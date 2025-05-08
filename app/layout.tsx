@@ -1,6 +1,7 @@
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import Player from "@/components/audio-player";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -33,6 +34,7 @@ export default function RootLayout({
         >
           <main className="min-h-screen flex flex-col items-center">
             {children}
+            <Player src="https://uvusudursocnsszzcprg.supabase.co/storage/v1/object/public/tracks//1.mp3" />
           </main>
         </ThemeProvider>
       </body>
