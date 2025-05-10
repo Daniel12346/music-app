@@ -12,7 +12,6 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
-    "@tanstack/react-query": "^5.75.7",
     "autoprefixer": "10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -22,7 +21,8 @@
     "prettier": "^3.3.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-h5-audio-player": "^3.10.0-rc.1"
+    "react-h5-audio-player": "^3.10.0-rc.1",
+    "swr": "^2.3.3"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
