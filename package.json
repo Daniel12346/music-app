@@ -22,7 +22,8 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-h5-audio-player": "^3.10.0-rc.1",
-    "swr": "^2.3.3"
+    "swr": "^2.3.3",
+    "zustand": "^5.0.4"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
