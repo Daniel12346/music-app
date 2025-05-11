@@ -1,6 +1,6 @@
 "use client";
 import useSWR from "swr";
-import { getAlbums } from "../features";
+import { getAlbums } from "../../lib/database";
 import { createClient } from "@/utils/supabase/client";
 
 export default function Albums() {

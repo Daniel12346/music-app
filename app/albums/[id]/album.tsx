@@ -1,5 +1,6 @@
 "use client";
-import { getAlbum, getAlbumWithTracks } from "@/app/features";
+import { getAlbumWithTracks } from "@/lib/database";
+import { useTrackStore } from "@/store/track.store";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
@@ -8,6 +9,7 @@ export default function Album({ id }: { id: string }) {
   const { data, isLoading, error } = useSWR(["albumWithTracks", id], () =>
     getAlbumWithTracks(supabase, id)
   );
+  const setTrackUrl = useTrackStore((state) => state.setTrackUrl);
   if (error) {
     return <div>Error loading album</div>;
   }
@@ -24,10 +26,16 @@ export default function Album({ id }: { id: string }) {
       {data.cover_url && <img src={data.cover_url} alt={data.title} />}
       <h3>Tracks</h3>
       <ul>
-        {data.tracks.map((track: any) => (
-          <li key={track.id}>
-            <a href={`/tracks/${track.id}`}>{track.title}</a>
-            {track.cover_url && <img src={track.cover_url} alt={track.title} />}
+        {data.tracks.map((track) => (
+          <li
+            className="bg-red-300"
+            key={track.id}
+            onClick={() => {
+              console.log("Track clicked", track.url);
+              setTrackUrl(track.url);
+            }}
+          >
+            <span>{track.title}</span>
           </li>
         ))}
       </ul>
