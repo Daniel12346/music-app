@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { SWRConfig } from "swr";
-import { getAlbums } from "../features";
+import { getAlbums } from "../../lib/database";
 import Albums from "./albums";
 
 export default async function AlbumsPage() {
