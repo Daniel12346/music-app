@@ -1,6 +1,7 @@
 import { Geist } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
+import Player from "@/components/audio-player";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -26,7 +27,10 @@ export default function RootLayout({
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
         <main className="min-h-screen flex flex-col items-center">
-          <Providers>{children}</Providers>
+          <Providers>
+            {children}
+            <Player />
+          </Providers>
         </main>
       </body>
     </html>
