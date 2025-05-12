@@ -38,3 +38,20 @@ export const getAlbumWithTracks = async (
   }
   return data;
 };
+
+export const getAlbumsLikedByUser = async (
+  client: SupabaseClient<Database>,
+  userId?: string,
+) => {
+  if (!userId) {
+    return [];
+  }
+  const { data, error } = await client
+    .from("albums")
+    .select("*, users_liked_albums(*)");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
