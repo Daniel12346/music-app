@@ -1,14 +1,18 @@
 "use client";
-import { getAlbumWithTracks } from "@/lib/database";
+import LikeAlbum from "@/components/likeAlbum";
+import { getAlbumWithTracks, getMyAuthUserData } from "@/lib/database";
 import { useTrackStore } from "@/store/track.store";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
 export default function Album({ id }: { id: string }) {
   const supabase = createClient();
-  const { data, isLoading, error } = useSWR(["albumWithTracks", id], () =>
-    getAlbumWithTracks(supabase, id)
-  );
+  const {
+    data: albumWithTracks,
+    isLoading,
+    error,
+  } = useSWR(["albumWithTracks", id], () => getAlbumWithTracks(supabase, id));
+  useSWR("me", () => getMyAuthUserData(supabase));
   const setTrackUrl = useTrackStore((state) => state.setTrackUrl);
   if (error) {
     return <div>Error loading album</div>;
@@ -16,22 +20,27 @@ export default function Album({ id }: { id: string }) {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  if (!data) {
+  if (!albumWithTracks) {
     return <div>No album found</div>;
   }
   return (
     <div>
       <h1>Album</h1>
-      <h2>{data.title}</h2>
-      {data.cover_url && <img src={data.cover_url} alt={data.title} />}
+      <h2>{albumWithTracks.title}</h2>
+      <div className="justify-end flex">
+        <LikeAlbum albumID={albumWithTracks.id} />
+      </div>
+
+      {albumWithTracks.cover_url && (
+        <img src={albumWithTracks.cover_url} alt={albumWithTracks.title} />
+      )}
       <h3>Tracks</h3>
       <ul>
-        {data.tracks.map((track) => (
+        {albumWithTracks.tracks.map((track) => (
           <li
             className="bg-red-300"
             key={track.id}
             onClick={() => {
-              console.log("Track clicked", track.url);
               setTrackUrl(track.url);
             }}
           >
