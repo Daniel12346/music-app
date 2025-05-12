@@ -2,6 +2,7 @@
 import useSWR from "swr";
 import { getAlbums } from "../../lib/database";
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 
 export default function Albums() {
   const supabase = createClient();
@@ -21,8 +22,8 @@ export default function Albums() {
       <ul>
         {data.map((album: any) => (
           <li key={album.id}>
-            <a href={`/albums/${album.id}`}>{album.title}</a>
-            <img src={album.cover_url} alt={album.title} />
+            <Link href={`/albums/${album.id}`}>{album.title}</Link>
+            <img src={album.cover_url} alt={album.title} width={80} />
           </li>
         ))}
       </ul>
