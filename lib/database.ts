@@ -47,11 +47,51 @@ export const getAlbumsLikedByUser = async (
     return [];
   }
   const { data, error } = await client
-    .from("albums")
-    .select("*, users_liked_albums(*)");
+    .from("users_liked_albums")
+    .select("*, album:albums(*)")
+    .eq("user_id", userId);
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+export const likeAlbum = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  albumId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_albums")
+    .insert({ user_id: userId, album_id: albumId });
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+export const unlikeAlbum = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  albumId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_albums")
+    .delete()
+    .match({ user_id: userId, album_id: albumId });
 
   if (error) {
     throw new Error(error.message);
   }
   return data;
+};
+
+export const getMyAuthUserData = async (
+  client: SupabaseClient<Database>,
+) => {
+  const { data, error } = await client.auth.getUser();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data.user;
 };
