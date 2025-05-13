@@ -1,14 +1,13 @@
 "use client";
-import { useTrackStore } from "@/store/track.store";
-import { DeleteIcon, StopCircleIcon } from "lucide-react";
-import { useEffect } from "react";
+import { useStore } from "@/state/store";
+import { StopCircleIcon } from "lucide-react";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 // import 'react-h5-audio-player/lib/styles.less' Use LESS
 // import 'react-h5-audio-player/src/styles.scss' Use SASS
 
 export default function Player() {
-  const { trackUrl, setTrackUrl } = useTrackStore();
+  const { trackUrl, setTrackUrl } = useStore();
   if (!trackUrl) {
     return null;
   }
