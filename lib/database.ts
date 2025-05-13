@@ -44,7 +44,7 @@ export const getAlbumsLikedByUser = async (
   userId?: string,
 ) => {
   if (!userId) {
-    return [];
+    return null;
   }
   const { data, error } = await client
     .from("users_liked_albums")
