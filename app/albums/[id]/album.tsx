@@ -1,7 +1,7 @@
 "use client";
 import LikeAlbum from "@/components/likeAlbum";
 import { getAlbumWithTracks, getMyAuthUserData } from "@/lib/database";
-import { useTrackStore } from "@/store/track.store";
+import { useStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
@@ -13,7 +13,7 @@ export default function Album({ id }: { id: string }) {
     error,
   } = useSWR(["albumWithTracks", id], () => getAlbumWithTracks(supabase, id));
   useSWR("me", () => getMyAuthUserData(supabase));
-  const setTrackUrl = useTrackStore((state) => state.setTrackUrl);
+  const setTrackUrl = useStore((state) => state.setTrackUrl);
   if (error) {
     return <div>Error loading album</div>;
   }
