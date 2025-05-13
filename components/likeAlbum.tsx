@@ -18,18 +18,21 @@ export default function LikeAlbum({
   size?: number;
 }) {
   const supabase = createClient();
-  const { data: myData } = useSWR("me", () => getMyAuthUserData(supabase));
-  const myID = myData?.id;
-  if (!myID) {
-    return null;
-  }
-  const { data: liked, mutate: mutateLiked } = useSWR("myLikedAlbums", () =>
-    getAlbumsLikedByUser(supabase, myID)
+  const { data: myData } = useSWR("me", async () => {
+    const { data } = await supabase.auth.getUser();
+    return data;
+  });
+  const myID = myData?.user?.id;
+  const { data: liked, mutate: mutateLiked } = useSWR(
+    myID ? "myLikedAlbums" : null,
+    () => getAlbumsLikedByUser(supabase, myID)
   );
 
   const isAlbumLiked =
     liked?.some((liked) => liked.album_id === albumID) ?? false;
-
+  if (!myID) {
+    return null;
+  }
   return (
     <HeartIcon
       className={cn("cursor-pointer", isAlbumLiked && "fill-red-600")}
