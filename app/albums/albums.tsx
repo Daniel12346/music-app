@@ -3,6 +3,7 @@ import useSWR from "swr";
 import { getAlbums } from "../../lib/database";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
+import LikeAlbum from "@/components/likeAlbum";
 
 export default function Albums() {
   const supabase = createClient();
@@ -20,10 +21,14 @@ export default function Albums() {
     <div>
       <h1>Albums</h1>
       <ul>
-        {data.map((album: any) => (
+        {data.map((album) => (
           <li key={album.id}>
             <Link href={`/albums/${album.id}`}>{album.title}</Link>
-            <img src={album.cover_url} alt={album.title} width={80} />
+            {album.cover_url && (
+              <img src={album.cover_url} alt={album.title} width={80} />
+            )}
+
+            <LikeAlbum albumID={album.id} />
           </li>
         ))}
       </ul>
