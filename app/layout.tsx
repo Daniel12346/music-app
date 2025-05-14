@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "@/components/providers";
 import Player from "@/components/audio-player";
 import Queue from "@/components/queue";
+import Header from "@/components/header";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -30,6 +31,9 @@ export default function RootLayout({
         <main className="min-h-screen flex flex-col items-center">
           <Providers>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full">
+              <div className="col-span-full">
+                <Header />
+              </div>
               <div className="md:col-start-2 bg-green-200 ">{children}</div>
               <Player />
               <div className="hidden md:block md:col-start-3 bg-blue-200/20  px-5">
