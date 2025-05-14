@@ -47,13 +47,14 @@ export const getAlbumsLikedByUser = async (
     return null;
   }
   const { data, error } = await client
-    .from("albums")
-    .select("*, users_liked_albums(*)")
-    .eq("users_liked_albums.user_id", userId);
+    .from("users_liked_albums")
+    .select("album_id, albums(*)")
+    .eq("user_id", userId);
+
   if (error) {
     throw new Error(error.message);
   }
-  return data;
+  return data?.map((record) => record.albums);
 };
 
 export const likeAlbum = async (
