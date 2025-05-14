@@ -2,17 +2,22 @@ import { Tables } from "@/database.types";
 import { create } from "zustand";
 import { combine } from "zustand/middleware";
 
-type Track = Tables<"tracks">;
+export type TrackWithExtra = Tables<"tracks"> & {
+  albumId: string;
+  albumName: string;
+  albumCoverUrl: string;
+  artists: Pick<Tables<"artists">, "id" | "name">[];
+};
 export const useStore = create(
   combine(
     {
       trackUrl: "",
-      queue: [] as Track[],
+      queue: [] as TrackWithExtra[],
     },
     (set) => ({
       setTrackUrl: (url: string) => set({ trackUrl: url }),
       clearTrackUrl: () => set({ trackUrl: "" }),
-      addToQueue: (track: Track) =>
+      addToQueue: (track: TrackWithExtra) =>
         set((state) => ({ queue: [...state.queue, track] })),
       removeFromQueue: (trackId: string) =>
         set((state) => ({
