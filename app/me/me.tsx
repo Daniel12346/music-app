@@ -15,7 +15,7 @@ export default function Me() {
     data: myLikedAlbums,
     error,
     isLoading,
-  } = useSWR(myID ? "myLikedAlbums" : null, () =>
+  } = useSWR(myID ? ["getAlbumsLikedByUser", myID] : null, () =>
     getAlbumsLikedByUser(supabase, myID)
   );
   if (error) {
@@ -31,7 +31,7 @@ export default function Me() {
     <div>
       <h1>My Albums</h1>
       <ul>
-        {myLikedAlbums.map(({ album }) => (
+        {myLikedAlbums.map((album) => (
           <li key={album.id}>
             <a href={`/albums/${album.id}`}>{album.title}</a>
             {album.cover_url && (
