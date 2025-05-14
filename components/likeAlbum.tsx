@@ -1,10 +1,5 @@
 "use client";
-import {
-  getMyAuthUserData,
-  getAlbumsLikedByUser,
-  unlikeAlbum,
-  likeAlbum,
-} from "@/lib/database";
+import { getAlbumsLikedByUser, unlikeAlbum, likeAlbum } from "@/lib/database";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/client";
 import { HeartIcon } from "lucide-react";
@@ -24,12 +19,12 @@ export default function LikeAlbum({
   });
   const myID = myData?.user?.id;
   const { data: liked, mutate: mutateLiked } = useSWR(
-    myID ? "myLikedAlbums" : null,
+    myID ? ["getAlbumsLikedByUser", myID] : null,
     () => getAlbumsLikedByUser(supabase, myID)
   );
-
   const isAlbumLiked =
-    liked?.some((liked) => liked.album_id === albumID) ?? false;
+    liked?.some((likedAlbum) => likedAlbum.id === albumID) ?? false;
+
   if (!myID) {
     return null;
   }
@@ -40,9 +35,7 @@ export default function LikeAlbum({
       onClick={async () => {
         if (isAlbumLiked) {
           await unlikeAlbum(supabase, myID, albumID);
-          mutateLiked((prev) =>
-            prev?.filter((liked) => liked.album_id !== albumID)
-          );
+          mutateLiked((prev) => prev?.filter((liked) => liked.id !== albumID));
         } else {
           await likeAlbum(supabase, myID, albumID);
           mutateLiked();
