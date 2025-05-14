@@ -7,7 +7,7 @@ import LikeAlbum from "@/components/likeAlbum";
 
 export default function Albums() {
   const supabase = createClient();
-  const { data, error } = useSWR("albums", () => getAlbums(supabase));
+  const { data, error } = useSWR("getAlbums", () => getAlbums(supabase));
   if (error) {
     return <div>Error loading albums</div>;
   }
@@ -25,7 +25,7 @@ export default function Albums() {
           <li key={album.id}>
             <Link href={`/albums/${album.id}`}>{album.title}</Link>
             {album.cover_url && (
-              <img src={album.cover_url} alt={album.title} width={80} />
+              <img src={album.cover_url} alt={album.title} width={50} />
             )}
 
             <LikeAlbum albumID={album.id} />
