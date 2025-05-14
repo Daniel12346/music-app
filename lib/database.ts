@@ -24,13 +24,13 @@ export const getAlbum = async (
   }
   return data;
 };
-export const getAlbumWithTracks = async (
+export const getAlbumWithTracksAndArtist = async (
   client: SupabaseClient<Database>,
   id: string,
 ) => {
   const { data, error } = await client
     .from("albums")
-    .select("*, tracks(*)")
+    .select("*, tracks(*), artists(*)")
     .eq("id", id)
     .single();
   if (error) {
@@ -47,9 +47,9 @@ export const getAlbumsLikedByUser = async (
     return null;
   }
   const { data, error } = await client
-    .from("users_liked_albums")
-    .select("*, album:albums(*)")
-    .eq("user_id", userId);
+    .from("albums")
+    .select("*, users_liked_albums(*)")
+    .eq("users_liked_albums.user_id", userId);
   if (error) {
     throw new Error(error.message);
   }
@@ -86,7 +86,7 @@ export const unlikeAlbum = async (
   return data;
 };
 
-export const getMyAuthUserData = async (
+export const getAuthUser = async (
   client: SupabaseClient<Database>,
 ) => {
   const { data, error } = await client.auth.getUser();
@@ -94,4 +94,14 @@ export const getMyAuthUserData = async (
     throw new Error(error.message);
   }
   return data.user;
+};
+export const getSessionUser = async (
+  client: SupabaseClient<Database>,
+) => {
+  const session = await client.auth.getSession();
+  const { data, error } = session;
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data.session?.user;
 };
