@@ -1,5 +1,5 @@
 "use client";
-import LikeAlbum from "@/components/likeAlbum";
+import AlbumCard from "@/components/album-card";
 import { getAlbumsLikedByUser } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
@@ -33,16 +33,12 @@ export default function Me() {
       <ul>
         {myLikedAlbums.map((album) => (
           <li key={album.id}>
-            <a href={`/albums/${album.id}`}>{album.title}</a>
-            {album.cover_url && (
-              <img
-                src={album.cover_url}
-                alt={album.title}
-                width={50}
-                height={50}
-              />
-            )}
-            <LikeAlbum albumID={album.id} />
+            <AlbumCard
+              id={album.id}
+              title={album.title}
+              cover_url={album.cover_url!}
+              artists={album.artists_albums.map((a) => a.artists)}
+            />
           </li>
         ))}
       </ul>
