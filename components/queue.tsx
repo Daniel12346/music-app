@@ -6,7 +6,6 @@ export default function Queue() {
   const { queue, removeFromQueue } = useStore();
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-2xl font-bold">Queue</h1>
       <div className="flex flex-col gap-2">
         {queue.map((track) => (
           <div key={track.id} className="flex items-center gap-2">
