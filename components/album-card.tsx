@@ -23,7 +23,12 @@ export default function AlbumCard({ id, title, cover_url, artists }: Props) {
         </Link>
       </div>
       <div className="relative">
-        <img src={cover_url || ""} alt={title || ""} width={120} />
+        <img
+          src={cover_url || ""}
+          alt={title || ""}
+          width={120}
+          className="rounded-md"
+        />
         <div className="hidden group-hover:block absolute top-0 right-0">
           <LikeAlbum albumID={id} size={20} />
         </div>
