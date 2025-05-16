@@ -30,20 +30,18 @@ export default function Me() {
   return (
     <div>
       <h1>Liked albums</h1>
-      <div className="">
-        <ul className="grid grid-cols-2 lg:grid-cols-3">
-          {myLikedAlbums.map((album) => (
-            <li className="flex place-content-center" key={album.id}>
-              <AlbumCard
-                id={album.id}
-                title={album.title}
-                cover_url={album.cover_url!}
-                artists={album.artists_albums.map((a) => a.artists)}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className="grid grid-cols-2 lg:grid-cols-3">
+        {myLikedAlbums.map((album) => (
+          <li className="flex place-content-center" key={album.id}>
+            <AlbumCard
+              id={album.id}
+              title={album.title}
+              cover_url={album.cover_url!}
+              artists={album.artists_albums.map((a) => a.artists)}
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
