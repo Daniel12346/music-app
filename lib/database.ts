@@ -2,8 +2,9 @@ import { Database } from "@/database.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export const getAlbums = async (client: SupabaseClient<Database>) => {
-  const { data, error } = await client.from("albums").select("*");
-
+  const { data, error } = await client.from("albums").select(
+    "*, artists_albums(*, artists(name, id))",
+  );
   if (error) {
     throw new Error(error.message);
   }
@@ -15,7 +16,7 @@ export const getAlbum = async (
 ) => {
   const { data, error } = await client
     .from("albums")
-    .select("*")
+    .select("*, artists(*), tracks(*)")
     .eq("id", id)
     .single();
 
@@ -48,7 +49,7 @@ export const getAlbumsLikedByUser = async (
   }
   const { data, error } = await client
     .from("users_liked_albums")
-    .select("album_id, albums(*)")
+    .select("album_id, albums(*, artists_albums(*, artists(name, id)))")
     .eq("user_id", userId);
 
   if (error) {
