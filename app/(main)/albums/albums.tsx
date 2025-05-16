@@ -1,6 +1,6 @@
 "use client";
 import useSWR from "swr";
-import { getAlbums } from "../../lib/database";
+import { getAlbums } from "../../../lib/database";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import LikeAlbum from "@/components/likeAlbum";
@@ -18,17 +18,27 @@ export default function Albums() {
     return <div>No albums found</div>;
   }
   return (
-    <div>
+    <div className="w-full">
       <h1>Albums</h1>
-      <ul>
+      <ul className="flex gap-4 flex-wrap  w-full">
         {data.map((album) => (
-          <li key={album.id}>
-            <Link href={`/albums/${album.id}`}>{album.title}</Link>
+          //TODO: use AlbumCard
+          <li key={album.id} className="w-32 ">
+            <div className="truncate w-full text-lg">
+              <Link href={`/albums/${album.id}`}>{album.title}</Link>
+            </div>
             {album.cover_url && (
-              <img src={album.cover_url} alt={album.title} width={50} />
+              <img
+                className="self-center w-full"
+                src={album.cover_url}
+                alt={album.title}
+                width={70}
+              />
             )}
 
-            <LikeAlbum albumID={album.id} />
+            <div className="self-end">
+              <LikeAlbum albumID={album.id} />
+            </div>
           </li>
         ))}
       </ul>
