@@ -1,5 +1,6 @@
 "use client";
-import LikeAlbum from "@/components/likeAlbum";
+import AlbumCard from "@/components/album-card";
+import LikeAlbum from "@/components/like-album";
 import { getAlbumWithTracksAndArtist, getAuthUser } from "@/lib/database";
 import { useStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
@@ -28,37 +29,30 @@ export default function Album({ id }: { id: string }) {
     return <div>No album found</div>;
   }
   return (
-    <div>
-      <h1>Album</h1>
-      <h2>{albumWithTracks.title}</h2>
-      <div className="justify-end flex">
-        <LikeAlbum albumID={albumWithTracks.id} />
-      </div>
-
-      {albumWithTracks.cover_url && (
-        <img
-          src={albumWithTracks.cover_url}
-          alt={albumWithTracks.title}
-          width={50}
-        />
-      )}
-      <h3>Tracks</h3>
-      <ul>
+    <div className="flex flex-col items-center gap-4">
+      <AlbumCard
+        id={albumWithTracks.id}
+        title={albumWithTracks.title}
+        cover_url={albumWithTracks.cover_url}
+        artists={albumWithTracks.artists}
+        size="large"
+      />
+      <ul className="w-full max-w-md space-y-2 md:space-y-0 border-t-2 p-2">
         {albumWithTracks.tracks.map((track) => (
           <li
-            className="bg-red-300 flex items-center justify-between p-2"
+            className="w-full h-8 flex items-center justify-between p-2"
             key={track.id}
             onClick={() => {
               setTrackUrl(track.url);
             }}
           >
             <div>
-              <span className="text-lg">{track.title}</span>
+              <span className="text-lg font-light">{track.title}</span>
               {/* TODO: artist names (not necessarily the same as album artist names - featured artists etc.)*/}
             </div>
             <div className="flex items-center gap-2">
               {/* TODO: correct type for length */}
-              <span className="text-md font-light">
+              <span className="text-md font-extralight">
                 {track.length as string}
               </span>
               <ListStartIcon size={16} />
@@ -78,7 +72,7 @@ export default function Album({ id }: { id: string }) {
                 }
               />
               {/* TODO: replace with LikeTrack */}
-              <LikeAlbum size={16} albumID={id} />
+              <LikeAlbum albumID={id} />
             </div>
           </li>
         ))}
