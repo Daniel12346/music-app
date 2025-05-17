@@ -1,4 +1,3 @@
-import { Geist } from "next/font/google";
 import Queue from "@/components/queue";
 import {
   ResizableHandle,
