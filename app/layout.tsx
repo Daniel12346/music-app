@@ -28,7 +28,12 @@ export default function RootLayout({
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground min-h-screen">
         <main className=" flex flex-col items-center">
-          <Providers>{children}</Providers>
+          <Providers>
+            <>
+              {children}
+              <AudioPlayer />
+            </>
+          </Providers>
         </main>
       </body>
     </html>
