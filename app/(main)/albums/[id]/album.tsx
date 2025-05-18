@@ -17,8 +17,16 @@ export default function Album({ id }: { id: string }) {
     getAlbumWithTracksAndArtist(supabase, id)
   );
   const addTrackToQueue = useStore((state) => state.addToQueue);
-  useSWR("getAuthUser", () => getAuthUser(supabase));
-  const setTrackUrl = useStore((state) => state.setTrackUrl);
+  const setCurrentTrack = useStore((state) => state.setCurrentTrack);
+  const setQueue = useStore((state) => state.setQueue);
+  const tracksWithExtraInfo = albumWithTracks?.tracks.map((track) => ({
+    ...track,
+    albumName: albumWithTracks.title,
+    albumCoverUrl: albumWithTracks.cover_url!,
+    albumId: albumWithTracks.id,
+    //TODO: artists for specific track, not album
+    artists: albumWithTracks.artists,
+  }));
   if (error) {
     return <div>Error loading album</div>;
   }
@@ -38,12 +46,15 @@ export default function Album({ id }: { id: string }) {
         size="large"
       />
       <ul className="w-full max-w-md space-y-2 md:space-y-0 border-t-2 p-2">
-        {albumWithTracks.tracks.map((track) => (
+        {tracksWithExtraInfo?.map((track, idx) => (
           <li
-            className="w-full h-8 flex items-center justify-between p-2"
+            className="w-full h-8 cursor-pointer flex items-center justify-between p-2"
             key={track.id}
             onClick={() => {
-              setTrackUrl(track.url);
+              setCurrentTrack(track);
+              //clearing the queue and adding all the album tracks starting with the selected track
+              //TODO: add optional setting to add clicked track to queue instead of resetting queue
+              setQueue(tracksWithExtraInfo.slice(idx));
             }}
           >
             <div>
@@ -55,21 +66,15 @@ export default function Album({ id }: { id: string }) {
               <span className="text-md font-extralight">
                 {track.length as string}
               </span>
-              <ListStartIcon size={16} />
+              <ListStartIcon
+                size={16}
+                className="opacity-80"
+                onClick={() => addTrackToQueue(track, "start")}
+              />
               <ListEndIcon
                 size={16}
-                onClick={() =>
-                  addTrackToQueue({
-                    ...track,
-                    albumId: albumWithTracks.id,
-                    albumCoverUrl: albumWithTracks.cover_url || "",
-                    albumName: albumWithTracks.title,
-                    artists: albumWithTracks.artists.map((artist) => ({
-                      name: artist.name,
-                      id: artist.id,
-                    })),
-                  })
-                }
+                className="opacity-80"
+                onClick={() => addTrackToQueue(track, "end")}
               />
               {/* TODO: replace with LikeTrack */}
               <LikeAlbum albumID={id} />
