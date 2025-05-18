@@ -19,7 +19,6 @@ export default function AlbumCard({
     <div className={cn("w-[120px] group", size === "large" && "w-[300px]")}>
       <div className="truncate text-lg flex-col">
         <div className="-mb-2 font-extralight text-muted-foreground">
-          {/* TODO: separator */}
           {artists.map((artist) => (
             <Link href={`/artists/${artist.id}`} key={artist.id}>
               <span className="">{artist.name}</span>
@@ -31,15 +30,30 @@ export default function AlbumCard({
         </Link>
       </div>
       <div className="relative">
-        <img
-          src={cover_url || ""}
-          alt={title || ""}
-          width={120}
-          height={120}
-          className="rounded-md w-full"
-        />
+        {size !== "large" ? (
+          <Link href={`/albums/${id}`}>
+            <img
+              src={cover_url || ""}
+              alt={title || ""}
+              width={120}
+              height={120}
+              className="rounded-md w-full"
+            />
+          </Link>
+        ) : (
+          <img
+            src={cover_url || ""}
+            alt={title || ""}
+            width={120}
+            height={120}
+            className="rounded-md w-full"
+          />
+        )}
         <div className="hidden group-hover:block absolute top-0 right-0">
-          <LikeAlbum albumID={id} size={size === "large" ? 32 : 16} />
+          <LikeAlbum
+            albumID={id}
+            size={size === "large" ? 32 : 16}
+          />
         </div>
       </div>
     </div>
