@@ -8,6 +8,7 @@ export type TrackWithExtra = Tables<"tracks"> & {
   albumCoverUrl: string;
   artists: Pick<Tables<"artists">, "id" | "name">[];
 };
+type Position = "start" | "end";
 export const useStore = create(
   combine(
     {
@@ -48,24 +49,48 @@ export const useStore = create(
       setQueue: (queue: TrackWithExtra[]) => {
         set({ queue });
       },
-      addToQueue: (track: TrackWithExtra, position: "end" | "start" = "end") =>
+      addTrackToQueue: (track: TrackWithExtra, position: Position = "end") =>
         set((state) => {
+          const idxOfCurrentTrackInQueue =
+            position === "start" && state.queue.length
+              ? state.idxOfCurrentTrackInQueue + 1
+              : state.idxOfCurrentTrackInQueue;
           const queue =
             position === "end"
               ? [...state.queue, track]
               : [track].concat(state.queue);
-          return { queue };
+          return { queue, idxOfCurrentTrackInQueue };
         }),
-      removeFromQueue: (trackId: string, idx: number) =>
+
+      addTracksToQueue: (
+        tracks: TrackWithExtra[],
+        position: Position = "end"
+      ) => {
         set((state) => {
-          let idxOfCurrentTrack = state.idxOfCurrentTrackInQueue;
+          const idxOfCurrentTrackInQueue =
+            position === "start" && state.queue.length
+              ? state.idxOfCurrentTrackInQueue + tracks.length
+              : state.idxOfCurrentTrackInQueue;
+          const queue =
+            position === "end"
+              ? [...state.queue, ...tracks]
+              : tracks.concat(state.queue);
+          return {
+            queue,
+            idxOfCurrentTrackInQueue,
+          };
+        });
+      },
+      removeTrackFromQueue: (trackId: string, idx: number) =>
+        set((state) => {
+          let idxOfCurrentTrackInQueue = state.idxOfCurrentTrackInQueue;
           //reducing the index of the track currently playing if a song with a lower index (before it) was removed
-          if (idx < idxOfCurrentTrack) {
-            idxOfCurrentTrack--;
+          if (idx < idxOfCurrentTrackInQueue) {
+            idxOfCurrentTrackInQueue--;
           }
           return {
             queue: state.queue.filter((track) => track.id !== trackId),
-            idxOfCurrentTrackInQueue: idxOfCurrentTrack,
+            idxOfCurrentTrackInQueue: idxOfCurrentTrackInQueue,
           };
         }),
     })
