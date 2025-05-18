@@ -5,7 +5,7 @@ import { XIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function Queue() {
-  const { queue, removeFromQueue, idxOfCurrentTrackInQueue } = useStore();
+  const { queue, removeTrackFromQueue, idxOfCurrentTrackInQueue } = useStore();
   return (
     <div className="flex flex-col gap-2">
       {queue.map((track, idx) => (
@@ -37,7 +37,7 @@ export default function Queue() {
             <XIcon
               className="cursor-pointer"
               onClick={() => {
-                removeFromQueue(track.id, idx);
+                removeTrackFromQueue(track.id, idx);
               }}
             />
           </div>
