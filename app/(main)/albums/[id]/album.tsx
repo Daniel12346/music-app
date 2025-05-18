@@ -1,7 +1,7 @@
 "use client";
 import AlbumCard from "@/components/album-card";
 import LikeAlbum from "@/components/like-album";
-import { getAlbumWithTracksAndArtist, getAuthUser } from "@/lib/database";
+import { getAlbumWithTracksAndArtist } from "@/lib/database";
 import { useStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { ListEndIcon, ListStartIcon } from "lucide-react";
@@ -16,7 +16,8 @@ export default function Album({ id }: { id: string }) {
   } = useSWR(["getAlbumWithTracksAndArtist", id], () =>
     getAlbumWithTracksAndArtist(supabase, id)
   );
-  const addTrackToQueue = useStore((state) => state.addToQueue);
+  const addTrackToQueue = useStore((state) => state.addTrackToQueue);
+  const addTracksToQueue = useStore((state) => state.addTracksToQueue);
   const setCurrentTrack = useStore((state) => state.setCurrentTrack);
   const setQueue = useStore((state) => state.setQueue);
   const tracksWithExtraInfo = albumWithTracks?.tracks.map((track) => ({
@@ -38,13 +39,25 @@ export default function Album({ id }: { id: string }) {
   }
   return (
     <div className="flex flex-col items-center gap-4">
-      <AlbumCard
-        id={albumWithTracks.id}
-        title={albumWithTracks.title}
-        cover_url={albumWithTracks.cover_url}
-        artists={albumWithTracks.artists}
-        size="large"
-      />
+      <div className="flex flex-col gap-2">
+        <AlbumCard
+          id={albumWithTracks.id}
+          title={albumWithTracks.title}
+          cover_url={albumWithTracks.cover_url}
+          artists={albumWithTracks.artists}
+          size="large"
+        />
+        <div className="">
+          <div className="justify-self-end w-fit">
+            <ListEndIcon
+              size={22}
+              onClick={() => {
+                addTracksToQueue(tracksWithExtraInfo!, "end");
+              }}
+            />
+          </div>
+        </div>
+      </div>
       <ul className="w-full max-w-md space-y-2 md:space-y-0 border-t-2 p-2">
         {tracksWithExtraInfo?.map((track, idx) => (
           <li
@@ -69,12 +82,19 @@ export default function Album({ id }: { id: string }) {
               <ListStartIcon
                 size={16}
                 className="opacity-80"
-                onClick={() => addTrackToQueue(track, "start")}
+                onClick={(e) => {
+                  //stopping propagation because the on click handle for the li element would set the clicked track as current and add unintened tracks to queue
+                  e.stopPropagation();
+                  addTrackToQueue(track, "start");
+                }}
               />
               <ListEndIcon
                 size={16}
                 className="opacity-80"
-                onClick={() => addTrackToQueue(track, "end")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  addTrackToQueue(track, "end");
+                }}
               />
               {/* TODO: replace with LikeTrack */}
               <LikeAlbum albumID={id} />
