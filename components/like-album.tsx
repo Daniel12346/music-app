@@ -8,9 +8,11 @@ import useSWR from "swr";
 export default function LikeAlbum({
   albumID,
   size = 16,
+  strokeColor,
 }: {
   albumID: string;
   size?: number;
+  strokeColor?: string;
 }) {
   const supabase = createClient();
   const { data: myData } = useSWR("me", async () => {
@@ -30,7 +32,11 @@ export default function LikeAlbum({
   }
   return (
     <HeartIcon
-      className={cn("cursor-pointer", isAlbumLiked && "fill-red-600")}
+      className={cn(
+        "cursor-pointer",
+        isAlbumLiked && "fill-red-600",
+        strokeColor && `stroke-${strokeColor}`
+      )}
       size={size}
       onClick={async () => {
         if (isAlbumLiked) {
