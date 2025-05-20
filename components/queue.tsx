@@ -1,11 +1,12 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useStore } from "@/state/store";
+import { useTrackStore } from "@/state/store";
 import { XIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function Queue() {
-  const { queue, removeTrackFromQueue, idxOfCurrentTrackInQueue } = useStore();
+  const { queue, removeTrackFromQueue, idxOfCurrentTrackInQueue } =
+    useTrackStore();
   return (
     <div className="flex flex-col gap-2">
       {queue.map((track, idx) => (

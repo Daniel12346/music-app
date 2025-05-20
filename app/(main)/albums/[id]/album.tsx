@@ -2,7 +2,7 @@
 import AlbumCard from "@/components/album-card";
 import LikeAlbum from "@/components/like-album";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
-import { useStore } from "@/state/store";
+import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { ListEndIcon, ListStartIcon } from "lucide-react";
 import useSWR from "swr";
@@ -16,10 +16,10 @@ export default function Album({ id }: { id: string }) {
   } = useSWR(["getAlbumWithTracksAndArtist", id], () =>
     getAlbumWithTracksAndArtist(supabase, id)
   );
-  const addTrackToQueue = useStore((state) => state.addTrackToQueue);
-  const addTracksToQueue = useStore((state) => state.addTracksToQueue);
-  const setCurrentTrack = useStore((state) => state.setCurrentTrack);
-  const setQueue = useStore((state) => state.setQueue);
+  const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
+  const addTracksToQueue = useTrackStore((state) => state.addTracksToQueue);
+  const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack);
+  const setQueue = useTrackStore((state) => state.setQueue);
   const tracksWithExtraInfo = albumWithTracks?.tracks.map((track) => ({
     ...track,
     albumName: albumWithTracks.title,

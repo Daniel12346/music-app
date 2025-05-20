@@ -1,6 +1,5 @@
 "use client";
-import { useStore } from "@/state/store";
-import { StopCircleIcon } from "lucide-react";
+import { useTrackStore } from "@/state/store";
 import Link from "next/link";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
@@ -8,7 +7,7 @@ import "react-h5-audio-player/lib/styles.css";
 // import 'react-h5-audio-player/src/styles.scss' Use SASS
 
 export default function Player() {
-  const { currentTrack, playNextTrack, playPrevTrack } = useStore();
+  const { currentTrack, playNextTrack, playPrevTrack } = useTrackStore();
   if (!currentTrack) {
     return null;
   }

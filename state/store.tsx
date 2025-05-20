@@ -9,7 +9,7 @@ export type TrackWithExtra = Tables<"tracks"> & {
   artists: Pick<Tables<"artists">, "id" | "name">[];
 };
 type Position = "start" | "end";
-export const useStore = create(
+export const useTrackStore = create(
   combine(
     {
       currentTrack: null as TrackWithExtra | null,
