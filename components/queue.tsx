@@ -5,32 +5,37 @@ import { XIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function Queue() {
-  const { queue, removeTrackFromQueue, idxOfCurrentTrackInQueue } =
+  const { queue, removeTrackFromQueue, currentTrack, setCurrentTrack } =
     useTrackStore();
+  const idxOfCurrentTrackInQueue = queue.findIndex(
+    (track) => track.queueId === currentTrack?.queueId
+  );
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 cursor-pointer">
       {queue.map((track, idx) => (
         //track.id alone can't be used as key because the same track can be added to queue multiple times
-        //TOOD: find better key
         <div
-          key={track.id + idx}
+          key={track.queueId}
+          onClick={() => setCurrentTrack(track)}
           className={cn(
             "flex items-center gap-2",
-            idx === idxOfCurrentTrackInQueue && "bg-green-500/40"
+            track.queueId === currentTrack?.queueId && "bg-green-500/40",
+            //TODO: add option to hide/collapse previous tracks
+            idx < idxOfCurrentTrackInQueue && "opacity-65"
           )}
         >
-          <Link href={"/albums/" + track.albumId}>
-            <img
-              src={track.albumCoverUrl}
-              alt={track.title}
-              className="w-16 h-16 rounded"
-            />
-          </Link>
+          <img
+            src={track.albumCoverUrl}
+            alt={track.title}
+            className="w-16 h-16 rounded"
+          />
           <div className="flex-1">
             <h2 className="text-lg font-bold">{track.title}</h2>
             {track.artists.map((artist) => (
               <Link href={"/artists/" + artist.id} key={artist.id}>
-                <span className="font-light">{artist.name}</span>
+                <span className="font-light hover:underline">
+                  {artist.name}
+                </span>
               </Link>
             ))}
           </div>
@@ -38,7 +43,7 @@ export default function Queue() {
             <XIcon
               className="cursor-pointer"
               onClick={() => {
-                removeTrackFromQueue(track.id, idx);
+                removeTrackFromQueue(track.queueId);
               }}
             />
           </div>
