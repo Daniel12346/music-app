@@ -2,6 +2,7 @@
 import AlbumCard from "@/components/album-card";
 import LikeAlbum from "@/components/like-album";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
+import { generateId } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { ListEndIcon, ListStartIcon } from "lucide-react";
@@ -27,6 +28,7 @@ export default function Album({ id }: { id: string }) {
     albumId: albumWithTracks.id,
     //TODO: artists for specific track, not album
     artists: albumWithTracks.artists,
+    queueId: generateId(),
   }));
   if (error) {
     return <div>Error loading album</div>;
