@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
-import { XIcon } from "lucide-react";
+import { EllipsisVerticalIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 
 export default function Queue() {
@@ -30,7 +30,7 @@ export default function Queue() {
             className="w-16 h-16 rounded"
           />
           <div className="flex-1">
-            <h2 className="text-lg font-bold">{track.title}</h2>
+            <h2 className="text-lg font-semibold">{track.title}</h2>
             {track.artists.map((artist) => (
               <Link href={"/artists/" + artist.id} key={artist.id}>
                 <span className="font-light hover:underline">
@@ -39,7 +39,8 @@ export default function Queue() {
               </Link>
             ))}
           </div>
-          <div>
+          <div className="flex">
+            <EllipsisVerticalIcon />
             <XIcon
               className="cursor-pointer"
               onClick={() => {
