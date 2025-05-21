@@ -50,13 +50,20 @@ export default function Album({ id }: { id: string }) {
           size="large"
         />
         <div className="">
-          <div className="justify-self-end w-fit">
+          <div className="flex items-center gap-2 justify-self-end w-fit cursor-pointer">
+            <ListStartIcon
+              size={22}
+              onClick={() => {
+                addTracksToQueue(tracksWithExtraInfo!, "start");
+              }}
+            />
             <ListEndIcon
               size={22}
               onClick={() => {
                 addTracksToQueue(tracksWithExtraInfo!, "end");
               }}
             />
+            <LikeAlbum albumID={albumWithTracks.id} size={22} />
           </div>
         </div>
       </div>
