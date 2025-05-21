@@ -3,9 +3,7 @@ import { useTrackStore } from "@/state/store";
 import Link from "next/link";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
-// import 'react-h5-audio-player/lib/styles.less' Use LESS
-// import 'react-h5-audio-player/src/styles.scss' Use SASS
-
+import "./audio-player.css";
 export default function Player() {
   const { currentTrack, playNextTrack, playPrevTrack } = useTrackStore();
   if (!currentTrack) {
@@ -15,7 +13,6 @@ export default function Player() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
       <AudioPlayer
-        style={{ background: "black", opacity: "70%" }}
         showSkipControls
         showJumpControls={false}
         onClickNext={() => playNextTrack()}
@@ -24,14 +21,16 @@ export default function Player() {
         //TODO: track title, artist, album, cover art
         //TODO: custom icons
         header={
-          <div className="flex bg-black w-fit">
+          <div className="flex w-fit gap-2">
             <img src={currentTrack.albumCoverUrl} width={50} height={50} />
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-2">
               <span>{currentTrack.title}</span>
               <span>
                 {currentTrack.artists.map((artist) => (
                   <Link href={"/artists" + artist.id} key={artist.id}>
-                    <span>{artist.name}</span>
+                    <span className="font-light opacity-85 hover:underline">
+                      {artist.name}
+                    </span>
                   </Link>
                 ))}
               </span>
