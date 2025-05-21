@@ -1,48 +1,67 @@
 import { Tables } from "@/database.types";
 import { create } from "zustand";
-import { combine } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
 export type TrackWithExtra = Tables<"tracks"> & {
   albumId: string;
   albumName: string;
   albumCoverUrl: string;
   artists: Pick<Tables<"artists">, "id" | "name">[];
+  queueId: string;
 };
+
 type Position = "start" | "end";
-export const useTrackStore = create(
-  combine(
-    {
-      currentTrack: null as TrackWithExtra | null,
-      queue: [] as TrackWithExtra[],
-      idxOfCurrentTrackInQueue: 0 as number,
-    },
+
+interface TrackStore {
+  currentTrack: TrackWithExtra | null;
+  queue: TrackWithExtra[];
+  setCurrentTrack: (track: TrackWithExtra | null) => void;
+  playNextTrack: () => void;
+  playPrevTrack: () => void;
+  setQueue: (queue: TrackWithExtra[]) => void;
+  addTrackToQueue: (track: TrackWithExtra, position?: Position) => void;
+  addTracksToQueue: (tracks: TrackWithExtra[], position?: Position) => void;
+  removeTrackFromQueue: (queueId: string) => void;
+}
+
+//persist queue and current track state with zustand
+export const useTrackStore = create<TrackStore>()(
+  persist(
     (set) => ({
-      setCurrentTrack: (track: TrackWithExtra | null, idx = 0) => {
-        set({ currentTrack: track, idxOfCurrentTrackInQueue: idx });
+      queue: [],
+      currentTrack: null,
+      queueIdOfCurrentTrack: null,
+      setCurrentTrack: (track: TrackWithExtra | null) => {
+        set({ currentTrack: track });
       },
       playNextTrack: () => {
         set((state) => {
-          const nextTrackIdx = state.idxOfCurrentTrackInQueue + 1;
+          const currentTrackIdx = state.queue.findIndex(
+            (track) => track.queueId === state.currentTrack?.queueId
+          );
+          if (currentTrackIdx === -1) return state;
+          const nextTrackIdx = currentTrackIdx + 1;
           let nextTrack = null;
           if (nextTrackIdx < state.queue.length) {
             nextTrack = state.queue[nextTrackIdx];
           }
           return {
             currentTrack: nextTrack,
-            idxOfCurrentTrackInQueue: nextTrackIdx,
           };
         });
       },
       playPrevTrack: () => {
         set((state) => {
-          const prevTrackIdx = state.idxOfCurrentTrackInQueue - 1;
+          const prevTrackIdx = state.queue.findIndex(
+            (track) => track.queueId === state.currentTrack?.queueId
+          );
+          if (prevTrackIdx === -1) return state;
           let prevTrack = null;
-          if (prevTrackIdx >= 0) {
-            prevTrack = state.queue[prevTrackIdx];
+          if (prevTrackIdx > 0) {
+            prevTrack = state.queue[prevTrackIdx - 1];
           }
           return {
             currentTrack: prevTrack,
-            idxOfCurrentTrackInQueue: prevTrackIdx,
           };
         });
       },
@@ -51,15 +70,11 @@ export const useTrackStore = create(
       },
       addTrackToQueue: (track: TrackWithExtra, position: Position = "end") =>
         set((state) => {
-          const idxOfCurrentTrackInQueue =
-            position === "start" && state.queue.length
-              ? state.idxOfCurrentTrackInQueue + 1
-              : state.idxOfCurrentTrackInQueue;
           const queue =
             position === "end"
               ? [...state.queue, track]
               : [track].concat(state.queue);
-          return { queue, idxOfCurrentTrackInQueue };
+          return { queue };
         }),
 
       addTracksToQueue: (
@@ -67,32 +82,30 @@ export const useTrackStore = create(
         position: Position = "end"
       ) => {
         set((state) => {
-          const idxOfCurrentTrackInQueue =
-            position === "start" && state.queue.length
-              ? state.idxOfCurrentTrackInQueue + tracks.length
-              : state.idxOfCurrentTrackInQueue;
           const queue =
             position === "end"
               ? [...state.queue, ...tracks]
               : tracks.concat(state.queue);
           return {
             queue,
-            idxOfCurrentTrackInQueue,
           };
         });
       },
-      removeTrackFromQueue: (trackId: string, idx: number) =>
+      removeTrackFromQueue: (queueId: string) =>
         set((state) => {
-          let idxOfCurrentTrackInQueue = state.idxOfCurrentTrackInQueue;
-          //reducing the index of the track currently playing if a song with a lower index (before it) was removed
-          if (idx < idxOfCurrentTrackInQueue) {
-            idxOfCurrentTrackInQueue--;
+          let currentTrack = state.currentTrack;
+          //removing the track from the queue if it was the current track
+          if (queueId === state.currentTrack?.queueId) {
+            currentTrack = null;
           }
           return {
-            queue: state.queue.filter((track) => track.id !== trackId),
-            idxOfCurrentTrackInQueue: idxOfCurrentTrackInQueue,
+            queue: state.queue.filter((track) => track.queueId !== queueId),
+            currentTrack,
           };
         }),
-    })
+    }),
+    {
+      name: "track-storage",
+    }
   )
 );
