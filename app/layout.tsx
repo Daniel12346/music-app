@@ -2,7 +2,6 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 import AudioPlayer from "@/components/audio-player";
-import Queue from "@/components/queue";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
