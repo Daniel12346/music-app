@@ -11,14 +11,13 @@ export default function Queue() {
     (track) => track.queueId === currentTrack?.queueId
   );
   return (
-    <div className="flex flex-col gap-2 cursor-pointer">
+    <div className="flex flex-col gap-2 cursor-pointer @container">
       {queue.map((track, idx) => (
-        //track.id alone can't be used as key because the same track can be added to queue multiple times
         <div
           key={track.queueId}
           onClick={() => setCurrentTrack(track)}
           className={cn(
-            "flex items-center gap-2",
+            "flex items-center gap-2 ",
             track.queueId === currentTrack?.queueId && "bg-green-500/40",
             //TODO: add option to hide/collapse previous tracks
             idx < idxOfCurrentTrackInQueue && "opacity-65"
@@ -40,7 +39,7 @@ export default function Queue() {
             ))}
           </div>
           <div className="flex">
-            <EllipsisVerticalIcon />
+            <EllipsisVerticalIcon className="block @lg:hidden" />
             <XIcon
               className="cursor-pointer"
               onClick={() => {

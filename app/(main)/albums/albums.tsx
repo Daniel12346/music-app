@@ -17,18 +17,20 @@ export default function Albums() {
     return <div>No albums found</div>;
   }
   return (
-    <div>
+    <div className="@container">
       <h1>Albums</h1>
-      <ul className="grid grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-2 @lg:grid-cols-3">
         {data.map((album) => (
           //TODO: use AlbumCard
           <li className="flex place-content-center" key={album.id}>
-            <AlbumCard
-              cover_url={album.cover_url}
-              title={album.title}
-              id={album.id}
-              artists={album.artists_albums.map((a) => a.artists)}
-            />
+            <div className="">
+              <AlbumCard
+                cover_url={album.cover_url}
+                title={album.title}
+                id={album.id}
+                artists={album.artists_albums.map((a) => a.artists)}
+              />
+            </div>
           </li>
         ))}
       </ul>
