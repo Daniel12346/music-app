@@ -29,7 +29,9 @@ export default function RootLayout({
           //TODO: this panel
         </ResizablePanel>
         <ResizableHandle className="hidden md:block" />
-        <ResizablePanel defaultSize={50}>{children}</ResizablePanel>
+        <ResizablePanel defaultSize={50} minSize={20}>
+          {children}
+        </ResizablePanel>
         <ResizableHandle className="hidden md:block" />
         <ResizablePanel className="hidden md:block" defaultSize={25}>
           <Queue />
