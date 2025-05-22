@@ -10,6 +10,9 @@ export const getAlbums = async (client: SupabaseClient<Database>) => {
   }
   return data;
 };
+
+export type AlbumsWithArtists = Awaited<ReturnType<typeof getAlbums>>;
+
 export const getAlbum = async (
   client: SupabaseClient<Database>,
   id: string,
