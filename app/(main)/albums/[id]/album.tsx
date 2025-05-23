@@ -6,9 +6,11 @@ import { generateId } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { ListEndIcon, ListStartIcon } from "lucide-react";
+import { useParams } from "next/navigation";
 import useSWR from "swr";
 
-export default function Album({ id }: { id: string }) {
+export default function Album() {
+  const { id } = useParams<{ id: string }>();
   const supabase = createClient();
   const {
     data: albumWithTracks,
