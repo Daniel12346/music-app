@@ -5,8 +5,11 @@ import { cn } from "@/lib/utils";
 
 type ArtistInfo = Pick<Tables<"artists">, "name" | "id">;
 type Props = Pick<Tables<"albums">, "id" | "title" | "cover_url"> & {
+  released_at?: Pick<Tables<"albums">, "released_at">["released_at"] | null;
   artists: ArtistInfo[];
   size?: "large";
+  showArtistName?: boolean;
+  showReleasedAt?: boolean;
 };
 export default function AlbumCard({
   id,
@@ -14,17 +17,22 @@ export default function AlbumCard({
   cover_url,
   artists,
   size,
+  released_at,
+  showArtistName = true,
+  showReleasedAt = false,
 }: Props) {
   return (
     <div className={cn("w-[120px] group", size === "large" && "w-[300px]")}>
       <div className="truncate text-lg flex-col">
-        <div className="-mb-2 font-extralight text-muted-foreground">
-          {artists.map((artist) => (
-            <Link href={`/artists/${artist.id}`} key={artist.id}>
-              <span className="">{artist.name}</span>
-            </Link>
-          ))}
-        </div>
+        {showArtistName && (
+          <div className="-mb-2 font-extralight text-muted-foreground">
+            {artists.map((artist) => (
+              <Link href={`/artists/${artist.id}`} key={artist.id}>
+                <span className="">{artist.name}</span>
+              </Link>
+            ))}
+          </div>
+        )}
         <Link href={`/albums/${id}`}>
           <span>{title}</span>
         </Link>
@@ -50,11 +58,13 @@ export default function AlbumCard({
           />
         )}
         <div className="hidden group-hover:block absolute top-0 right-0">
-          <LikeAlbum
-            albumID={id}
-            size={size === "large" ? 32 : 16}
-          />
+          <LikeAlbum albumID={id} size={size === "large" ? 32 : 16} />
         </div>
+      </div>
+      <div className="text-muted-foreground">
+        {showReleasedAt && released_at && (
+          <span className="">{new Date(released_at).getFullYear()}</span>
+        )}
       </div>
     </div>
   );
