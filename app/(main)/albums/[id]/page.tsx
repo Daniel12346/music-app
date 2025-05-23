@@ -20,7 +20,7 @@ export default async function AlbumsPage({
         },
       }}
     >
-      <Album id={id} />
+      <Album />
     </SWRConfig>
   );
 }
