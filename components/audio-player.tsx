@@ -18,16 +18,20 @@ export default function Player() {
         onClickNext={() => playNextTrack()}
         onEnded={() => playNextTrack()}
         onClickPrevious={() => playPrevTrack()}
-        //TODO: track title, artist, album, cover art
         //TODO: custom icons
         header={
           <div className="flex w-fit gap-2">
-            <img src={currentTrack.albumCoverUrl} width={50} height={50} />
+            <Link
+              href={"/albums/" + currentTrack.albumId}
+              className="cursor-pointer"
+            >
+              <img src={currentTrack.albumCoverUrl} width={50} height={50} />
+            </Link>
             <div className="flex flex-col gap-2">
               <span>{currentTrack.title}</span>
               <span>
                 {currentTrack.artists.map((artist) => (
-                  <Link href={"/artists" + artist.id} key={artist.id}>
+                  <Link href={"/artists/" + artist.id} key={artist.id}>
                     <span className="font-light opacity-85 hover:underline">
                       {artist.name}
                     </span>
