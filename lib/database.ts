@@ -110,3 +110,16 @@ export const getSessionUser = async (
   }
   return data.session?.user;
 };
+
+export const getArtistWithAlbums = async (
+  client: SupabaseClient<Database>,
+  id: string,
+) => {
+  const { data, error } = await client.from("artists").select(
+    "*, albums(*, artists_albums(*, artists(name, id)))",
+  ).eq("id", id).single();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
