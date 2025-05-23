@@ -28,8 +28,8 @@ export default function Queue() {
             alt={track.title}
             className="w-16 h-16 rounded"
           />
-          <div className="flex-1">
-            <h2 className="text-lg font-semibold">{track.title}</h2>
+          <div className="flex-1 flex flex-col">
+            <span className="text-lg font-semibold">{track.title}</span>
             {track.artists.map((artist) => (
               <Link href={"/artists/" + artist.id} key={artist.id}>
                 <span className="font-light hover:underline">
