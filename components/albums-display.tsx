@@ -22,7 +22,8 @@ export default function Albums({
                 cover_url={album.cover_url}
                 title={album.title}
                 id={album.id}
-                released_at={showReleasedAt ? album.released_at : null}
+                showReleasedAt={showReleasedAt}
+                released_at={album.released_at}
                 artists={album.artists_albums.map((a) => a.artists)}
               />
             </div>
