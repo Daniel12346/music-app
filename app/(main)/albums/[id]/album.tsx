@@ -3,7 +3,7 @@ import AlbumCard from "@/components/album-card";
 import LikeAlbum from "@/components/like-album";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
 import { generateId } from "@/lib/utils";
-import { useTrackStore } from "@/state/store";
+import { TrackWithExtra, useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { ListEndIcon, ListStartIcon } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -30,8 +30,24 @@ export default function Album() {
     albumId: albumWithTracks.id,
     //TODO: artists for specific track, not album
     artists: albumWithTracks.artists,
-    queueId: generateId(),
   }));
+  const totalDurationInSeconds =
+    tracksWithExtraInfo?.reduce((acc, track) => {
+      const [hours, minutes, seconds] = (track.length as string).split(":");
+      const totalSeconds =
+        parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds);
+      return acc + totalSeconds;
+    }, 0) ?? 0;
+  //formatted total duration in hours, minutes, seconds
+  const totalDuration = new Date(totalDurationInSeconds * 1000)
+    .toISOString()
+    .slice(11, 19);
+  const addNewQueueIdToTrack = (track: Omit<TrackWithExtra, "queueId">) => {
+    return {
+      ...track,
+      queueId: generateId(),
+    };
+  };
   if (error) {
     return <div>Error loading album</div>;
   }
@@ -51,38 +67,64 @@ export default function Album() {
           artists={albumWithTracks.artists}
           size="large"
         />
+
         <div className="">
-          <div className="flex items-center gap-2 justify-self-end w-fit cursor-pointer">
-            <ListStartIcon
-              size={22}
-              onClick={() => {
-                addTracksToQueue(tracksWithExtraInfo!, "start");
-              }}
-            />
-            <ListEndIcon
-              size={22}
-              onClick={() => {
-                addTracksToQueue(tracksWithExtraInfo!, "end");
-              }}
-            />
-            <LikeAlbum albumID={albumWithTracks.id} size={22} />
+          <div className="flex items-center gap-2 cursor-pointer justify-between">
+            <div>
+              {totalDuration}{" "}
+              <span className="text-lg text-muted-foreground">|</span>{" "}
+              {tracksWithExtraInfo?.length} tracks
+            </div>
+            <div className="flex gap-2">
+              <ListStartIcon
+                size={22}
+                onClick={() => {
+                  addTracksToQueue(
+                    tracksWithExtraInfo?.map((track) =>
+                      addNewQueueIdToTrack(track)
+                    )!,
+                    "start"
+                  );
+                }}
+              />
+              <ListEndIcon
+                size={22}
+                onClick={() => {
+                  addTracksToQueue(
+                    tracksWithExtraInfo?.map((track) =>
+                      addNewQueueIdToTrack(track)
+                    )!,
+                    "end"
+                  );
+                }}
+              />
+              <LikeAlbum albumID={albumWithTracks.id} size={22} />
+            </div>
           </div>
         </div>
       </div>
       <ul className="w-full max-w-md space-y-2 md:space-y-0 border-t-2 p-2">
         {tracksWithExtraInfo?.map((track, idx) => (
           <li
-            className="w-full h-8 cursor-pointer flex items-center justify-between p-2"
+            className="w-full h-8  flex items-center justify-between p-2"
             key={track.id}
-            onClick={() => {
-              setCurrentTrack(track);
-              //clearing the queue and adding all the album tracks starting with the selected track
-              //TODO: add optional setting to add clicked track to queue instead of resetting queue
-              setQueue(tracksWithExtraInfo.slice(idx));
-            }}
           >
             <div>
-              <span className="text-lg font-light">{track.title}</span>
+              <span
+                className="text-lg font-light cursor-pointer"
+                onClick={() => {
+                  const tracksWithQueueIds = tracksWithExtraInfo.map((track) =>
+                    addNewQueueIdToTrack(track)
+                  );
+                  const trackWithQueueId = tracksWithQueueIds[idx];
+                  setCurrentTrack(trackWithQueueId);
+                  //clearing the queue and adding all the album tracks starting with the selected track
+                  //TODO: add optional setting to add clicked track to queue without resetting queue
+                  setQueue(tracksWithQueueIds.slice(idx));
+                }}
+              >
+                {track.title}
+              </span>
               {/* TODO: artist names (not necessarily the same as album artist names - featured artists etc.)*/}
             </div>
             <div className="flex items-center gap-2">
@@ -96,7 +138,7 @@ export default function Album() {
                 onClick={(e) => {
                   //stopping propagation because the on click handle for the li element would set the clicked track as current and add unintened tracks to queue
                   e.stopPropagation();
-                  addTrackToQueue(track, "start");
+                  addTrackToQueue(addNewQueueIdToTrack(track), "start");
                 }}
               />
               <ListEndIcon
@@ -104,7 +146,7 @@ export default function Album() {
                 className="opacity-80"
                 onClick={(e) => {
                   e.stopPropagation();
-                  addTrackToQueue(track, "end");
+                  addTrackToQueue(addNewQueueIdToTrack(track), "end");
                 }}
               />
               {/* TODO: replace with LikeTrack */}
