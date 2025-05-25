@@ -34,7 +34,7 @@ export const getAlbumWithTracksAndArtist = async (
 ) => {
   const { data, error } = await client
     .from("albums")
-    .select("*, tracks(*), artists(*)")
+    .select("*, tracks!albums_tracks(*), artists(*)")
     .eq("id", id)
     .single();
   if (error) {
@@ -130,10 +130,15 @@ export const likeTrack = async (
   client: SupabaseClient<Database>,
   userId: string,
   trackId: string,
+  trackAlbumId: string,
 ) => {
   const { data, error } = await client
     .from("users_liked_tracks")
-    .insert({ user_id: userId, track_id: trackId })
+    .insert({
+      user_id: userId,
+      track_id: trackId,
+      track_album_id: trackAlbumId,
+    })
     .select();
   if (error) {
     throw new Error(error.message);
@@ -145,11 +150,12 @@ export const unlikeTrack = async (
   client: SupabaseClient<Database>,
   userId: string,
   trackId: string,
+  trackAlbumId: string,
 ) => {
   const { data, error } = await client
     .from("users_liked_tracks")
     .delete()
-    .match({ user_id: userId, track_id: trackId })
+    .match({ user_id: userId, track_id: trackId, track_album_id: trackAlbumId })
     .select();
 
   if (error) {
@@ -167,6 +173,28 @@ export const getTracksLikedByUser = async (
   }
   const { data, error } = await client
     .from("users_liked_tracks")
+    .select("track_id, track_album_id, tracks(*), albums(*)")
+    .eq("user_id", userId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  const trackData = data?.map((record) => ({
+    ...record.tracks,
+    album: record.albums,
+  }));
+  return trackData;
+};
+
+export const getUserHistoryTracks = async (
+  client: SupabaseClient<Database>,
+  userId?: string,
+) => {
+  if (!userId) {
+    return null;
+  }
+  const { data, error } = await client
+    .from("users_history_tracks")
     .select("track_id, tracks(*)")
     .eq("user_id", userId);
 
