@@ -5,6 +5,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import Header from "@/components/header";
+import TracksLiked from "@/components/tracks-liked";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -26,7 +27,7 @@ export default function RootLayout({
       <Header />
       <ResizablePanelGroup direction="horizontal" className="min-h-screen">
         <ResizablePanel className="hidden md:block" defaultSize={25}>
-          //TODO: this panel
+          <TracksLiked />
         </ResizablePanel>
         <ResizableHandle className="hidden md:block" />
         <ResizablePanel defaultSize={50} minSize={20}>
