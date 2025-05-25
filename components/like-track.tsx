@@ -7,10 +7,12 @@ import useSWR from "swr";
 
 export default function LikeTrack({
   trackID,
+  trackAlbumID,
   size = 16,
   strokeColor,
 }: {
   trackID: string;
+  trackAlbumID: string;
   size?: number;
   strokeColor?: string;
 }) {
@@ -40,10 +42,10 @@ export default function LikeTrack({
       size={size}
       onClick={async () => {
         if (isTrackLiked) {
-          await unlikeTrack(supabase, myID, trackID);
+          await unlikeTrack(supabase, myID, trackID, trackAlbumID);
           mutateLiked((prev) => prev?.filter((liked) => liked.id !== trackID));
         } else {
-          await likeTrack(supabase, myID, trackID);
+          await likeTrack(supabase, myID, trackID, trackAlbumID);
           mutateLiked();
         }
       }}
