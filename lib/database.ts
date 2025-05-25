@@ -68,7 +68,8 @@ export const likeAlbum = async (
 ) => {
   const { data, error } = await client
     .from("users_liked_albums")
-    .insert({ user_id: userId, album_id: albumId });
+    .insert({ user_id: userId, album_id: albumId })
+    .select();
   if (error) {
     throw new Error(error.message);
   }
@@ -83,7 +84,8 @@ export const unlikeAlbum = async (
   const { data, error } = await client
     .from("users_liked_albums")
     .delete()
-    .match({ user_id: userId, album_id: albumId });
+    .match({ user_id: userId, album_id: albumId })
+    .select();
 
   if (error) {
     throw new Error(error.message);
@@ -122,4 +124,54 @@ export const getArtistWithAlbums = async (
     throw new Error(error.message);
   }
   return data;
+};
+
+export const likeTrack = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  trackId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_tracks")
+    .insert({ user_id: userId, track_id: trackId })
+    .select();
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+export const unlikeTrack = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  trackId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_tracks")
+    .delete()
+    .match({ user_id: userId, track_id: trackId })
+    .select();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+export const getTracksLikedByUser = async (
+  client: SupabaseClient<Database>,
+  userId?: string,
+) => {
+  if (!userId) {
+    return null;
+  }
+  const { data, error } = await client
+    .from("users_liked_tracks")
+    .select("track_id, tracks(*)")
+    .eq("user_id", userId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data?.map((record) => record.tracks);
 };
