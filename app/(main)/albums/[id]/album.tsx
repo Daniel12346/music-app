@@ -1,6 +1,7 @@
 "use client";
 import AlbumCard from "@/components/album-card";
 import LikeAlbum from "@/components/like-album";
+import LikeTrack from "@/components/like-track";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
 import { generateId } from "@/lib/utils";
 import { TrackWithExtra, useTrackStore } from "@/state/store";
@@ -149,8 +150,7 @@ export default function Album() {
                   addTrackToQueue(addNewQueueIdToTrack(track), "end");
                 }}
               />
-              {/* TODO: replace with LikeTrack */}
-              <LikeAlbum albumID={id} />
+              <LikeTrack trackID={track.id} />
             </div>
           </li>
         ))}
