@@ -150,7 +150,7 @@ export default function Album() {
                   addTrackToQueue(addNewQueueIdToTrack(track), "end");
                 }}
               />
-              <LikeTrack trackID={track.id} />
+              <LikeTrack trackID={track.id} trackAlbumID={track.albumId} />
             </div>
           </li>
         ))}
