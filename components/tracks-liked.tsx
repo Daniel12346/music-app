@@ -20,7 +20,7 @@ export default function TracksLiked() {
 
   return (
     <div>
-      <ul className="flex flex-col p-2 gap-1.5">
+      <ul className="flex flex-col gap-1.5">
         {myLikedTracks?.map((track) => (
           <li key={track.id} className="flex">
             <img src={track.album.cover_url!} width={20} alt={track.title} />
