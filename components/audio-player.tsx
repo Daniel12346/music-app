@@ -23,13 +23,12 @@ export default function Player() {
   useEffect(() => {
     if (currentTrack && myID) {
       //TODO: optimistic update
-      const trackInHistory = addTrackToHistory(
+      const upsertedData = addTrackToHistory(
         supabase,
         myID!,
         currentTrack.id,
         currentTrack.albumId
       );
-
       mutateHistoryTracks();
     }
   }, [currentTrack]);
@@ -55,7 +54,7 @@ export default function Player() {
             >
               <img src={currentTrack.albumCoverUrl} width={50} height={50} />
             </Link>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 justify-center">
               <span>{currentTrack.title}</span>
               <span>
                 {currentTrack.artists.map((artist) => (
