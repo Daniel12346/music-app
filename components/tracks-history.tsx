@@ -28,7 +28,9 @@ export default function TracksHistory({
   }
   return (
     <div className="flex flex-col gap-2">
-      <span>History</span>
+      <span className="text-lg font-semibold text-muted-foreground">
+        History
+      </span>
 
       {historyTracks?.map((track) => {
         if (!track) return null;
@@ -37,10 +39,10 @@ export default function TracksHistory({
             <img
               src={track.album.cover_url || ""}
               alt={track.title}
-              className="w-12 h-12 rounded"
+              className="w-10 h-10 rounded"
             />
             <div className="flex-1 flex flex-col">
-              <span className="text-lg font-semibold">{track.title}</span>
+              <span className="text-lg ">{track.title}</span>
               {/* {track.artists.map((artist) => (
                 <Link href={"/artists/" + artist.id} key={artist.id}>
                   <span className="font-light hover:underline">
