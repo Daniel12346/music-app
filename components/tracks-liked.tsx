@@ -20,6 +20,9 @@ export default function TracksLiked() {
 
   return (
     <div>
+      <span className="text-lg font-semibold text-muted-foreground">
+        Recently liked
+      </span>
       <ul className="flex flex-col gap-1.5">
         {myLikedTracks?.map((track) => (
           <li key={track.id} className="flex">
