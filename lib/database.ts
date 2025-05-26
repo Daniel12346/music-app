@@ -195,11 +195,46 @@ export const getUserHistoryTracks = async (
   }
   const { data, error } = await client
     .from("users_history_tracks")
-    .select("track_id, tracks(*)")
+    .select(
+      "track_id, played_at, tracks(*), albums(*, artists_albums(*, artists(name, id)))",
+    )
     .eq("user_id", userId);
 
   if (error) {
     throw new Error(error.message);
   }
-  return data?.map((record) => record.tracks);
+  const trackData = data?.map((record) => ({
+    ...record.tracks,
+    album: record.albums,
+    last_played_at: record.played_at,
+    // artists: record.albums.artists_albums.artists || [],
+  }));
+  return trackData;
+};
+
+export const addTrackToHistory = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  trackId: string,
+  trackAlbumId: string,
+) => {
+  const { data, error } = await client
+    .from("users_history_tracks")
+    .upsert({
+      user_id: userId,
+      track_id: trackId,
+      track_album_id: trackAlbumId,
+    })
+    .select();
+
+  if (error) {
+    if (error.code === "23505") {
+      // This error code indicates a unique constraint violation, which means the track already exists in history.
+      // There's a trigger that updates the played_at timestamp, so we can return the existing data.
+      return data;
+    }
+    // For other errors, throw an error to be handled by the caller.
+    throw new Error(error.message);
+  }
+  return data;
 };
