@@ -4,12 +4,39 @@ import Link from "next/link";
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import "./audio-player.css";
+import useSWR from "swr";
+import { createClient } from "@/utils/supabase/client";
+import { addTrackToHistory, getUserHistoryTracks } from "@/lib/database";
+import { useEffect } from "react";
 export default function Player() {
   const { currentTrack, playNextTrack, playPrevTrack } = useTrackStore();
+  const supabase = createClient();
+  const { data: myData } = useSWR("me", async () => {
+    const { data } = await supabase.auth.getUser();
+    return data;
+  });
+  const myID = myData?.user?.id;
+  const { mutate: mutateHistoryTracks } = useSWR(
+    myID ? ["getUserHistoryTracks", myID] : null,
+    () => getUserHistoryTracks(supabase, myID)
+  );
+  useEffect(() => {
+    if (currentTrack && myID) {
+      //TODO: optimistic update
+      const trackInHistory = addTrackToHistory(
+        supabase,
+        myID!,
+        currentTrack.id,
+        currentTrack.albumId
+      );
+
+      mutateHistoryTracks();
+    }
+  }, [currentTrack]);
+
   if (!currentTrack) {
     return null;
   }
-
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50">
       <AudioPlayer
@@ -18,6 +45,7 @@ export default function Player() {
         onClickNext={() => playNextTrack()}
         onEnded={() => playNextTrack()}
         onClickPrevious={() => playPrevTrack()}
+        autoPlayAfterSrcChange
         //TODO: custom icons
         header={
           <div className="flex w-fit gap-2">
@@ -42,7 +70,7 @@ export default function Player() {
           </div>
         }
         src={currentTrack.url}
-        onPlay={() => console.log("onPlay")}
+        // onPlay={() => console.log(currentTrack)}
       />
     </div>
   );
