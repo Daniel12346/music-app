@@ -3,7 +3,8 @@ import { getUserHistoryTracks } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 import LikeTrack from "./like-track";
-import { EllipsisVerticalIcon } from "lucide-react";
+import { EllipsisVerticalIcon, XIcon } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 export default function TracksHistory({
   size = 16,
@@ -32,37 +33,50 @@ export default function TracksHistory({
         History
       </span>
 
-      {historyTracks?.map((track) => {
-        if (!track) return null;
-        return (
-          <div key={track.id} className="flex items-center gap-2  @container">
-            <img
-              src={track.album.cover_url || ""}
-              alt={track.title}
-              className="w-10 h-10 rounded"
-            />
-            <div className="flex-1 flex flex-col">
-              <span className="text-lg ">{track.title}</span>
-              {/* {track.artists.map((artist) => (
+      {historyTracks
+        ?.toSorted(
+          (a, b) =>
+            new Date(b.last_played_at).getTime() -
+            new Date(a.last_played_at).getTime()
+        )
+        .map((track) => {
+          if (!track) return null;
+          return (
+            <div key={track.id} className="flex items-center gap-2  @container">
+              <img
+                src={track.album.cover_url || ""}
+                alt={track.title}
+                className="w-10 h-10 rounded"
+              />
+              <div className="flex-1 flex flex-col">
+                <span className="text-lg ">{track.title}</span>
+
+                {/* {track.artists.map((artist) => (
                 <Link href={"/artists/" + artist.id} key={artist.id}>
                   <span className="font-light hover:underline">
                     {artist.name}
                   </span>
                 </Link>
               ))} */}
+              </div>
+              <span className="hidden @sm:block text-sm text-muted-foreground">
+                {formatDistanceToNow(new Date(track.last_played_at), {
+                  addSuffix: true,
+                })}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <EllipsisVerticalIcon className="cursor-pointer block @md:hidden" />
+                <LikeTrack
+                  trackID={track.id}
+                  size={size}
+                  strokeColor={strokeColor}
+                  trackAlbumID={track.album.id}
+                />
+                <XIcon />
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <EllipsisVerticalIcon className="cursor-pointer block @md:hidden" />
-              <LikeTrack
-                trackID={track.id}
-                size={size}
-                strokeColor={strokeColor}
-                trackAlbumID={track.album.id}
-              />
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
     </div>
   );
 }
