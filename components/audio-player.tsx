@@ -23,13 +23,14 @@ export default function Player() {
   useEffect(() => {
     if (currentTrack && myID) {
       //TODO: optimistic update
-      const upsertedData = addTrackToHistory(
+      addTrackToHistory(
         supabase,
         myID!,
         currentTrack.id,
         currentTrack.albumId
-      );
-      mutateHistoryTracks();
+      ).then(() => {
+        mutateHistoryTracks();
+      });
     }
   }, [currentTrack]);
 
