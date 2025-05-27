@@ -5,6 +5,9 @@ import useSWR from "swr";
 import LikeTrack from "./like-track";
 import { EllipsisVerticalIcon, XIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import TrackArtists from "./track-artists";
+import { useTrackStore } from "@/state/store";
+import { generateId } from "@/lib/utils";
 
 export default function TracksHistory({
   size = 16,
@@ -23,6 +26,7 @@ export default function TracksHistory({
     myID ? ["getUserHistoryTracks", myID] : null,
     () => getUserHistoryTracks(supabase, myID)
   );
+  const { setCurrentTrack } = useTrackStore();
 
   if (!myID) {
     return null;
@@ -42,7 +46,22 @@ export default function TracksHistory({
         .map((track) => {
           if (!track) return null;
           return (
-            <div key={track.id} className="flex items-center gap-2  @container">
+            <div
+              key={track.id}
+              className="flex cursor-pointer items-center gap-2  @container"
+              onClick={
+                () =>
+                  setCurrentTrack({
+                    ...track,
+                    queueId: generateId(),
+                    albumCoverUrl: track.album.cover_url || "",
+                    albumId: track.album.id, // Assuming albumId is the same as album ID
+                    artists: track.artists || [],
+                    albumName: track.album.title || "",
+                  })
+                //TODO: set queue to something (history tracks?)
+              }
+            >
               <img
                 src={track.album.cover_url || ""}
                 alt={track.title}
@@ -51,13 +70,7 @@ export default function TracksHistory({
               <div className="flex-1 flex flex-col">
                 <span className="text-lg ">{track.title}</span>
 
-                {/* {track.artists.map((artist) => (
-                <Link href={"/artists/" + artist.id} key={artist.id}>
-                  <span className="font-light hover:underline">
-                    {artist.name}
-                  </span>
-                </Link>
-              ))} */}
+                <TrackArtists artists={track.artists} />
               </div>
               <span className="hidden @sm:block text-sm text-muted-foreground">
                 {formatDistanceToNow(new Date(track.last_played_at), {
