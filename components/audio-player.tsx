@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
 import { addTrackToHistory, getUserHistoryTracks } from "@/lib/database";
 import { useEffect } from "react";
+import TrackArtists from "./track-artists";
 export default function Player() {
   const { currentTrack, playNextTrack, playPrevTrack } = useTrackStore();
   const supabase = createClient();
@@ -58,13 +59,7 @@ export default function Player() {
             <div className="flex flex-col gap-2 justify-center">
               <span>{currentTrack.title}</span>
               <span>
-                {currentTrack.artists.map((artist) => (
-                  <Link href={"/artists/" + artist.id} key={artist.id}>
-                    <span className="font-light opacity-85 hover:underline">
-                      {artist.name}
-                    </span>
-                  </Link>
-                ))}
+                <TrackArtists artists={currentTrack.artists}></TrackArtists>
               </span>
             </div>
           </div>

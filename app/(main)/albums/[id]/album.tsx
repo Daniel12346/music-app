@@ -2,6 +2,7 @@
 import AlbumCard from "@/components/album-card";
 import LikeAlbum from "@/components/like-album";
 import LikeTrack from "@/components/like-track";
+import TrackArtists from "@/components/track-artists";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
 import { generateId } from "@/lib/utils";
 import { TrackWithExtra, useTrackStore } from "@/state/store";
@@ -30,7 +31,10 @@ export default function Album() {
     albumCoverUrl: albumWithTracks.cover_url!,
     albumId: albumWithTracks.id,
     //TODO: artists for specific track, not album
-    artists: albumWithTracks.artists,
+    artists: track.tracks_artists.map((trackArtist) => ({
+      id: trackArtist.artists.id,
+      name: trackArtist.artists.name,
+    })),
   }));
   const totalDurationInSeconds =
     tracksWithExtraInfo?.reduce((acc, track) => {
@@ -72,8 +76,8 @@ export default function Album() {
         <div className="">
           <div className="flex items-center gap-2 cursor-pointer justify-between">
             <div>
-              {totalDuration}{" "}
-              <span className="text-lg text-muted-foreground">|</span>{" "}
+              {totalDuration}
+              <span className="text-xl text-foreground">|</span>{" "}
               {tracksWithExtraInfo?.length} tracks
             </div>
             <div className="flex gap-2">
@@ -104,13 +108,13 @@ export default function Album() {
           </div>
         </div>
       </div>
-      <ul className="w-full max-w-md space-y-2 md:space-y-0 border-t-2 p-2">
+      <ul className="w-full max-w-md space-y-2 md:space-y-1 border-t-2 p-2">
         {tracksWithExtraInfo?.map((track, idx) => (
           <li
-            className="w-full h-8  flex items-center justify-between p-2"
+            className="w-full  flex items-center justify-between px-2"
             key={track.id}
           >
-            <div>
+            <div className="flex flex-col">
               <span
                 className="text-lg font-light cursor-pointer"
                 onClick={() => {
@@ -126,6 +130,7 @@ export default function Album() {
               >
                 {track.title}
               </span>
+              <TrackArtists artists={track.artists} />
               {/* TODO: artist names (not necessarily the same as album artist names - featured artists etc.)*/}
             </div>
             <div className="flex items-center gap-2">
