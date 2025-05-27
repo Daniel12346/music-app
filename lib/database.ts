@@ -34,7 +34,9 @@ export const getAlbumWithTracksAndArtist = async (
 ) => {
   const { data, error } = await client
     .from("albums")
-    .select("*, tracks!albums_tracks(*), artists(*)")
+    .select(
+      "*, tracks!albums_tracks(*, tracks_artists(*, artists(id, name))), artists(*)",
+    )
     .eq("id", id)
     .single();
   if (error) {
@@ -196,7 +198,7 @@ export const getUserHistoryTracks = async (
   const { data, error } = await client
     .from("users_history_tracks")
     .select(
-      "track_id, played_at, tracks(*), albums(*, artists_albums(*, artists(name, id)))",
+      "track_id, played_at, tracks(*, tracks_artists(*, artists(id, name))), albums(*)",
     )
     .eq("user_id", userId);
 
@@ -207,7 +209,9 @@ export const getUserHistoryTracks = async (
     ...record.tracks,
     album: record.albums,
     last_played_at: record.played_at,
-    // artists: record.albums.artists_albums.artists || [],
+    artists: record.tracks.tracks_artists.map(
+      ({ artists }) => artists,
+    ),
   }));
   return trackData;
 };
