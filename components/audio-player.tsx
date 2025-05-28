@@ -9,6 +9,7 @@ import { createClient } from "@/utils/supabase/client";
 import { addTrackToHistory, getUserHistoryTracks } from "@/lib/database";
 import { useEffect } from "react";
 import TrackArtists from "./track-artists";
+import { ListIcon } from "lucide-react";
 export default function Player() {
   const { currentTrack, playNextTrack, playPrevTrack } = useTrackStore();
   const supabase = createClient();
@@ -49,18 +50,25 @@ export default function Player() {
         autoPlayAfterSrcChange
         //TODO: custom icons
         header={
-          <div className="flex w-fit gap-2">
-            <Link
-              href={"/albums/" + currentTrack.albumId}
-              className="cursor-pointer"
-            >
-              <img src={currentTrack.albumCoverUrl} width={50} height={50} />
-            </Link>
-            <div className="flex flex-col gap-2 justify-center">
-              <span>{currentTrack.title}</span>
-              <span>
-                <TrackArtists artists={currentTrack.artists}></TrackArtists>
-              </span>
+          <div className="w-full flex items-center justify-between">
+            <div className="flex w-fit gap-2">
+              <Link
+                href={"/albums/" + currentTrack.albumId}
+                className="cursor-pointer"
+              >
+                <img src={currentTrack.albumCoverUrl} width={50} height={50} />
+              </Link>
+              <div className="flex flex-col gap-2 justify-center">
+                <span>{currentTrack.title}</span>
+                <span>
+                  <TrackArtists artists={currentTrack.artists}></TrackArtists>
+                </span>
+              </div>
+            </div>
+            <div>
+              <Link href={`/queue`}>
+                <ListIcon />
+              </Link>
             </div>
           </div>
         }
