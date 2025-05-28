@@ -1,8 +1,9 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
-import { EllipsisVerticalIcon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import TrackArtists from "./track-artists";
+import TrackOptionsButton from "./track-options-button";
 
 export default function Queue() {
   const { queue, removeTrackFromQueue, currentTrack, setCurrentTrack } =
@@ -38,7 +39,7 @@ export default function Queue() {
               />
             </div>
             <div className="flex">
-              <EllipsisVerticalIcon className="block @lg:hidden" />
+              <TrackOptionsButton track={track} />
               <XIcon
                 className="cursor-pointer"
                 onClick={() => {
