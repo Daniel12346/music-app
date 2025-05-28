@@ -4,10 +4,9 @@ import LikeAlbum from "@/components/like-album";
 import LikeTrack from "@/components/like-track";
 import TrackArtists from "@/components/track-artists";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
-import { generateId } from "@/lib/utils";
-import { TrackWithExtra, useTrackStore } from "@/state/store";
+import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
-import { ListEndIcon, ListStartIcon } from "lucide-react";
+import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 
@@ -47,12 +46,7 @@ export default function Album() {
   const totalDuration = new Date(totalDurationInSeconds * 1000)
     .toISOString()
     .slice(11, 19);
-  const addNewQueueIdToTrack = (track: Omit<TrackWithExtra, "queueId">) => {
-    return {
-      ...track,
-      queueId: generateId(),
-    };
-  };
+ 
   if (error) {
     return <div>Error loading album</div>;
   }
@@ -62,6 +56,14 @@ export default function Album() {
   if (!albumWithTracks) {
     return <div>No album found</div>;
   }
+  function addNewQueueIdToTrack(track: {
+    albumName: string; albumCoverUrl: string; albumId: string;
+    //TODO: artists for specific track, not album
+    artists: { id: string; name: string; }[]; created_at: string; id: string; length: unknown; title: string; url: string; tracks_artists: { artist_id: string; track_id: string; artists: { id: string; name: string; }; }[];
+  }): any {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="flex flex-col gap-2">
@@ -73,12 +75,22 @@ export default function Album() {
           size="large"
         />
 
-        <div className="">
+        <div className="mt-2">
           <div className="flex items-center gap-2 cursor-pointer justify-between">
-            <div>
-              {totalDuration}
-              <span className="text-xl text-foreground">|</span>{" "}
-              {tracksWithExtraInfo?.length} tracks
+            <div className="flex">
+              <div className="flex gap-1 items-center">
+                <ClockIcon size={20} />
+                {totalDuration}
+              </div>
+              <div className="flex gap-1 items-center">
+                ,
+                <span>
+                  {tracksWithExtraInfo?.length}{" "}
+                  {tracksWithExtraInfo?.length.toString().endsWith("1")
+                    ? "track"
+                    : "tracks"}
+                </span>
+              </div>
             </div>
             <div className="flex gap-2">
               <ListStartIcon
