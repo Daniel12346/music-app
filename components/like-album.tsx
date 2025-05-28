@@ -38,7 +38,8 @@ export default function LikeAlbum({
         strokeColor && `stroke-${strokeColor}`
       )}
       size={size}
-      onClick={async () => {
+      onClick={async (e) => {
+        e.stopPropagation();
         if (isAlbumLiked) {
           await unlikeAlbum(supabase, myID, albumID);
           mutateLiked((prev) => prev?.filter((liked) => liked.id !== albumID));
