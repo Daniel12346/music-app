@@ -3,11 +3,12 @@ import { getUserHistoryTracks } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 import LikeTrack from "./like-track";
-import { EllipsisVerticalIcon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import TrackArtists from "./track-artists";
 import { useTrackStore } from "@/state/store";
-import { generateId } from "@/lib/utils";
+import { addNewQueueIdToTrack } from "@/lib/utils";
+import TrackOptionsButton from "./track-options-button";
 
 export default function TracksHistory({
   size = 16,
@@ -45,20 +46,20 @@ export default function TracksHistory({
         )
         .map((track) => {
           if (!track) return null;
+          const TrackWithExtra = {
+            ...track,
+            albumCoverUrl: track.album.cover_url || "",
+            albumId: track.album.id, // Assuming albumId is the same as album ID
+            artists: track.artists || [],
+            albumName: track.album.title || "",
+          };
+
           return (
             <div
               key={track.id}
               className="flex cursor-pointer items-center gap-2  @container"
               onClick={
-                () =>
-                  setCurrentTrack({
-                    ...track,
-                    queueId: generateId(),
-                    albumCoverUrl: track.album.cover_url || "",
-                    albumId: track.album.id, // Assuming albumId is the same as album ID
-                    artists: track.artists || [],
-                    albumName: track.album.title || "",
-                  })
+                () => setCurrentTrack(addNewQueueIdToTrack(TrackWithExtra)) // Add queueId to track
                 //TODO: set queue to something (history tracks?)
               }
             >
@@ -78,7 +79,7 @@ export default function TracksHistory({
                 })}
               </span>
               <div className="flex items-center gap-1.5">
-                <EllipsisVerticalIcon className="cursor-pointer block @md:hidden" />
+                <TrackOptionsButton track={TrackWithExtra} />
                 <LikeTrack
                   trackID={track.id}
                   size={size}
