@@ -24,7 +24,8 @@ export default function TrackOptionsButton({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <EllipsisVerticalIcon className="cursor-pointer block @md:hidden" />
+        {/* TODO: @md:hidden */}
+        <EllipsisVerticalIcon className="cursor-pointer block " />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">
         <DropdownMenuItem className="flex flex-between">
@@ -40,6 +41,7 @@ export default function TrackOptionsButton({
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="flex justify-between">
+          {/* TODO: enable liking by clicking anywhere, not just the icon */}
           <LikeTrack
             trackID={track.id}
             trackAlbumID={track.albumId}
