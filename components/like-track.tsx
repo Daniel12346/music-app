@@ -40,7 +40,8 @@ export default function LikeTrack({
         strokeColor && `stroke-${strokeColor}`
       )}
       size={size}
-      onClick={async () => {
+      onClick={async (e) => {
+        e.stopPropagation();
         if (isTrackLiked) {
           await unlikeTrack(supabase, myID, trackID, trackAlbumID);
           mutateLiked((prev) => prev?.filter((liked) => liked.id !== trackID));
