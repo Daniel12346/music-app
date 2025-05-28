@@ -78,7 +78,10 @@ export default function TracksHistory({
                   addSuffix: true,
                 })}
               </span>
-              <div className="flex items-center gap-1.5">
+              <div
+                className="flex items-center gap-1.5"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <TrackOptionsButton track={TrackWithExtra} />
                 <LikeTrack
                   trackID={track.id}
