@@ -29,11 +29,11 @@ export default function RootLayout({
         <ResizablePanel className="hidden md:block" defaultSize={25}>
           <Liked />
         </ResizablePanel>
-        <ResizableHandle className="hidden md:block" />
+        <ResizableHandle className="hidden md:block w-0.75 " />
         <ResizablePanel defaultSize={50} minSize={20}>
           {children}
         </ResizablePanel>
-        <ResizableHandle className="hidden md:block" />
+        <ResizableHandle className="hidden md:block w-0.75" />
         <ResizablePanel className="hidden md:block" defaultSize={25}>
           <Queue />
         </ResizablePanel>

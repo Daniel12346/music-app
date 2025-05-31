@@ -12,7 +12,7 @@ export default function Queue() {
     (track) => track.queueId === currentTrack?.queueId
   );
   return (
-    <div className="flex flex-col gap-2 cursor-pointer @container">
+    <div className="flex flex-col gap-2 px-1 cursor-pointer @container">
       {queue.map((track, idx) => {
         const isCurrentTrack = track.queueId === currentTrack?.queueId;
         return (
