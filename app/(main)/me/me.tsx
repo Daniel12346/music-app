@@ -1,6 +1,7 @@
 "use client";
 import AlbumsDisplay from "@/components/albums-display";
-import { getAlbumsLikedByUser } from "@/lib/database";
+import Playlists from "@/components/playlists";
+import { getAlbumsLikedByUser, getUserPlaylists } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
@@ -13,15 +14,16 @@ export default function Me() {
 
   const {
     data: myLikedAlbums,
-    error,
-    isLoading,
+    error: albumsError,
+    isLoading: albumsLoading,
   } = useSWR(myID ? ["getAlbumsLikedByUser", myID] : null, () =>
     getAlbumsLikedByUser(supabase, myID)
   );
-  if (error) {
+
+  if (albumsError) {
     return <div>Error loading albums</div>;
   }
-  if (isLoading) {
+  if (albumsLoading) {
     return <div>Loading...</div>;
   }
   if (!myLikedAlbums) {
@@ -29,6 +31,8 @@ export default function Me() {
   }
   return (
     <div>
+      <h1>Playlists</h1>
+      <Playlists />
       <h1>Liked albums</h1>
       <AlbumsDisplay albums={myLikedAlbums} />
     </div>
