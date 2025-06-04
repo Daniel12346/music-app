@@ -242,3 +242,49 @@ export const addTrackToHistory = async (
   }
   return data;
 };
+
+export const getUserPlaylists = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+) => {
+  const { data, error } = await client
+    .from("playlists")
+    .select()
+    .eq("owner_id", userId);
+  if (error) {
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+export const getUserPlaylistsWithPreview = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+) => {
+  const { data, error } = await client
+    .from("playlists")
+    .select(
+      "*, playlists_tracks(*, albums(id, title, cover_url), tracks(*, tracks_artists(*, artists(name, id))))",
+    )
+    .eq("owner_id", userId)
+    .limit(10, { referencedTable: "playlists_tracks" })
+    .order("added_at", {
+      referencedTable: "playlists_tracks",
+      ascending: false,
+    });
+  console.log("data", data);
+  if (error) {
+    throw new Error(error.message);
+  }
+  const playlists = data?.map((playlist) => ({
+    ...playlist,
+    // tracks: playlist.playlists_tracks.map((playlistTrack) => ({
+    //   ...playlistTrack.tracks,
+    //   album: playlistTrack.tracks.albums,
+    //   artists: playlistTrack.tracks.tracks_artists.map((artist) =>
+    //     artist.artists
+    //   ),
+    // })),
+  }));
+  return playlists;
+};
