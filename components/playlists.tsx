@@ -1,7 +1,5 @@
-import { getUserPlaylists, getUserPlaylistsWithPreview } from "@/lib/database";
-import { cn } from "@/lib/utils";
+import { getUserPlaylistsWithPreview } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
-import Link from "next/link";
 import useSWR from "swr";
 import Playlist from "./playlist";
 
