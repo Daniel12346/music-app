@@ -1,9 +1,6 @@
-import { Database } from "@/database.types";
 import { PlaylistsWithPreview } from "@/lib/database";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-
-//playlist track is the type returned by getUserPlaylistsWithPreview
 
 interface Props {
   id: string;
@@ -23,7 +20,12 @@ export default function Playlist({
       <div className="w-24 h-24 bg-muted">
         {/* //TODO: default image */}
         {image_url ? (
-          <img src={image_url} width={10} height={10} className="w-full" />
+          <img
+            src={image_url}
+            width={10}
+            height={10}
+            className="cover w-full h-full rounded-md"
+          />
         ) : (
           <div className="grid grid-cols-2 grid-rows-2 border-1 border-muted-foreground rounded-md w-full">
             {playlists_tracks.slice(0, 4).map((playlistTrack, i) => {
