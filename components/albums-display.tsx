@@ -37,7 +37,7 @@ export default function Albums({
     <div className="@container">
       <ul className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-4">
         {sortAlbumsByKey(albums, sortKey).map((album) => (
-          <li className="flex place-content-center" key={album.id}>
+          <li className="flex" key={album.id}>
             <div className="">
               <AlbumCard
                 showArtistName={showArtistName}
