@@ -22,21 +22,7 @@ export default function AlbumCard({
   showReleasedAt = false,
 }: Props) {
   return (
-    <div className={cn("w-[120px] group", size === "large" && "w-[300px]")}>
-      <div className="truncate text-lg flex-col">
-        {showArtistName && (
-          <div className="-mb-2 font-extralight text-muted-foreground">
-            {artists.map((artist) => (
-              <Link href={`/artists/${artist.id}`} key={artist.id}>
-                <span className="">{artist.name}</span>
-              </Link>
-            ))}
-          </div>
-        )}
-        <Link href={`/albums/${id}`}>
-          <span>{title}</span>
-        </Link>
-      </div>
+    <div className={cn("w-32 group", size === "large" && "w-[300px]")}>
       <div className="relative">
         {size !== "large" ? (
           <Link href={`/albums/${id}`}>
@@ -64,6 +50,20 @@ export default function AlbumCard({
       <div className="text-muted-foreground">
         {showReleasedAt && released_at && (
           <span className="">{new Date(released_at).getFullYear()}</span>
+        )}
+      </div>
+      <div className="truncate text-lg flex-col">
+        <Link href={`/albums/${id}`}>
+          <span>{title}</span>
+        </Link>
+        {showArtistName && (
+          <div className="-mb-2 font-extralight text-muted-foreground">
+            {artists.map((artist) => (
+              <Link href={`/artists/${artist.id}`} key={artist.id}>
+                <span className="">{artist.name}</span>
+              </Link>
+            ))}
+          </div>
         )}
       </div>
     </div>
