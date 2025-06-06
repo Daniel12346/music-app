@@ -1,7 +1,7 @@
 "use client";
 import AlbumsDisplay from "@/components/albums-display";
 import Playlists from "@/components/playlists";
-import { getAlbumsLikedByUser, getUserPlaylists } from "@/lib/database";
+import { getAlbumsLikedByUser } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
@@ -30,11 +30,15 @@ export default function Me() {
     return <div>No albums found</div>;
   }
   return (
-    <div>
+    <div className="px-1">
       <h1>Playlists</h1>
-      <Playlists />
+      <div className="px-2 mb-6">
+        <Playlists />
+      </div>
       <h1>Liked albums</h1>
-      <AlbumsDisplay albums={myLikedAlbums} />
+      <div className="px-2">
+        <AlbumsDisplay albums={myLikedAlbums} />
+      </div>
     </div>
   );
 }
