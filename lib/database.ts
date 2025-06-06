@@ -272,7 +272,6 @@ export const getUserPlaylistsWithPreview = async (
       referencedTable: "playlists_tracks",
       ascending: false,
     });
-  console.log("data", data);
   if (error) {
     throw new Error(error.message);
   }
@@ -288,3 +287,7 @@ export const getUserPlaylistsWithPreview = async (
   }));
   return playlists;
 };
+
+export type PlaylistsWithPreview = Awaited<
+  ReturnType<typeof getUserPlaylistsWithPreview>
+>;
