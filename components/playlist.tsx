@@ -15,19 +15,18 @@ export default function Playlist({
   playlists_tracks,
 }: Props) {
   return (
-    <Link href={`/playlists/${id}`} key={id}>
-      <span className="font-semibold">{name}</span>
-      <div className="w-24 h-24 bg-muted">
+    <Link href={`/playlists/${id}`} key={id} className="w-fit">
+      <div className="w-32 min-h-32">
         {/* //TODO: default image */}
         {image_url ? (
           <img
             src={image_url}
             width={10}
             height={10}
-            className="cover w-full h-full rounded-md"
+            className="cover w-32 h-32 rounded-md"
           />
         ) : (
-          <div className="grid grid-cols-2 grid-rows-2 border-1 border-muted-foreground rounded-md w-full">
+          <div className="grid grid-cols-2 grid-rows-2  bg-muted border-1 border-muted-foreground rounded-md w-full">
             {playlists_tracks.slice(0, 4).map((playlistTrack, i) => {
               return (
                 playlistTrack.albums.cover_url && (
@@ -49,6 +48,7 @@ export default function Playlist({
             })}
           </div>
         )}
+        <div className="font-semibold line-clamp-2 min-h-6">{name}</div>
       </div>
     </Link>
   );
