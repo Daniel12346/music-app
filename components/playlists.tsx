@@ -17,7 +17,13 @@ export default function Playlists() {
     getUserPlaylistsWithPreview(supabase, myID!)
   );
   if (arePlaylistsLoading) return <div>Loading...</div>;
-  return myPlaylists?.map((playlist) => (
-    <Playlist key={playlist.id} {...playlist} />
-  ));
+  return (
+    <div className="@container">
+      <div className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-4">
+        {myPlaylists?.map((playlist) => (
+          <Playlist key={playlist.id} {...playlist} />
+        ))}
+      </div>
+    </div>
+  );
 }
