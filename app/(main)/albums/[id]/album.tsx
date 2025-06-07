@@ -4,6 +4,7 @@ import LikeAlbum from "@/components/like-album";
 import LikeTrack from "@/components/like-track";
 import TrackArtists from "@/components/track-artists";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
+import { addNewQueueIdToTrack } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
@@ -46,7 +47,6 @@ export default function Album() {
   const totalDuration = new Date(totalDurationInSeconds * 1000)
     .toISOString()
     .slice(11, 19);
- 
   if (error) {
     return <div>Error loading album</div>;
   }
@@ -55,13 +55,6 @@ export default function Album() {
   }
   if (!albumWithTracks) {
     return <div>No album found</div>;
-  }
-  function addNewQueueIdToTrack(track: {
-    albumName: string; albumCoverUrl: string; albumId: string;
-    //TODO: artists for specific track, not album
-    artists: { id: string; name: string; }[]; created_at: string; id: string; length: unknown; title: string; url: string; tracks_artists: { artist_id: string; track_id: string; artists: { id: string; name: string; }; }[];
-  }): any {
-    throw new Error("Function not implemented.");
   }
 
   return (
