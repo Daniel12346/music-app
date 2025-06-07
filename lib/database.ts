@@ -6,7 +6,7 @@ export const getAlbums = async (client: SupabaseClient<Database>) => {
     "*, artists_albums(*, artists(name, id))",
   );
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -24,7 +24,7 @@ export const getAlbum = async (
     .single();
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -40,7 +40,7 @@ export const getAlbumWithTracksAndArtist = async (
     .eq("id", id)
     .single();
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -58,7 +58,7 @@ export const getAlbumsLikedByUser = async (
     .eq("user_id", userId);
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data?.map((record) => record.albums);
 };
@@ -73,7 +73,7 @@ export const likeAlbum = async (
     .insert({ user_id: userId, album_id: albumId })
     .select();
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -90,7 +90,7 @@ export const unlikeAlbum = async (
     .select();
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -100,7 +100,7 @@ export const getAuthUser = async (
 ) => {
   const { data, error } = await client.auth.getUser();
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data.user;
 };
@@ -110,7 +110,7 @@ export const getSessionUser = async (
   const session = await client.auth.getSession();
   const { data, error } = session;
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data.session?.user;
 };
@@ -123,7 +123,7 @@ export const getArtistWithAlbums = async (
     "*, albums(*, artists_albums(*, artists(name, id)))",
   ).eq("id", id).single();
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -143,7 +143,7 @@ export const likeTrack = async (
     })
     .select();
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -161,7 +161,7 @@ export const unlikeTrack = async (
     .select();
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -179,7 +179,7 @@ export const getTracksLikedByUser = async (
     .eq("user_id", userId);
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   const trackData = data?.map((record) => ({
     ...record.tracks,
@@ -203,7 +203,7 @@ export const getUserHistoryTracks = async (
     .eq("user_id", userId);
 
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   const trackData = data?.map((record) => ({
     ...record.tracks,
@@ -238,7 +238,7 @@ export const addTrackToHistory = async (
       return data;
     }
     // For other errors, throw an error to be handled by the caller.
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -252,7 +252,7 @@ export const getUserPlaylists = async (
     .select()
     .eq("owner_id", userId);
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   return data;
 };
@@ -273,7 +273,7 @@ export const getUserPlaylistsWithPreview = async (
       ascending: false,
     });
   if (error) {
-    throw new Error(error.message);
+    throw error;
   }
   const playlists = data?.map((playlist) => ({
     ...playlist,
@@ -291,3 +291,25 @@ export const getUserPlaylistsWithPreview = async (
 export type PlaylistsWithPreview = Awaited<
   ReturnType<typeof getUserPlaylistsWithPreview>
 >;
+
+export const getPlaylist = async (
+  client: SupabaseClient<Database>,
+  id: string,
+) => {
+  const { data, error } = await client
+    .from("playlists")
+    .select(
+      "*, owner:profiles(id, username), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(*, artists(name, id))))",
+    )
+    .eq("id", id)
+    .order("added_at", {
+      referencedTable: "playlists_tracks",
+      ascending: false,
+    })
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+  return data;
+};
