@@ -22,7 +22,7 @@ export default function AlbumCard({
   showReleasedAt = false,
 }: Props) {
   return (
-    <div className={cn("w-32 group", size === "large" && "w-[300px]")}>
+    <div className={cn("w-32 group", size === "large" && "w-72")}>
       <div className="relative">
         {size !== "large" ? (
           <Link href={`/albums/${id}`}>
