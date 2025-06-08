@@ -8,7 +8,7 @@ import { formatDistanceToNow } from "date-fns";
 import TrackArtists from "./track-artists";
 import { useTrackStore } from "@/state/store";
 import { addNewQueueIdToTrack } from "@/lib/utils";
-import TrackOptionsButton from "./track-options-button";
+import TrackOptionsButton from "./track-options";
 
 export default function TracksHistory({
   size = 16,

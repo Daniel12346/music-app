@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { XIcon } from "lucide-react";
 import TrackArtists from "./track-artists";
-import TrackOptionsButton from "./track-options-button";
+import TrackOptionsButton from "./track-options";
 
 export default function Queue() {
   const { queue, removeTrackFromQueue, currentTrack, setCurrentTrack } =
