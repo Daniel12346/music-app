@@ -11,6 +11,7 @@ import {
   Download,
   EllipsisVerticalIcon,
   ListEndIcon,
+  ListMusicIcon,
   ListStartIcon,
   UserIcon,
   UsersIcon,
@@ -18,12 +19,24 @@ import {
 import { TrackWithExtra } from "@/state/store";
 import Link from "next/link";
 import LikeTrack from "./like-track";
+import { getUserPlaylistsWithPreview } from "@/lib/database";
+import useSWR from "swr";
+import { createClient } from "@/utils/supabase/client";
 
 export default function TrackOptionsButton({
   track,
 }: {
   track: Omit<TrackWithExtra, "queueId">;
 }) {
+  const supabase = createClient();
+  const { data } = useSWR("me", () =>
+    supabase.auth.getUser().then((res) => res.data)
+  );
+  const myID = data?.user?.id;
+  const { data: myPlaylists } = useSWR(
+    myID ? ["getUserPlaylistsWithPreview", myID] : null,
+    () => getUserPlaylistsWithPreview(supabase, myID!)
+  );
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -40,11 +53,11 @@ export default function TrackOptionsButton({
           ) : (
             <>
               <UsersIcon size={20} />
-              <Link href={`/artists/${track.artists[0].id}`} className="flex">
+              <div className="flex">
                 View artist{" "}
                 <DropdownMenu>
                   <DropdownMenuTrigger>
-                    <ChevronRightIcon size={20} />
+                    <ChevronRightIcon size={20} className="-mr-2" />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     {track.artists.map((artist) => (
@@ -56,7 +69,7 @@ export default function TrackOptionsButton({
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </Link>
+              </div>
             </>
           )}
         </DropdownMenuItem>
@@ -77,6 +90,27 @@ export default function TrackOptionsButton({
             size={20}
           />
           <span>Like</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="flex justify-between">
+          <ListMusicIcon size={20} />
+          <div className="flex">
+            Add to playlist{" "}
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <ChevronRightIcon size={20} className="-mr-2" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {/* TODO: playlists */}
+                {myPlaylists?.map((playlist) => (
+                  <DropdownMenuItem key={playlist.id}>
+                    <Link href={`/playlists/${playlist.id}`}>
+                      {playlist.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </DropdownMenuItem>
         <DropdownMenuItem className="flex justify-between">
           <Download />
