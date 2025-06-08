@@ -1,7 +1,8 @@
 import { getUserPlaylistsWithPreview } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
-import Playlist from "./playlist";
+//TODO:
+// import Playlist from "./playlist";
 
 export default function Playlists() {
   const supabase = createClient();
@@ -21,7 +22,9 @@ export default function Playlists() {
     <div className="@container">
       <div className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-4">
         {myPlaylists?.map((playlist) => (
-          <Playlist key={playlist.id} {...playlist} />
+          <></>
+          //TODO:
+          // <Playlist key={playlist.id} {...playlist} />
         ))}
       </div>
     </div>
