@@ -1,5 +1,4 @@
 import { Tables } from "@/database.types";
-import Link from "next/link";
 import LikeAlbum from "./like-album";
 import { cn } from "@/lib/utils";
 
