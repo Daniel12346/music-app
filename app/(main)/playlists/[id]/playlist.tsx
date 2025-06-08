@@ -8,6 +8,7 @@ import { createClient } from "@/utils/supabase/client";
 import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
+import PlaylistCard from "@/components/playlist-card";
 
 export default function Playlist() {
   const { id } = useParams<{ id: string }>();
@@ -17,7 +18,6 @@ export default function Playlist() {
     isLoading,
     error,
   } = useSWR(["getPlaylist", id], () => getPlaylist(supabase, id));
-  console.log(playlist);
   const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
   const addTracksToQueue = useTrackStore((state) => state.addTracksToQueue);
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack);
@@ -60,13 +60,14 @@ export default function Playlist() {
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="flex flex-col gap-2">
-        {/* <AlbumCard
-          id={albumWithTracks.id}
-          title={albumWithTracks.title}
-          cover_url={albumWithTracks.cover_url}
-          artists={albumWithTracks.artists}
+        <PlaylistCard
+          {...playlist}
+          album_cover_urls={playlist.playlists_tracks.map(
+            (playlist) => playlist.albums.cover_url
+          )}
           size="large"
-        /> */}
+          showCreatedAt
+        />
 
         <div className="mt-2">
           <div className="flex items-center gap-2 cursor-pointer justify-between">
@@ -137,8 +138,14 @@ export default function Playlist() {
               </span>
               <TrackArtists artists={track.artists} />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-md font-extralight">
+            <div className="flex justify-end items-center gap-2 grow-0 shrink-0">
+              {/* TODO: use user avatar instead */}
+              <span className="text-md font-extralight w-fit">
+                <span className="text-sm font-extralight">
+                  {track.contributor.username}
+                </span>
+              </span>
+              <span className="text-md font-extralight w-fit">
                 {track.length as string}
               </span>
               <ListStartIcon
