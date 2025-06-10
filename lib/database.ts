@@ -299,7 +299,7 @@ export const getPlaylist = async (
   const { data, error } = await client
     .from("playlists")
     .select(
-      "*, owner:profiles(id, username), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(*, artists(name, id))))",
+      "*, owner:profiles!playlists_owner_id_fkey(id, username), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(*, artists(name, id))))",
     )
     .eq("id", id)
     .order("added_at", {
@@ -308,6 +308,51 @@ export const getPlaylist = async (
     })
     .maybeSingle();
 
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const likePlaylist = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  playlistId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_playlists")
+    .insert({ playlist_id: playlistId, user_id: userId })
+    .select();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const unlikePlaylist = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  playlistId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_playlists")
+    .delete()
+    .match({ playlist_id: playlistId, user_id: userId })
+    .select();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const getPlaylistsLikedByUser = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_playlists")
+    .select("playlist_id, playlists(*)")
+    .eq("user_id", userId);
   if (error) {
     throw error;
   }
