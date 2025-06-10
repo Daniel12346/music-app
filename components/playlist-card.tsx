@@ -1,6 +1,6 @@
 import { Tables } from "@/database.types";
-import LikeAlbum from "./like-album";
 import { cn } from "@/lib/utils";
+import LikePlaylist from "./like-playlist";
 
 type Props = Tables<"playlists"> & {
   size?: "large";
@@ -16,7 +16,6 @@ export default function PlaylistCard({
   created_at,
   showCreatedAt = false,
 }: Props) {
-  console.log(album_cover_urls);
   return (
     <div className={cn("w-32 min-h-32 group", size === "large" && "w-72")}>
       <div className="relative">
@@ -26,7 +25,10 @@ export default function PlaylistCard({
             alt={name || ""}
             width={120}
             height={120}
-            className="rounded-md w-full"
+            className={cn(
+              "rounded-md w-full object-cover h-32",
+              size === "large" && "h-72"
+            )}
           />
         ) : (
           <div className="grid grid-cols-2 grid-rows-2  bg-muted border-1 border-muted-foreground rounded-md w-full">
@@ -53,7 +55,7 @@ export default function PlaylistCard({
           </div>
         )}
         <div className="hidden group-hover:block absolute top-0 right-0">
-          <LikeAlbum albumID={id} size={size === "large" ? 32 : 16} />
+          <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
         </div>
       </div>
       <div className="text-muted-foreground">
