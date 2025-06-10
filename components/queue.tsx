@@ -21,7 +21,7 @@ export default function Queue() {
             onClick={() => setCurrentTrack(track)}
             className={cn(
               "flex items-center gap-2 ",
-              isCurrentTrack && "bg-green-500/40",
+              isCurrentTrack && "bg-green-500/30",
               //TODO: add option to hide/collapse previous tracks
               idx < idxOfCurrentTrackInQueue && "opacity-65"
             )}
