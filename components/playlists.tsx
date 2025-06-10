@@ -1,6 +1,8 @@
 import { getUserPlaylistsWithPreview } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
+import PlaylistCard from "./playlist-card";
+import Link from "next/link";
 //TODO:
 // import Playlist from "./playlist";
 
@@ -22,9 +24,14 @@ export default function Playlists() {
     <div className="@container">
       <div className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-4">
         {myPlaylists?.map((playlist) => (
-          <></>
-          //TODO:
-          // <Playlist key={playlist.id} {...playlist} />
+          <Link href={`/playlists/${playlist.id}`} key={playlist.id}>
+            <PlaylistCard
+              {...playlist}
+              album_cover_urls={playlist.playlists_tracks.map(
+                (playlist) => playlist.albums.cover_url
+              )}
+            />
+          </Link>
         ))}
       </div>
     </div>
