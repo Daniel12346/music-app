@@ -27,7 +27,7 @@ export default function Playlist() {
       ...playlists_tracks.tracks,
       albumName: playlists_tracks.albums.title,
       albumCoverUrl: playlists_tracks.albums.cover_url!,
-      albumId: playlist.id,
+      albumId: playlists_tracks.albums.id,
       artists: playlists_tracks.tracks.tracks_artists.map((trackArtist) => ({
         id: trackArtist.artists.id,
         name: trackArtist.artists.name,
