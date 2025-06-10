@@ -30,7 +30,7 @@ export default function RootLayout({
           <Liked />
         </ResizablePanel>
         <ResizableHandle className="hidden md:block w-0.75 " />
-        <ResizablePanel defaultSize={50} minSize={20}>
+        <ResizablePanel defaultSize={50} minSize={20} className="mt-4">
           {children}
         </ResizablePanel>
         <ResizableHandle className="hidden md:block w-0.75" />
