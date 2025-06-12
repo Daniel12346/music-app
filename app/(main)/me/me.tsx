@@ -32,11 +32,11 @@ export default function Me() {
   return (
     <div className="px-1">
       <h1>Playlists</h1>
-      <div className="px-2 mb-6">
+      <div className="mb-4">
         <Playlists />
       </div>
       <h1>Liked albums</h1>
-      <div className="px-2">
+      <div className="">
         <AlbumsDisplay albums={myLikedAlbums} />
       </div>
     </div>
