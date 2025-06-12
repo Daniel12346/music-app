@@ -2,6 +2,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
 import AudioPlayer from "@/components/audio-player";
+import SidebarMobile from "@/components/sidebar-mobile";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -26,14 +27,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground min-h-screen">
-        <main className=" flex flex-col items-center">
-          <Providers>
-            <>
-              {children}
-              <AudioPlayer />
-            </>
-          </Providers>
-        </main>
+        <Providers>
+          <div className="block md:hidden">
+            <SidebarMobile />
+          </div>
+          <main className="w-full flex flex-col items-center">
+            {children}
+            <AudioPlayer />
+          </main>
+        </Providers>
       </body>
     </html>
   );
