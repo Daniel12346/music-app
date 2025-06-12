@@ -37,18 +37,16 @@ export default function Albums({
     <div className="@container">
       <ul className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-4">
         {sortAlbumsByKey(albums, sortKey).map((album) => (
-          <li className="flex" key={album.id}>
-            <div className="">
-              <AlbumCard
-                showArtistName={showArtistName}
-                cover_url={album.cover_url}
-                title={album.title}
-                id={album.id}
-                showReleasedAt={showReleasedAt}
-                released_at={album.released_at}
-                artists={album.artists_albums.map((a) => a.artists)}
-              />
-            </div>
+          <li className="flex justify-center" key={album.id}>
+            <AlbumCard
+              showArtistName={showArtistName}
+              cover_url={album.cover_url}
+              title={album.title}
+              id={album.id}
+              showReleasedAt={showReleasedAt}
+              released_at={album.released_at}
+              artists={album.artists_albums.map((a) => a.artists)}
+            />
           </li>
         ))}
       </ul>
