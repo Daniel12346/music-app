@@ -4,7 +4,7 @@ import useSWR, { SWRConfig, unstable_serialize } from "swr";
 import TracksLiked from "./tracks-liked";
 import TracksHistory from "./tracks-history";
 
-export default async function Liked() {
+export default async function TracksSidebar() {
   const supabase = await createClient();
   const { data: myData } = await supabase.auth.getUser();
   const myID = myData.user?.id;
