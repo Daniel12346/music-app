@@ -9,6 +9,7 @@ import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import PlaylistCard from "@/components/playlist-card";
+import LikePlaylist from "@/components/like-playlist";
 
 export default function Playlist() {
   const { id } = useParams<{ id: string }>();
@@ -109,7 +110,7 @@ export default function Playlist() {
                   );
                 }}
               />
-              {/* <LikeAlbum albumID={albumWithTracks.id} size={22} /> */}
+              <LikePlaylist playlistID={playlist.id} />{" "}
             </div>
           </div>
         </div>
