@@ -17,7 +17,7 @@ export default function TrackArtists({
         >
           {(i > 0 && ", ") || ""}
           <Link href={`/artists/${artist.id}`}>
-            <span className="hover:underline">{artist.name}</span>
+            <span className="hover:underline truncate">{artist.name}</span>
           </Link>
         </span>
       ))}
