@@ -12,9 +12,9 @@ export default async function AuthButton() {
   } = await supabase.auth.getUser();
 
   return user ? (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-4 w-full">
       <SidebarTrigger className="md:hidden" />
-      Hey, {user.email}!
+      {/* TODO: user profile image */}
       <form action={signOutAction}>
         <Button type="submit" variant={"outline"}>
           Sign out
