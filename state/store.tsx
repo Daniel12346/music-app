@@ -15,6 +15,8 @@ type Position = "start" | "end";
 interface TrackStore {
   currentTrack: TrackWithExtra | null;
   queue: TrackWithExtra[];
+  queueIdOfCurrentTrack: string | null;
+  isShuffleActive: boolean;
   setCurrentTrack: (track: TrackWithExtra | null) => void;
   playNextTrack: () => void;
   playPrevTrack: () => void;
@@ -22,6 +24,7 @@ interface TrackStore {
   addTrackToQueue: (track: TrackWithExtra, position?: Position) => void;
   addTracksToQueue: (tracks: TrackWithExtra[], position?: Position) => void;
   removeTrackFromQueue: (queueId: string) => void;
+  toggleShuffle: () => void;
 }
 
 //persist queue and current track state with zustand
@@ -31,6 +34,7 @@ export const useTrackStore = create<TrackStore>()(
       queue: [],
       currentTrack: null,
       queueIdOfCurrentTrack: null,
+      isShuffleActive: false,
       setCurrentTrack: (track: TrackWithExtra | null) => {
         set({ currentTrack: track });
       },
@@ -103,6 +107,8 @@ export const useTrackStore = create<TrackStore>()(
             currentTrack,
           };
         }),
+      toggleShuffle: () =>
+        set((state) => ({ isShuffleActive: !state.isShuffleActive })),
     }),
     {
       name: "track-storage",
