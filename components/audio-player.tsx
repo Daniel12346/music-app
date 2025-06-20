@@ -12,7 +12,13 @@ import TrackArtists from "./track-artists";
 import { ListIcon, Repeat1Icon, ShuffleIcon } from "lucide-react";
 import LikeTrack from "./like-track";
 export default function Player() {
-  const { currentTrack, playNextTrack, playPrevTrack } = useTrackStore();
+  const {
+    currentTrack,
+    playNextTrack,
+    playPrevTrack,
+    toggleShuffle,
+    isShuffleActive,
+  } = useTrackStore();
   const supabase = createClient();
   const { data: myData } = useSWR("me", async () => {
     const { data } = await supabase.auth.getUser();
@@ -76,7 +82,15 @@ export default function Player() {
 
             <div className="flex  gap-3 md:gap-4">
               <Repeat1Icon />
-              <ShuffleIcon />
+              <ShuffleIcon
+                onClick={() => {
+                  toggleShuffle();
+                  console.log(isShuffleActive);
+                }}
+                className={
+                  isShuffleActive ? "text-green-600" : "text-muted-foreground"
+                }
+              />
               <Link href={`/queue`}>
                 <ListIcon />
               </Link>
