@@ -85,7 +85,6 @@ export default function Player() {
               <ShuffleIcon
                 onClick={() => {
                   toggleShuffle();
-                  console.log(isShuffleActive);
                 }}
                 className={
                   isShuffleActive ? "text-green-600" : "text-muted-foreground"
