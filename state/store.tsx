@@ -14,16 +14,24 @@ type Position = "start" | "end";
 
 interface TrackStore {
   currentTrack: TrackWithExtra | null;
-  queue: TrackWithExtra[];
+  queuedFromSource: TrackWithExtra[];
+  queuedByUser: TrackWithExtra[];
+  prevTrack: TrackWithExtra | null;
+  nextTrack: TrackWithExtra | null;
   queueIdOfCurrentTrack: string | null;
   isShuffleActive: boolean;
   setCurrentTrack: (track: TrackWithExtra | null) => void;
+  setNextTrack: (track: TrackWithExtra | null) => void;
+  setPrevTrack: (track: TrackWithExtra | null) => void;
   playNextTrack: () => void;
   playPrevTrack: () => void;
   setQueue: (queue: TrackWithExtra[]) => void;
+  queueTracksFromSource: (tracks: TrackWithExtra[]) => void;
   addTrackToQueue: (track: TrackWithExtra, position?: Position) => void;
   addTracksToQueue: (tracks: TrackWithExtra[], position?: Position) => void;
   removeTrackFromQueue: (queueId: string) => void;
+  removeTrackFromSourceQueue: (queueId: string) => void;
+  removeTrackFromUserQueue: (queueId: string) => void;
   toggleShuffle: () => void;
 }
 
@@ -31,67 +39,62 @@ interface TrackStore {
 export const useTrackStore = create<TrackStore>()(
   persist(
     (set) => ({
-      queue: [],
+      queuedByUser: [],
+      queuedFromSource: [],
       currentTrack: null,
+      prevTrack: null,
+      nextTrack: null,
       queueIdOfCurrentTrack: null,
       isShuffleActive: false,
+
       setCurrentTrack: (track: TrackWithExtra | null) => {
         set({ currentTrack: track });
       },
+      setNextTrack: (track: TrackWithExtra | null) => {
+        set({ nextTrack: track });
+      },
+      setPrevTrack: (track: TrackWithExtra | null) => {
+        set({ prevTrack: track });
+      },
       playNextTrack: () => {
         set((state) => {
-          const currentTrackIdx = state.queue.findIndex(
-            (track) => track.queueId === state.currentTrack?.queueId
-          );
-          if (currentTrackIdx === -1) return state;
-          const nextTrackIdx = currentTrackIdx + 1;
-          let nextTrack = null;
-          if (nextTrackIdx < state.queue.length) {
-            nextTrack = state.queue[nextTrackIdx];
-          }
           return {
-            currentTrack: nextTrack,
+            currentTrack: state.nextTrack,
           };
         });
       },
       playPrevTrack: () => {
         set((state) => {
-          const prevTrackIdx = state.queue.findIndex(
-            (track) => track.queueId === state.currentTrack?.queueId
-          );
-          if (prevTrackIdx === -1) return state;
-          let prevTrack = null;
-          if (prevTrackIdx > 0) {
-            prevTrack = state.queue[prevTrackIdx - 1];
-          }
           return {
-            currentTrack: prevTrack,
+            currentTrack: state.prevTrack,
           };
         });
       },
       setQueue: (queue: TrackWithExtra[]) => {
-        set({ queue });
+        set({ queuedByUser: queue });
       },
       addTrackToQueue: (track: TrackWithExtra, position: Position = "end") =>
         set((state) => {
-          const queue =
+          const queuedByUser =
             position === "end"
-              ? [...state.queue, track]
-              : [track].concat(state.queue);
-          return { queue };
+              ? [...state.queuedByUser, track]
+              : [track].concat(state.queuedByUser);
+          return { queuedByUser };
         }),
-
+      queueTracksFromSource: (tracks: TrackWithExtra[]) => {
+        set({ queuedFromSource: tracks });
+      },
       addTracksToQueue: (
         tracks: TrackWithExtra[],
         position: Position = "end"
       ) => {
         set((state) => {
-          const queue =
+          const queuedByUser =
             position === "end"
-              ? [...state.queue, ...tracks]
-              : tracks.concat(state.queue);
+              ? [...state.queuedByUser, ...tracks]
+              : tracks.concat(state.queuedByUser);
           return {
-            queue,
+            queuedByUser,
           };
         });
       },
@@ -103,10 +106,24 @@ export const useTrackStore = create<TrackStore>()(
             currentTrack = null;
           }
           return {
-            queue: state.queue.filter((track) => track.queueId !== queueId),
+            queuedByUser: state.queuedByUser.filter(
+              (track) => track.queueId !== queueId
+            ),
             currentTrack,
           };
         }),
+      removeTrackFromUserQueue: (queueId: string) =>
+        set((state) => ({
+          queuedByUser: state.queuedByUser.filter(
+            (track) => track.queueId !== queueId
+          ),
+        })),
+      removeTrackFromSourceQueue: (queueId: string) =>
+        set((state) => ({
+          queuedFromSource: state.queuedFromSource.filter(
+            (track) => track.queueId !== queueId
+          ),
+        })),
       toggleShuffle: () =>
         set((state) => ({ isShuffleActive: !state.isShuffleActive })),
     }),
