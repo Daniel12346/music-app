@@ -24,7 +24,9 @@ export default function Album() {
   const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
   const addTracksToQueue = useTrackStore((state) => state.addTracksToQueue);
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack);
-  const setQueue = useTrackStore((state) => state.setQueue);
+  const queueTracksFromSource = useTrackStore(
+    (state) => state.queueTracksFromSource
+  );
   const tracksWithExtraInfo = albumWithTracks?.tracks.map((track) => ({
     ...track,
     albumName: albumWithTracks.title,
@@ -130,7 +132,8 @@ export default function Album() {
                   setCurrentTrack(trackWithQueueId);
                   //clearing the queue and adding all the album tracks starting with the selected track
                   //TODO: add optional setting to add clicked track to queue without resetting queue
-                  setQueue(tracksWithQueueIds.slice(idx));
+                  // setQueue(tracksWithQueueIds.slice(idx));
+                  queueTracksFromSource(tracksWithQueueIds);
                 }}
               >
                 {track.title}
