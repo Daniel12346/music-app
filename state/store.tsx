@@ -14,15 +14,16 @@ type Position = "start" | "end";
 
 interface TrackStore {
   currentTrack: TrackWithExtra | null;
-  queuedFromSource: TrackWithExtra[];
-  queuedByUser: TrackWithExtra[];
+  sourceQueue: TrackWithExtra[];
+  userQueue: TrackWithExtra[];
   prevTrack: TrackWithExtra | null;
   nextTrack: TrackWithExtra | null;
-  queueIdOfCurrentTrack: string | null;
+  lastPlayedSourceTrack: TrackWithExtra | null;
   isShuffleActive: boolean;
   setCurrentTrack: (track: TrackWithExtra | null) => void;
   setNextTrack: (track: TrackWithExtra | null) => void;
   setPrevTrack: (track: TrackWithExtra | null) => void;
+  setLastPlayedSourceTrack: (track: TrackWithExtra | null) => void;
   playNextTrack: () => void;
   playPrevTrack: () => void;
   setQueue: (queue: TrackWithExtra[]) => void;
@@ -33,20 +34,20 @@ interface TrackStore {
   removeTrackFromSourceQueue: (queueId: string) => void;
   removeTrackFromUserQueue: (queueId: string) => void;
   toggleShuffle: () => void;
+  setUserQueue: (queue: TrackWithExtra[]) => void;
 }
 
 //persist queue and current track state with zustand
 export const useTrackStore = create<TrackStore>()(
   persist(
     (set) => ({
-      queuedByUser: [],
-      queuedFromSource: [],
+      userQueue: [],
+      sourceQueue: [],
       currentTrack: null,
       prevTrack: null,
       nextTrack: null,
-      queueIdOfCurrentTrack: null,
+      lastPlayedSourceTrack: null,
       isShuffleActive: false,
-
       setCurrentTrack: (track: TrackWithExtra | null) => {
         set({ currentTrack: track });
       },
@@ -55,6 +56,9 @@ export const useTrackStore = create<TrackStore>()(
       },
       setPrevTrack: (track: TrackWithExtra | null) => {
         set({ prevTrack: track });
+      },
+      setLastPlayedSourceTrack: (track: TrackWithExtra | null) => {
+        set({ lastPlayedSourceTrack: track });
       },
       playNextTrack: () => {
         set((state) => {
@@ -71,30 +75,31 @@ export const useTrackStore = create<TrackStore>()(
         });
       },
       setQueue: (queue: TrackWithExtra[]) => {
-        set({ queuedByUser: queue });
+        set({ userQueue: queue });
       },
+      //
       addTrackToQueue: (track: TrackWithExtra, position: Position = "end") =>
         set((state) => {
-          const queuedByUser =
+          const userQueue =
             position === "end"
-              ? [...state.queuedByUser, track]
-              : [track].concat(state.queuedByUser);
-          return { queuedByUser };
+              ? [...state.userQueue, track]
+              : [track].concat(state.userQueue);
+          return { userQueue };
         }),
       queueTracksFromSource: (tracks: TrackWithExtra[]) => {
-        set({ queuedFromSource: tracks });
+        set({ sourceQueue: tracks });
       },
       addTracksToQueue: (
         tracks: TrackWithExtra[],
         position: Position = "end"
       ) => {
         set((state) => {
-          const queuedByUser =
+          const userQueue =
             position === "end"
-              ? [...state.queuedByUser, ...tracks]
-              : tracks.concat(state.queuedByUser);
+              ? [...state.userQueue, ...tracks]
+              : tracks.concat(state.userQueue);
           return {
-            queuedByUser,
+            userQueue,
           };
         });
       },
@@ -106,7 +111,7 @@ export const useTrackStore = create<TrackStore>()(
             currentTrack = null;
           }
           return {
-            queuedByUser: state.queuedByUser.filter(
+            userQueue: state.userQueue.filter(
               (track) => track.queueId !== queueId
             ),
             currentTrack,
@@ -114,13 +119,14 @@ export const useTrackStore = create<TrackStore>()(
         }),
       removeTrackFromUserQueue: (queueId: string) =>
         set((state) => ({
-          queuedByUser: state.queuedByUser.filter(
+          userQueue: state.userQueue.filter(
             (track) => track.queueId !== queueId
           ),
         })),
+      setUserQueue: (queue: TrackWithExtra[]) => set({ userQueue: queue }),
       removeTrackFromSourceQueue: (queueId: string) =>
         set((state) => ({
-          queuedFromSource: state.queuedFromSource.filter(
+          sourceQueue: state.sourceQueue.filter(
             (track) => track.queueId !== queueId
           ),
         })),
