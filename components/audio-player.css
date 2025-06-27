@@ -38,7 +38,9 @@
   color: var(--color-green-500);
 }
 
-.rhap_volume-bar,
+.rhap_volume-bar {
+  background-color: var(--color-green-200) !important;
+}
 .rhap_volume-indicator {
   background-color: var(--color-green-500) !important;
 }
