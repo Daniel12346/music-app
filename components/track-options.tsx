@@ -16,12 +16,13 @@ import {
   UserIcon,
   UsersIcon,
 } from "lucide-react";
-import { TrackWithExtra } from "@/state/store";
+import { TrackWithExtra, useTrackStore } from "@/state/store";
 import Link from "next/link";
 import LikeTrack from "./like-track";
 import { getUserPlaylistsWithPreview } from "@/lib/database";
 import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
+import { addNewQueueIdToTrack } from "@/lib/utils";
 
 export default function TrackOptionsButton({
   track,
@@ -37,6 +38,7 @@ export default function TrackOptionsButton({
     myID ? ["getUserPlaylistsWithPreview", myID] : null,
     () => getUserPlaylistsWithPreview(supabase, myID!)
   );
+  const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -117,11 +119,23 @@ export default function TrackOptionsButton({
           <span>Download</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="flex justify-between">
+        <DropdownMenuItem
+          className="flex justify-between"
+          onClick={(e) => {
+            e.stopPropagation();
+            addTrackToQueue(addNewQueueIdToTrack(track), "start");
+          }}
+        >
           <ListStartIcon size={20} />
           <span>Add to queue start</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex justify-between">
+        <DropdownMenuItem
+          className="flex justify-between "
+          onClick={(e) => {
+            e.stopPropagation();
+            addTrackToQueue(addNewQueueIdToTrack(track), "end");
+          }}
+        >
           <ListEndIcon size={20} />
           <span>Add to queue end</span>
         </DropdownMenuItem>
