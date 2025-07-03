@@ -19,6 +19,7 @@ export default function Queue() {
     setNextTrack,
     setLastPlayedSourceTrack,
     lastPlayedSourceTrack,
+    setCurrentTrack,
   } = useTrackStore();
 
   const sortedSourceQueue = useMemo(
@@ -48,6 +49,9 @@ export default function Queue() {
     if (userQueue.length) {
       if (idxOfCurrentTrackInUserQueue !== -1) {
         if (userQueue.length === 1) {
+          //if the current track is the last track in the user queue,
+          //set the next track to the first track in the rest of the source queue 
+          //(the track after last played track from source queue)
           const nextTrackIdx =
             idxofLastPlayedSourceTrackInSourceQueue === -1
               ? 0
@@ -73,6 +77,7 @@ export default function Queue() {
     }
   }, [currentTrack, sortedSourceQueue]);
 
+  //updating the next and prev track if the user queue changes
   useEffect(() => {
     if (userQueue.length) {
       if (idxOfCurrentTrackInUserQueue !== -1) {
@@ -103,6 +108,10 @@ export default function Queue() {
           "flex items-center gap-2",
           isCurrent && "border-y-green-400 border-y-2"
         )}
+        onClick={(e) => {
+          e.stopPropagation();
+          setCurrentTrack(track);
+        }}
       >
         <img
           src={track.albumCoverUrl}
