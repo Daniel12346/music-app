@@ -358,3 +358,45 @@ export const getPlaylistsLikedByUser = async (
   }
   return data;
 };
+export const addTrackToPlaylist = async (
+  client: SupabaseClient<Database>,
+  playlistId: string,
+  trackId: string,
+  trackAlbumId: string,
+  userId: string,
+) => {
+  const { data, error } = await client
+    .from("playlists_tracks")
+    .insert({
+      playlist_id: playlistId,
+      track_id: trackId,
+      track_album_id: trackAlbumId,
+      added_by: userId,
+    })
+    .select();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const removeTrackFromPlaylist = async (
+  client: SupabaseClient<Database>,
+  playlistId: string,
+  trackId: string,
+  trackAlbumId: string,
+) => {
+  const { data, error } = await client
+    .from("playlists_tracks")
+    .delete()
+    .match({
+      playlist_id: playlistId,
+      track_id: trackId,
+      track_album_id: trackAlbumId,
+    })
+    .select();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
