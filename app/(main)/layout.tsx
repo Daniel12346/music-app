@@ -25,7 +25,10 @@ export default function RootLayout({
   return (
     <>
       <Header />
-      <ResizablePanelGroup direction="horizontal" className="min-h-screen">
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="min-h-screen pb-60"
+      >
         <ResizablePanel className="hidden md:block" defaultSize={25}>
           <Liked />
         </ResizablePanel>
