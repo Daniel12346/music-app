@@ -38,7 +38,7 @@ export default function PlaylistCard({
                 (album_cover_url, i) =>
                   album_cover_url && (
                     <img
-                      key={album_cover_url}
+                      key={album_cover_url + i}
                       src={album_cover_url}
                       width={10}
                       height={10}
