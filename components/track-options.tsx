@@ -19,7 +19,10 @@ import {
 import { TrackWithExtra, useTrackStore } from "@/state/store";
 import Link from "next/link";
 import LikeTrack from "./like-track";
-import { getUserPlaylistsWithPreview } from "@/lib/database";
+import {
+  addTrackToPlaylist,
+  getUserPlaylistsWithPreview,
+} from "@/lib/database";
 import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
 import { addNewQueueIdToTrack } from "@/lib/utils";
@@ -104,17 +107,52 @@ export default function TrackOptionsButton({
               <DropdownMenuContent>
                 {/* TODO: playlists */}
                 {myPlaylists?.map((playlist) => (
-                  <DropdownMenuItem key={playlist.id}>
-                    <Link href={`/playlists/${playlist.id}`}>
-                      {playlist.name}
-                    </Link>
+                  <DropdownMenuItem
+                    key={playlist.id}
+                    onClick={async (e) => {
+                      try {
+                        //TODO: handle error, optimistically update state with data
+                        const data = await addTrackToPlaylist(
+                          supabase,
+                          playlist.id,
+                          track.id,
+                          track.albumId,
+                          myID!
+                        );
+                      } catch (e) {
+                        throw e;
+                      }
+                    }}
+                  >
+                    {playlist.name}
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex justify-between">
+        <DropdownMenuItem
+          className="flex justify-between"
+          onClick={async (e) => {
+            e.stopPropagation();
+            const { url, title } = track;
+            //get part of url after "tracks//""
+            const id = url.split("tracks//")[1];
+            console.log(url, id);
+            const {
+              data: { publicUrl },
+            } = supabase.storage
+              .from("tracks")
+              .getPublicUrl(id, { download: true });
+            console.log(publicUrl);
+            const link = document.createElement("a");
+            link.setAttribute("download", title);
+            link.href = publicUrl;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+          }}
+        >
           <Download />
           <span>Download</span>
         </DropdownMenuItem>
