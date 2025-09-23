@@ -138,13 +138,11 @@ export default function TrackOptionsButton({
             const { url, title } = track;
             //get part of url after "tracks//""
             const id = url.split("tracks//")[1];
-            console.log(url, id);
             const {
               data: { publicUrl },
             } = supabase.storage
               .from("tracks")
               .getPublicUrl(id, { download: true });
-            console.log(publicUrl);
             const link = document.createElement("a");
             link.setAttribute("download", title);
             link.href = publicUrl;
