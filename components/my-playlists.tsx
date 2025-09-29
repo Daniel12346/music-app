@@ -1,4 +1,8 @@
-import { getUserPlaylistsWithPreview } from "@/lib/database";
+import {
+  getNewTracksByLikedArtists,
+  getUserPlaylistsWithPreview,
+  makeNewTracksPlaylist,
+} from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 import PlaylistsDisplay from "./playlists-display";
@@ -10,7 +14,6 @@ export default function MyPlaylists() {
     supabase.auth.getUser().then((res) => res.data)
   );
   const myID = data?.user?.id;
-
   const {
     data: myPlaylists,
     error: playlistsError,
@@ -18,8 +21,17 @@ export default function MyPlaylists() {
   } = useSWR(myID ? ["getUserPlaylistsWithPreview", myID] : null, () =>
     getUserPlaylistsWithPreview(supabase, myID!)
   );
+  const { data: newTracksByLikedArtists } = useSWR(
+    myID ? ["getNewTracksByLikedArtists", myID] : null,
+    () => getNewTracksByLikedArtists(supabase, myID!)
+  );
+  const newReleasesPlaylist = makeNewTracksPlaylist(
+    newTracksByLikedArtists ?? null
+  );
   if (arePlaylistsLoading) return <div>Loading...</div>;
   if (playlistsError) return <div>Error loading playlists</div>;
   if (!myPlaylists) return <div>No playlists found</div>;
-  return <PlaylistsDisplay playlists={myPlaylists} />;
+  return (
+    <PlaylistsDisplay playlists={[newReleasesPlaylist!, ...myPlaylists]} />
+  );
 }
