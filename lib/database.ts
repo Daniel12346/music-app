@@ -264,7 +264,7 @@ export const getUserPlaylistsWithPreview = async (
   const { data, error } = await client
     .from("playlists")
     .select(
-      "*, playlists_tracks(*, albums(id, title, cover_url), tracks(*, tracks_artists(*, artists(name, id))))",
+      "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url), track:tracks(*, tracks_artists(artists(name, id))))",
     )
     .eq("owner_id", userId)
     .limit(10, { referencedTable: "playlists_tracks" })
@@ -292,12 +292,14 @@ export type PlaylistsWithPreview = Awaited<
   ReturnType<typeof getUserPlaylistsWithPreview>
 >;
 
+export type PlaylistWithPreview = PlaylistsWithPreview[number];
 export const getPlaylist = async (
   client: SupabaseClient<Database>,
   id: string,
 ) => {
   const { data, error } = await client
     .from("playlists")
+    //TODO: check if contributor is using the right fore
     .select(
       "*, owner:profiles!playlists_owner_id_fkey(id, username), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(*, artists(name, id))))",
     )
@@ -399,4 +401,87 @@ export const removeTrackFromPlaylist = async (
     throw error;
   }
   return data;
+};
+
+//TODO: replace with view
+export const getNewAlbumsByLikedArtists = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+): Promise<AlbumsWithArtists> => {
+  const { data, error } = await client
+    .from("users_liked_artists")
+    .select(
+      "artist_id, artists(*, albums(*, artists_albums(*, artists(name, id))))",
+    )
+    //album released in last 5 years
+    //TODO: change to last week/month
+    .gte(
+      "artists.albums.released_at",
+      new Date(Date.now() - 5 * 365 * 24 * 60 * 60 * 1000).toDateString(),
+    )
+    .eq("user_id", userId);
+  if (error) {
+    throw error;
+  }
+  const artists = data.map((record) => record.artists);
+  const albums = artists.map((artist) => artist.albums).flat();
+  return albums;
+};
+
+// export  const makePlaylistFromTracks= async (
+
+// )
+export const getNewTracksByLikedArtists = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+) => {
+  const { data, error } = await client
+    //tracks_by_liked_artists is an sql view
+    .from("tracks_by_liked_artists")
+    //TODO: fix - if track's track_artists has multiple artists liked by user, duplicate tracks will be returned
+    .select(
+      "*, tracks_artists(artists(name, id))",
+    )
+    //album released in last 5 years
+    .gte(
+      "album_released_at",
+      new Date(Date.now() - 5 * 365 * 24 * 60 * 60 * 1000).toDateString(),
+    )
+    .eq("liked_by_user_id", userId);
+  return data;
+};
+export type NewTracksByLikedArtists = Awaited<
+  ReturnType<typeof getNewTracksByLikedArtists>
+>;
+
+export const makeNewTracksPlaylist = (
+  tracks: NewTracksByLikedArtists,
+): PlaylistWithPreview | null => {
+  if (!tracks) return null;
+  return {
+    //TODO: make ID nullable or choose id for generated playlists
+    id: "0",
+    name: "New Tracks",
+    image_url: "/new.png",
+    description: "Recent tracks by artists you like",
+    owner_id: null,
+    created_at: new Date().toISOString(),
+    playlists_tracks: tracks.map((track) => ({
+      added_at: null,
+      added_by: null,
+      track: {
+        length: track.length,
+        id: track.id!,
+        title: track.title!,
+        url: track.url!,
+        created_at: "",
+        tracks_artists: track.tracks_artists,
+      },
+      track_album: {
+        id: track.album_id!,
+        title: track.album_title!,
+        cover_url: track.album_cover_url!,
+      },
+    })),
+  };
 };
