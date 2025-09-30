@@ -143,7 +143,7 @@ export default function Playlist() {
               {/* TODO: use user avatar instead */}
               <span className="text-md font-extralight w-fit">
                 <span className="text-sm font-extralight">
-                  {track.contributor.username}
+                  {track.contributor?.username}
                 </span>
               </span>
               <span className="text-md font-extralight w-fit">
