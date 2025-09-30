@@ -460,7 +460,7 @@ export const makeNewTracksPlaylist = (
   if (!tracks) return null;
   return {
     //TODO: make ID nullable or choose id for generated playlists
-    id: "0",
+    id: "new_releases",
     name: "New Tracks",
     image_url: "/new.png",
     description: "Recent tracks by artists you like",
