@@ -5,7 +5,7 @@ interface Props {
   playlists: PlaylistsWithPreview;
 }
 
-export default function PlaylistsDisplay({ playlists }: Props) {
+export default function PlaylistsGrid({ playlists }: Props) {
   return (
     <div className="@container">
       <div className="grid grid-cols-2 gap-y-4 md:gap-y-0 @md:grid-cols-3 @lg:grid-cols-4">

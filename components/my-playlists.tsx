@@ -5,7 +5,7 @@ import {
 } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
-import PlaylistsDisplay from "./playlists-display";
+import PlaylistsDisplay from "./playlists-grid";
 //TODO: playlist with new releases
 
 export default function MyPlaylists() {
