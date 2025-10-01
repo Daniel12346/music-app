@@ -175,7 +175,9 @@ export const getTracksLikedByUser = async (
   }
   const { data, error } = await client
     .from("users_liked_tracks")
-    .select("track_id, track_album_id, tracks(*), albums(*)")
+    .select(
+      "track_id, tracks(*, tracks_artists(*, artists(id, name))), albums(*)",
+    )
     .eq("user_id", userId);
 
   if (error) {
