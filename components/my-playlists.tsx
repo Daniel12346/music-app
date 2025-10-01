@@ -10,7 +10,7 @@ import PlaylistsDisplay from "./playlists-grid";
 
 export default function MyPlaylists() {
   const supabase = createClient();
-  const { data } = useSWR("me", () =>
+  const { data, isLoading: isMyDataLoading } = useSWR("me", () =>
     supabase.auth.getUser().then((res) => res.data)
   );
   const myID = data?.user?.id;
@@ -21,17 +21,22 @@ export default function MyPlaylists() {
   } = useSWR(myID ? ["getUserPlaylistsWithPreview", myID] : null, () =>
     getUserPlaylistsWithPreview(supabase, myID!)
   );
-  const { data: newTracksByLikedArtists } = useSWR(
-    myID ? ["getNewTracksByLikedArtists", myID] : null,
-    () => getNewTracksByLikedArtists(supabase, myID!)
-  );
+  const { data: newTracksByLikedArtists, isLoading: areNewTracksLoading } =
+    useSWR(myID ? ["getNewTracksByLikedArtists", myID] : null, () =>
+      getNewTracksByLikedArtists(supabase, myID!)
+    );
   const newReleasesPlaylist = makeNewTracksPlaylist(
     newTracksByLikedArtists ?? null
   );
-  if (arePlaylistsLoading) return <div>Loading...</div>;
+  const isLoading =
+    isMyDataLoading || areNewTracksLoading || arePlaylistsLoading;
   if (playlistsError) return <div>Error loading playlists</div>;
-  if (!myPlaylists) return <div>No playlists found</div>;
+  if (!isLoading && myPlaylists?.length === 0)
+    return <div>No playlists found</div>;
   return (
-    <PlaylistsDisplay playlists={[newReleasesPlaylist!, ...myPlaylists]} />
+    <PlaylistsDisplay
+      playlists={[newReleasesPlaylist!, ...(myPlaylists || [])]}
+      isLoading={isLoading}
+    />
   );
 }

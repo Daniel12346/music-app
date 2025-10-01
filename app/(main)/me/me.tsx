@@ -7,7 +7,7 @@ import useSWR from "swr";
 
 export default function Me() {
   const supabase = createClient();
-  const { data } = useSWR("me", () =>
+  const { data, isLoading: isMyDataLoading } = useSWR("me", () =>
     supabase.auth.getUser().then((res) => res.data)
   );
   const myID = data?.user?.id;
@@ -15,19 +15,15 @@ export default function Me() {
   const {
     data: myLikedAlbums,
     error: albumsError,
-    isLoading: albumsLoading,
+    isLoading: areAlbumsLoading,
   } = useSWR(myID ? ["getAlbumsLikedByUser", myID] : null, () =>
     getAlbumsLikedByUser(supabase, myID)
   );
-
   if (albumsError) {
     return <div>Error loading albums</div>;
   }
-  if (albumsLoading) {
-    return <div>Loading...</div>;
-  }
-  if (!myLikedAlbums) {
-    return <div>No albums found</div>;
+  if (!areAlbumsLoading && myLikedAlbums?.length === 0) {
+    return <div className="bg-red-400">No albums found</div>;
   }
   return (
     <div className="px-3">
@@ -37,7 +33,10 @@ export default function Me() {
       </div>
       <h1>Liked albums</h1>
       <div className="">
-        <AlbumsDisplay albums={myLikedAlbums} />
+        <AlbumsDisplay
+          albums={myLikedAlbums ?? null}
+          isLoading={isMyDataLoading || areAlbumsLoading}
+        />
       </div>
     </div>
   );
