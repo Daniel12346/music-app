@@ -14,7 +14,7 @@ export default function Albums({
   showArtistName = true,
   showReleasedAt = false,
   sortKey = "newest_first",
-  isLoading = true,
+  isLoading,
 }: Props) {
   if (!albums && !isLoading) return null;
   const sortAlbumsByKey = (albums: AlbumsWithArtists, sortKey: SortKey) => {
@@ -43,7 +43,11 @@ export default function Albums({
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <li className="flex justify-center" key={i}>
-                <Skeleton className="w-32 h-32 bg-slate-200" />
+                <div className="w-32">
+                  <Skeleton className="w-full h-32 bg-slate-200" />
+                  <Skeleton className="w-full mt-1 h-8 bg-slate-200" />
+                  <Skeleton className="w-full mt-1.5 h-6 bg-slate-200" />
+                </div>
               </li>
             ))
           : sortAlbumsByKey(!albums ? [] : albums, sortKey).map((album) => (
