@@ -30,7 +30,7 @@ export default function Me() {
     return <div>No albums found</div>;
   }
   return (
-    <div className="px-1">
+    <div className="px-3">
       <h1>Playlists</h1>
       <div className="mb-4">
         <MyPlaylists />
