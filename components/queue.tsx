@@ -50,7 +50,7 @@ export default function Queue() {
       if (idxOfCurrentTrackInUserQueue !== -1) {
         if (userQueue.length === 1) {
           //if the current track is the last track in the user queue,
-          //set the next track to the first track in the rest of the source queue 
+          //set the next track to the first track in the rest of the source queue
           //(the track after last played track from source queue)
           const nextTrackIdx =
             idxofLastPlayedSourceTrackInSourceQueue === -1
@@ -141,15 +141,15 @@ export default function Queue() {
     <div className="flex flex-col gap-2 px-1 cursor-pointer @container">
       {currentTrack && (
         <>
-          <span className="text-lg font-semibold text-muted-foreground">
+          <span className="text-lg font-semibold text-muted-foreground cursor-default">
             Now playing
           </span>
           <QueueTrack track={currentTrack} isCurrent />
         </>
       )}
       {userQueue.length > 0 && (
-        <span className="text-lg font-semibold text-muted-foreground mt-4">
-          Next from queue
+        <span className="text-lg font-semibold text-muted-foreground mt-4 cursor-default">
+          Queued
         </span>
       )}
       {userQueue.map((track) => (
@@ -157,7 +157,7 @@ export default function Queue() {
       ))}
       {/* TODO: source name */}
       {sortedSourceQueue.length > 0 && (
-        <span className="text-lg font-semibold text-muted-foreground mt-4">
+        <span className="text-lg font-semibold text-muted-foreground mt-4 cursor-default">
           Next from source
         </span>
       )}
