@@ -40,7 +40,7 @@ export default function Artist() {
           {artist?.name}
         </h1>
       </div>
-      <div className="flex items-baseline-last pl-2 pt-4">
+      <div className="flex items-baseline-last pl-2 pt-4 mb-2">
         <span className="text-2xl opacity-90">Albums</span>
         <Select onValueChange={(value: SortKey) => setCurrentSortKey(value)}>
           <SelectTrigger className="ml-2 mt-2 border-1px rounded-sm">
