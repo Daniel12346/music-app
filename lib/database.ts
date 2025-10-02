@@ -461,7 +461,6 @@ export const makeNewTracksPlaylist = (
 ): PlaylistWithPreview | null => {
   if (!tracks) return null;
   return {
-    //TODO: make ID nullable or choose id for generated playlists
     id: "new_releases",
     name: "New Tracks",
     image_url: "/new.png",
@@ -472,6 +471,7 @@ export const makeNewTracksPlaylist = (
       added_at: null,
       added_by: null,
       track: {
+        play_count: track.play_count!,
         length: track.length,
         id: track.id!,
         title: track.title!,
@@ -486,4 +486,17 @@ export const makeNewTracksPlaylist = (
       },
     })),
   };
+};
+
+export const incrementTrackPlayCount = async (
+  client: SupabaseClient<Database>,
+  trackId: string,
+) => {
+  const { data, error } = await client.rpc("increment_track_play_count", {
+    track_id: trackId,
+  });
+  if (error) {
+    throw error;
+  }
+  return data;
 };
