@@ -43,10 +43,10 @@ export default function Albums({
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <li className="flex justify-center" key={i}>
-                <div className="w-32">
-                  <Skeleton className="w-full h-32 bg-slate-200" />
-                  <Skeleton className="w-full mt-1 h-8 bg-slate-200" />
-                  <Skeleton className="w-full mt-1.5 h-6 bg-slate-200" />
+                <div className="w-32 opacity-90 dark:opacity-40">
+                  <Skeleton className="w-full h-32 bg-slate-500" />
+                  <Skeleton className="w-full mt-1 h-8 bg-slate-500" />
+                  <Skeleton className="w-full mt-1.5 h-6 bg-slate-500" />
                 </div>
               </li>
             ))
