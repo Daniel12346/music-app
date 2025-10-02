@@ -6,7 +6,11 @@ import "react-h5-audio-player/lib/styles.css";
 import "./audio-player.css";
 import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
-import { addTrackToHistory, getUserHistoryTracks } from "@/lib/database";
+import {
+  addTrackToHistory,
+  getUserHistoryTracks,
+  incrementTrackPlayCount,
+} from "@/lib/database";
 import { useEffect } from "react";
 import TrackArtists from "./track-artists";
 import { ListIcon, Repeat1Icon, ShuffleIcon } from "lucide-react";
@@ -32,14 +36,17 @@ export default function Player() {
   useEffect(() => {
     if (currentTrack && myID) {
       //TODO: optimistic update
-      addTrackToHistory(
-        supabase,
-        myID!,
-        currentTrack.id,
-        currentTrack.albumId
-      ).then(() => {
-        mutateHistoryTracks();
-      });
+      Promise.all([
+        addTrackToHistory(
+          supabase,
+          myID!,
+          currentTrack.id,
+          currentTrack.albumId
+        ).then(() => {
+          mutateHistoryTracks();
+        }),
+        incrementTrackPlayCount(supabase, currentTrack.id)
+      ]);
     }
   }, [currentTrack]);
 
@@ -49,10 +56,13 @@ export default function Player() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 w-full">
       <AudioPlayer
+        // autoPlay
         showSkipControls
         showJumpControls={false}
         onClickNext={() => playNextTrack()}
-        onEnded={() => playNextTrack()}
+        onEnded={() => {
+          playNextTrack();
+        }}
         onClickPrevious={() => playPrevTrack()}
         autoPlayAfterSrcChange
         //TODO: custom icons
@@ -97,7 +107,6 @@ export default function Player() {
           </div>
         }
         src={currentTrack.url}
-        // onPlay={() => console.log(currentTrack)}
         customAdditionalControls={[]}
       />
     </div>
