@@ -49,3 +49,17 @@
 .rhap_total-time {
   color: var(--color-muted-foreground) !important;
 }
+
+.rhap_volume-bar,
+.rhap_volume-indicator,
+.rhap_volume-button {
+  display: none;
+}
+
+@media screen and (min-width: 640px) {
+  .rhap_volume-bar,
+  .rhap_volume-button,
+  .rhap_volume-indicator {
+    display: block;
+  }
+}
