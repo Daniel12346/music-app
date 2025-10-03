@@ -49,7 +49,7 @@ export default function Artist() {
           <SelectContent>
             {sortKeys.map((sortKey) => (
               <SelectItem key={sortKey} value={sortKey}>
-                {sortKey}
+                {sortKey.replace("_", " ")}
               </SelectItem>
             ))}
           </SelectContent>
