@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/client";
 import { HeartIcon } from "lucide-react";
 import useSWR from "swr";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function LikePlaylist({
   playlistID,
@@ -35,29 +36,34 @@ export default function LikePlaylist({
     return null;
   }
   return (
-    <HeartIcon
-      className={cn(
-        "cursor-pointer",
-        isPlaylistLiked && "fill-red-600",
-        strokeColor && `stroke-${strokeColor}`
-      )}
-      size={size}
-      onClick={async (e) => {
-        e.stopPropagation();
-        try {
-          if (isPlaylistLiked) {
-            await unlikePlaylist(supabase, myID, playlistID);
-            mutateLiked((prev) =>
-              prev?.filter((liked) => liked.playlist_id !== playlistID)
-            );
-          } else {
-            await likePlaylist(supabase, myID, playlistID);
-            mutateLiked();
-          }
-        } catch (e) {
-          console.log(e);
-        }
-      }}
-    />
+    <Tooltip>
+      <TooltipContent>{isPlaylistLiked ? "Unlike" : "Like"}</TooltipContent>
+      <TooltipTrigger asChild>
+        <HeartIcon
+          className={cn(
+            "cursor-pointer",
+            isPlaylistLiked && "fill-red-600",
+            strokeColor && `stroke-${strokeColor}`
+          )}
+          size={size}
+          onClick={async (e) => {
+            e.stopPropagation();
+            try {
+              if (isPlaylistLiked) {
+                await unlikePlaylist(supabase, myID, playlistID);
+                mutateLiked((prev) =>
+                  prev?.filter((liked) => liked.playlist_id !== playlistID)
+                );
+              } else {
+                await likePlaylist(supabase, myID, playlistID);
+                mutateLiked();
+              }
+            } catch (e) {
+              console.log(e);
+            }
+          }}
+        />
+      </TooltipTrigger>
+    </Tooltip>
   );
 }

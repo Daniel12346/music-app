@@ -26,6 +26,7 @@ import {
 import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
 import { addNewQueueIdToTrack } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function TrackOptionsButton({
   track,
@@ -46,7 +47,12 @@ export default function TrackOptionsButton({
     <DropdownMenu>
       <DropdownMenuTrigger>
         {/* TODO: @md:hidden */}
-        <EllipsisVerticalIcon className="cursor-pointer block " />
+        <Tooltip>
+          <TooltipContent>More options</TooltipContent>
+          <TooltipTrigger asChild>
+            <EllipsisVerticalIcon className="cursor-pointer block " />
+          </TooltipTrigger>
+        </Tooltip>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">
         <DropdownMenuItem className="flex justify-between">

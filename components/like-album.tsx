@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/client";
 import { HeartIcon } from "lucide-react";
 import useSWR from "swr";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function LikeAlbum({
   albumID,
@@ -31,23 +32,30 @@ export default function LikeAlbum({
     return null;
   }
   return (
-    <HeartIcon
-      className={cn(
-        "cursor-pointer",
-        isAlbumLiked && "fill-red-600",
-        strokeColor && `stroke-${strokeColor}`
-      )}
-      size={size}
-      onClick={async (e) => {
-        e.stopPropagation();
-        if (isAlbumLiked) {
-          await unlikeAlbum(supabase, myID, albumID);
-          mutateLiked((prev) => prev?.filter((liked) => liked.id !== albumID));
-        } else {
-          await likeAlbum(supabase, myID, albumID);
-          mutateLiked();
-        }
-      }}
-    />
+    <Tooltip>
+      <TooltipContent>{isAlbumLiked ? "Unlike" : "Like"}</TooltipContent>
+      <TooltipTrigger asChild>
+        <HeartIcon
+          className={cn(
+            "cursor-pointer",
+            isAlbumLiked && "fill-red-600",
+            strokeColor && `stroke-${strokeColor}`
+          )}
+          size={size}
+          onClick={async (e) => {
+            e.stopPropagation();
+            if (isAlbumLiked) {
+              await unlikeAlbum(supabase, myID, albumID);
+              mutateLiked((prev) =>
+                prev?.filter((liked) => liked.id !== albumID)
+              );
+            } else {
+              await likeAlbum(supabase, myID, albumID);
+              mutateLiked();
+            }
+          }}
+        />
+      </TooltipTrigger>
+    </Tooltip>
   );
 }

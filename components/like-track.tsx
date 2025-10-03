@@ -4,6 +4,8 @@ import { cn } from "@/lib/utils";
 import { createClient } from "@/utils/supabase/client";
 import { HeartIcon } from "lucide-react";
 import useSWR from "swr";
+import { Tooltip, TooltipContent } from "./ui/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 export default function LikeTrack({
   trackID,
@@ -33,23 +35,30 @@ export default function LikeTrack({
     return null;
   }
   return (
-    <HeartIcon
-      className={cn(
-        "cursor-pointer",
-        isTrackLiked && "fill-red-600",
-        strokeColor && `stroke-${strokeColor}`
-      )}
-      size={size}
-      onClick={async (e) => {
-        e.stopPropagation();
-        if (isTrackLiked) {
-          await unlikeTrack(supabase, myID, trackID, trackAlbumID);
-          mutateLiked((prev) => prev?.filter((liked) => liked.id !== trackID));
-        } else {
-          await likeTrack(supabase, myID, trackID, trackAlbumID);
-          mutateLiked();
-        }
-      }}
-    />
+    <Tooltip>
+      <TooltipContent>{isTrackLiked ? "Unlike" : "Like"}</TooltipContent>
+      <TooltipTrigger asChild>
+        <HeartIcon
+          className={cn(
+            "cursor-pointer",
+            isTrackLiked && "fill-red-600",
+            strokeColor && `stroke-${strokeColor}`
+          )}
+          size={size}
+          onClick={async (e) => {
+            e.stopPropagation();
+            if (isTrackLiked) {
+              await unlikeTrack(supabase, myID, trackID, trackAlbumID);
+              mutateLiked((prev) =>
+                prev?.filter((liked) => liked.id !== trackID)
+              );
+            } else {
+              await likeTrack(supabase, myID, trackID, trackAlbumID);
+              mutateLiked();
+            }
+          }}
+        />
+      </TooltipTrigger>
+    </Tooltip>
   );
 }
