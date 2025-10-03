@@ -35,7 +35,7 @@ export const getAlbumWithTracksAndArtist = async (
   const { data, error } = await client
     .from("albums")
     .select(
-      "*, tracks!albums_tracks(*, tracks_artists(*, artists(id, name))), artists(*)",
+      "*, tracks!albums_tracks(*, tracks_artists(artists(id, name))), artists(*)",
     )
     .eq("id", id)
     .single();
