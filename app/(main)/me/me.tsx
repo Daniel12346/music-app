@@ -27,11 +27,11 @@ export default function Me() {
   }
   return (
     <div className="px-3">
-      <h1>Playlists</h1>
+      <h1 className="mb-2 text-lg">Playlists</h1>
       <div className="mb-4">
         <MyPlaylists />
       </div>
-      <h1>Liked albums</h1>
+      <h1 className="mb-2 text-lg">Liked albums</h1>
       <div className="">
         <AlbumsDisplay
           albums={myLikedAlbums ?? null}
