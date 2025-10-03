@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import TrackArtists from "./track-artists";
 import { ListIcon, Repeat1Icon, ShuffleIcon } from "lucide-react";
 import LikeTrack from "./like-track";
+import { cn } from "@/lib/utils";
 export default function Player() {
   const {
     currentTrack,
@@ -45,7 +46,7 @@ export default function Player() {
         ).then(() => {
           mutateHistoryTracks();
         }),
-        incrementTrackPlayCount(supabase, currentTrack.id)
+        incrementTrackPlayCount(supabase, currentTrack.id),
       ]);
     }
   }, [currentTrack]);
@@ -96,9 +97,10 @@ export default function Player() {
                 onClick={() => {
                   toggleShuffle();
                 }}
-                className={
+                className={cn(
+                  "cursor-pointer",
                   isShuffleActive ? "text-green-600" : "text-muted-foreground"
-                }
+                )}
               />
               <Link href={`/queue`}>
                 <ListIcon />
