@@ -71,7 +71,7 @@ export default function Album() {
         />
 
         <div className="mt-2">
-          <div className="flex items-center gap-2 cursor-pointer justify-between">
+          <div className="flex items-center gap-2  justify-between">
             <div className="flex">
               <div className="flex gap-1 items-center">
                 <ClockIcon size={20} />
@@ -89,6 +89,7 @@ export default function Album() {
             </div>
             <div className="flex gap-2">
               <ListStartIcon
+                className="cursor-pointer"
                 size={22}
                 onClick={() => {
                   addTracksToQueue(
@@ -100,6 +101,7 @@ export default function Album() {
                 }}
               />
               <ListEndIcon
+                className="cursor-pointer"
                 size={22}
                 onClick={() => {
                   addTracksToQueue(
@@ -139,10 +141,11 @@ export default function Album() {
                 {track.title}
               </span>
               <TrackArtists artists={track.artists} />
-              {/* TODO: artist names (not necessarily the same as album artist names - featured artists etc.)*/}
             </div>
             <div className="flex items-center gap-2">
-              {/* TODO: correct type for length */}
+              <span className="text-md font-thin hidden md:block mr-1 text-md">
+                {track.play_count} plays
+              </span>
               <span className="text-md font-extralight">
                 {track.length as string}
               </span>
