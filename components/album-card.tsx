@@ -57,10 +57,10 @@ export default function AlbumCard({
           <span>{title}</span>
         </Link>
         {showArtistName && (
-          <div className="-mb-2 font-extralight text-muted-foreground">
+          <div className="font-extralight text-muted-foreground">
             {artists.map((artist) => (
               <Link href={`/artists/${artist.id}`} key={artist.id}>
-                <span className="">{artist.name}</span>
+                <span>{artist.name}</span>
               </Link>
             ))}
           </div>
