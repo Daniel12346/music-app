@@ -23,6 +23,8 @@ export default function Player() {
     playPrevTrack,
     toggleShuffle,
     isShuffleActive,
+    isRepeatActive,
+    toggleRepeat,
   } = useTrackStore();
   const supabase = createClient();
   const { data: myData } = useSWR("me", async () => {
@@ -57,8 +59,8 @@ export default function Player() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 w-full">
       <AudioPlayer
-        // autoPlay
         showSkipControls
+        loop={isRepeatActive}
         showJumpControls={false}
         onClickNext={() => playNextTrack()}
         onEnded={() => {
@@ -92,7 +94,15 @@ export default function Player() {
             </div>
 
             <div className="flex  gap-3 md:gap-4">
-              <Repeat1Icon />
+              <Repeat1Icon
+                onClick={() => {
+                  toggleRepeat();
+                }}
+                className={cn(
+                  "cursor-pointer",
+                  isRepeatActive ? "text-green-600" : "text-muted-foreground"
+                )}
+              />
               <ShuffleIcon
                 onClick={() => {
                   toggleShuffle();
