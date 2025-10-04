@@ -106,7 +106,7 @@ export default function Queue() {
       <div
         className={cn(
           "flex items-center gap-2",
-          isCurrent && "border-y-green-400 border-y-2"
+          isCurrent && "border-y-fuchsia-400 border-y-2 py-1 bg-fuchsia-600/10"
         )}
         onClick={(e) => {
           e.stopPropagation();
@@ -123,7 +123,7 @@ export default function Queue() {
           <TrackArtists artists={track.artists} textColor="text-foreground" />
         </div>
         <div className="flex">
-          {isQueuedByUser && <ListIcon stroke="var(--color-green-500)" />}
+          {isQueuedByUser && <ListIcon stroke="var(--color-fuchsia-500)" />}
           <TrackOptionsButton track={track} />
           <XIcon
             className="cursor-pointer"

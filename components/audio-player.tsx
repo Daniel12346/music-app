@@ -100,7 +100,7 @@ export default function Player() {
                 }}
                 className={cn(
                   "cursor-pointer",
-                  isRepeatActive ? "text-green-600" : "text-muted-foreground"
+                  isRepeatActive ? "text-fuchsia-600" : "text-muted-foreground"
                 )}
               />
               <ShuffleIcon
@@ -109,7 +109,7 @@ export default function Player() {
                 }}
                 className={cn(
                   "cursor-pointer",
-                  isShuffleActive ? "text-green-600" : "text-muted-foreground"
+                  isShuffleActive ? "text-fuchsia-600" : "text-muted-foreground"
                 )}
               />
               <Link href={`/queue`}>

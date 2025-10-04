@@ -25,24 +25,24 @@
 }
 
 .rhap_main-controls-button svg {
-  color: var(--color-green-400) !important;
+  color: var(--color-fuchsia-400) !important;
   width: 100%;
   height: 100%;
 }
 .rhap_progress-filled,
 .rhap_progress-indicator {
-  background-color: var(--color-green-500) !important;
+  background-color: var(--color-fuchsia-500) !important;
 }
 
 .rhap_button-clear.rhap_volume-button {
-  color: var(--color-green-500);
+  color: var(--color-fuchsia-500);
 }
 
 .rhap_volume-bar {
-  background-color: var(--color-green-200) !important;
+  background-color: var(--color-fuchsia-200) !important;
 }
 .rhap_volume-indicator {
-  background-color: var(--color-green-500) !important;
+  background-color: var(--color-fuchsia-500) !important;
 }
 
 .rhap_current-time,
