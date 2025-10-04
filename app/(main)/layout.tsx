@@ -6,6 +6,8 @@ import {
 } from "@/components/ui/resizable";
 import Header from "@/components/header";
 import Liked from "@/components/tracks-sidebar";
+import SidebarMobile from "@/components/sidebar-mobile";
+import AudioPlayer from "@/components/audio-player";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -23,7 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <main className="w-full flex flex-col items-center">
+      <div className="block md:hidden">
+        <SidebarMobile />
+      </div>
+      <div className="block md:hidden">
+        <SidebarMobile />
+      </div>
       <Header />
       <ResizablePanelGroup
         direction="horizontal"
@@ -41,6 +49,7 @@ export default function RootLayout({
           <Queue />
         </ResizablePanel>
       </ResizablePanelGroup>
-    </>
+      <AudioPlayer />
+    </main>
   );
 }
