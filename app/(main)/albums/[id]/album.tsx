@@ -151,7 +151,7 @@ export default function Album() {
               </span>
               <ListStartIcon
                 size={16}
-                className="opacity-80"
+                className="opacity-80 cursor-pointer"
                 onClick={(e) => {
                   //stopping propagation because the on click handle for the li element would set the clicked track as current and add unintened tracks to queue
                   e.stopPropagation();
@@ -160,7 +160,7 @@ export default function Album() {
               />
               <ListEndIcon
                 size={16}
-                className="opacity-80"
+                className="opacity-80 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   addTrackToQueue(addNewQueueIdToTrack(track), "end");
