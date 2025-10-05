@@ -2,6 +2,7 @@ import { Tables } from "@/database.types";
 import Link from "next/link";
 import LikeAlbum from "./like-album";
 import { cn } from "@/lib/utils";
+import { format, formatDistanceToNowStrict } from "date-fns";
 
 type ArtistInfo = Pick<Tables<"artists">, "name" | "id">;
 type Props = Pick<Tables<"albums">, "id" | "title" | "cover_url"> & {
@@ -49,7 +50,20 @@ export default function AlbumCard({
       </div>
       <div className="text-muted-foreground">
         {showReleasedAt && released_at && (
-          <span className="">{new Date(released_at).getFullYear()}</span>
+          <div className="flex justify-between mt-1">
+            {new Date(released_at) >= new Date() ? (
+              <span className="w-full bg-amber-200 text-slate-800 px-1 text-sm rounded-sm">
+                {"Out "}
+                {new Date(released_at).getFullYear() -
+                  new Date().getFullYear() >
+                1
+                  ? format(released_at, "dd MMMM yyyy")
+                  : format(released_at, "dd MMMM")}
+              </span>
+            ) : (
+              <span className="">{new Date(released_at).getFullYear()}</span>
+            )}
+          </div>
         )}
       </div>
       <div className="truncate text-lg flex-col">
