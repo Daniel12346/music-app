@@ -41,7 +41,7 @@ export default function LikeTrack({
         <HeartIcon
           className={cn(
             "cursor-pointer",
-            isTrackLiked && "fill-red-600",
+            isTrackLiked && "fill-red-600/70",
             strokeColor && `stroke-${strokeColor}`
           )}
           size={size}
