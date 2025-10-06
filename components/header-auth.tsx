@@ -13,7 +13,6 @@ export default async function AuthButton() {
 
   return user ? (
     <div className="flex items-center gap-4 w-full">
-      <SidebarTrigger className="md:hidden" />
       {/* TODO: user profile image */}
       <form action={signOutAction}>
         <Button type="submit" variant={"outline"}>
