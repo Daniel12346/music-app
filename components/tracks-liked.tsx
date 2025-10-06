@@ -33,7 +33,9 @@ export default function TracksLiked({
 
   return (
     <div className="flex flex-col gap-2">
-      <span className="text-lg font-semibold text-muted-foreground">Liked</span>
+      <span className="text-lg font-semibold text-muted-foreground">
+        Liked tracks
+      </span>
 
       {myLikedTracks?.map((track) => {
         if (!track) return null;
