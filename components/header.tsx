@@ -10,8 +10,15 @@ export default function Header() {
       <div className="hidden md:flex">
         <AuthButton />
       </div>
-      <Input placeholder="Search..." className="max-w-lg" />
-      <ThemeSwitcher />
+      <div className="max-w-lg w-full relative group">
+        <Input placeholder="Search..." className="w-full" />
+        <div className="absolute w-full max-h-40 overflow-y-scroll left-0 h-16 z-20 bg-accent hidden group-focus-within:flex shadow-md">
+          {/* //TODO: searching */}
+        </div>
+      </div>
+      <div className="w-6 flex justify-center">
+        <ThemeSwitcher />
+      </div>
     </div>
   );
 }
