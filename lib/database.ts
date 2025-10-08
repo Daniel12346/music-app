@@ -500,3 +500,35 @@ export const incrementTrackPlayCount = async (
   }
   return data;
 };
+
+export const getSearchResults = async (
+  client: SupabaseClient<Database>,
+  query: string,
+) => {
+  if (!query) return null;
+  if (!query.trim()) return null;
+  //TODO: add limits to queries
+  const [albumsRes, tracksRes, artistsRes, playlistsRes] = await Promise
+    .allSettled([
+      client.from("albums").select("*, artists(name, id)").ilike(
+        "name",
+        `%${query}%`,
+      ),
+      client.from("tracks").select("*, tracks_artists(artists(name, id))")
+        .ilike(
+          "title",
+          `%${query}%`,
+        ),
+      client.from("artists").select("*, albums(name, id)").ilike(
+        "name",
+        `%${query}%`,
+      ),
+      client.from("playlists").select("*").ilike("name", `%${query}%`),
+    ]);
+  return {
+    albums: albumsRes.status === "fulfilled" ? albumsRes.value : null,
+    tracks: tracksRes.status === "fulfilled" ? tracksRes.value : null,
+    artists: artistsRes.status === "fulfilled" ? artistsRes.value : null,
+    playlists: playlistsRes.status === "fulfilled" ? playlistsRes.value : null,
+  };
+};
