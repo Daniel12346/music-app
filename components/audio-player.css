@@ -13,6 +13,10 @@
   height: 20px;
 }
 
+.rhap_progress-container {
+  padding: 0 5px !important;
+}
+
 .rhap_main-controls-button {
   width: 80px !important;
   height: 80px !important;
@@ -51,6 +55,7 @@
 }
 
 .rhap_volume-bar,
+.rhap_volume-bar-area,
 .rhap_volume-indicator,
 .rhap_volume-button {
   display: none;
@@ -58,6 +63,7 @@
 
 @media screen and (min-width: 640px) {
   .rhap_volume-bar,
+  .rhap_volume-bar-area,
   .rhap_volume-button,
   .rhap_volume-indicator {
     display: block;
