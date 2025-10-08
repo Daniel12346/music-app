@@ -511,7 +511,7 @@ export const getSearchResults = async (
   const [albumsRes, tracksRes, artistsRes, playlistsRes] = await Promise
     .allSettled([
       client.from("albums").select("*, artists(name, id)").ilike(
-        "name",
+        "title",
         `%${query}%`,
       ),
       client.from("tracks").select("*, tracks_artists(artists(name, id))")
@@ -519,7 +519,7 @@ export const getSearchResults = async (
           "title",
           `%${query}%`,
         ),
-      client.from("artists").select("*, albums(name, id)").ilike(
+      client.from("artists").select("*, albums(title, id)").ilike(
         "name",
         `%${query}%`,
       ),
