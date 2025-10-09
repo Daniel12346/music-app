@@ -1,7 +1,7 @@
 import AuthButton from "./header-auth";
 import { ThemeSwitcher } from "./theme-switcher";
-import { Input } from "./ui/input";
 import { SidebarTrigger } from "./ui/sidebar";
+import Search from "./search";
 
 export default function Header() {
   return (
@@ -11,7 +11,7 @@ export default function Header() {
         <AuthButton />
       </div>
       <div className="max-w-lg w-full relative group">
-        <Input placeholder="Search..." className="w-full" />
+        <Search />
         <div className="absolute w-full max-h-40 overflow-y-scroll left-0 h-16 z-20 bg-accent hidden group-focus-within:flex shadow-md">
           {/* //TODO: searching */}
         </div>
