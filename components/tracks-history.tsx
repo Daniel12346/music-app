@@ -35,7 +35,7 @@ export default function TracksHistory({
   return (
     <div className="flex flex-col gap-2">
       <span className="text-lg font-semibold text-muted-foreground">
-        History
+        Recent tracks
       </span>
 
       {historyTracks
