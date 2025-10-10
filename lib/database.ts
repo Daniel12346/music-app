@@ -514,7 +514,9 @@ export const getSearchResults = async (
         "title",
         `%${query}%`,
       ),
-      client.from("tracks").select("*, tracks_artists(artists(name, id))")
+      client.from("tracks").select(
+        "*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url))",
+      )
         .ilike(
           "title",
           `%${query}%`,
@@ -523,7 +525,10 @@ export const getSearchResults = async (
         "name",
         `%${query}%`,
       ),
-      client.from("playlists").select("*").ilike("name", `%${query}%`),
+      //TODO: custom rpc to limit track albums (only 4 oldest albums with distinct covers needed)
+      client.from("playlists").select(
+        "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url))",
+      ).ilike("name", `%${query}%`),
     ]);
   return {
     albums: albumsRes.status === "fulfilled" ? albumsRes.value : null,
