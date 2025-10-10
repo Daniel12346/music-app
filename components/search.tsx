@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Input } from "./ui/input";
 import { getSearchResults } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
@@ -12,6 +12,7 @@ import {
   UserRoundIcon,
 } from "lucide-react";
 import Link from "next/link";
+import PlaylistCover from "./playlist-cover";
 
 export default function Search() {
   const supabase = createClient();
@@ -23,8 +24,9 @@ export default function Search() {
   const tracksRes = data?.tracks ?? null;
   const artistsRes = data?.artists ?? null;
   const playlistsRes = data?.playlists ?? null;
+  const dropdownRef = useRef<HTMLDivElement>(null);
   return (
-    <div className="max-w-lg w-full relative group">
+    <div className="max-w-lg w-full relative group" ref={dropdownRef}>
       <Input
         placeholder="Search..."
         className="w-full"
@@ -32,18 +34,23 @@ export default function Search() {
         onChange={(e) => setQuery(e.target.value)}
       />
 
-      <div className="absolute w-full  flex-col max-h-120 overflow-y-scroll left-0  z-20 bg-accent hidden group-focus-within:flex shadow-md">
+      <div className="absolute w-full  flex-col gap-1 max-h-120 overflow-y-scroll left-0  z-20 bg-accent hidden group-focus-within:flex shadow-md">
+        {/* //TODO: */}
+        {/* {data === null && <div>Recent searches:</div>} */}
         {albumsRes &&
           albumsRes.status === 200 &&
           albumsRes.data?.length !== 0 && (
-            <div className="flex flex-col gap-1 p-2">
-              <div className=" flex">
+            <div className="flex flex-col gap-2 p-2 border-b-2 border-slate-500/30">
+              <div className="flex">
                 <DiscAlbumIcon className="mr-1" />
                 Albums
               </div>
               {albumsRes?.data?.map((album) => (
                 <div key={album.id}>
-                  <Link href={`/albums/${album.id}`}>
+                  <Link
+                    href={`/albums/${album.id}`}
+                    onNavigate={() => setQuery("")}
+                  >
                     <div className="flex gap-1">
                       <img
                         className="rounded-sm"
@@ -54,7 +61,7 @@ export default function Search() {
                       />
                       <div className="flex flex-col ">
                         <span>{album.title}</span>
-                        <span className="text-s">
+                        <span className="text-s text-muted-foreground">
                           {album.artists
                             ?.map((artist) => artist.name)
                             .join(", ")}
@@ -70,15 +77,15 @@ export default function Search() {
         {tracksRes &&
           tracksRes.status === 200 &&
           tracksRes.data?.length !== 0 && (
-            <div className="flex flex-col gap-1 p-2">
+            <div className="flex flex-col gap-2 p-2 border-b-2 border-slate-500/30">
               <div className=" flex">
                 <MusicIcon className="mr-1" />
                 Tracks
               </div>
-              <div className="flex flex-col gap-2 md:flex-row md:gap-4 md:overflow-x-scroll">
+              <div className="flex flex-col gap-2">
                 {tracksRes?.data?.map((track) => (
                   <div key={track.id}>
-                    <Link href={`/track/${track.id}`}>
+                    <Link href={`/albums/${track.albums_tracks[0].albums.id}`}>
                       <div className="flex gap-1">
                         <img
                           className="rounded-sm"
@@ -87,7 +94,7 @@ export default function Search() {
                           width={40}
                           height={40}
                         />
-                        <div className="flex flex-col ">
+                        <div className="flex flex-col">
                           <span>{track.title}</span>
                           <span className="text-s">
                             {track.tracks_artists
@@ -105,14 +112,30 @@ export default function Search() {
         {artistsRes &&
           artistsRes.status === 200 &&
           artistsRes.data?.length !== 0 && (
-            <div className="flex flex-col gap-1 p-2">
+            <div className="flex flex-col gap-2 p-2 border-b-2 border-slate-500/30">
               <div className=" flex">
                 <UserRoundIcon className="mr-1" />
                 Artists
               </div>
               {artistsRes?.data?.map((artist) => (
                 <div key={artist.id}>
-                  <Link href={`/artists/${artist.id}`}>{artist.name}</Link>
+                  <Link
+                    href={`/artists/${artist.id}`}
+                    onNavigate={() => setQuery("")}
+                  >
+                    <div className="flex flex-col gap-1 ">
+                      <img
+                        className="w-20 h-20 object-cover rounded-full"
+                        src={artist.image_url || ""}
+                        alt={artist.name}
+                        width={20}
+                        height={20}
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-lg">{artist.name}</span>
+                      </div>
+                    </div>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -120,18 +143,35 @@ export default function Search() {
         {playlistsRes &&
           playlistsRes.status === 200 &&
           playlistsRes.data?.length !== 0 && (
-            <div className="flex flex-col gap-1 p-2">
+            <div className="flex flex-col gap-2 p-2 border-b-2 border-slate-500/30">
               <div className=" flex">
                 <ListMusicIcon className="mr-1" />
                 Playlists
               </div>
-              {playlistsRes?.data?.map((playlist) => (
-                <div key={playlist.id}>
-                  <Link href={`/playlists/${playlist.id}`}>
-                    {playlist.name}
-                  </Link>
-                </div>
-              ))}
+              <div className="flex gap-1">
+                {playlistsRes?.data?.map((playlist) => (
+                  <div key={playlist.id}>
+                    <Link
+                      href={`/playlists/${playlist.id}`}
+                      onNavigate={() => setQuery("")}
+                    >
+                      <div>
+                        <PlaylistCover
+                          alt={playlist.name || ""}
+                          image_url={playlist.image_url || ""}
+                          album_cover_urls={playlist.playlists_tracks.map(
+                            (track) => track.track_album.cover_url
+                          )}
+                          size="small"
+                        />
+                        <div className="w-full">
+                          <span className="truncate">{playlist.name}</span>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
       </div>
