@@ -13,10 +13,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import PlaylistCover from "./playlist-cover";
+import { useTrackStore } from "@/state/store";
 
 export default function SearchBar() {
   const supabase = createClient();
-  const [query, setQuery] = useState("");
+  const query = useTrackStore((state) => state.query);
+  const setQuery = useTrackStore((state) => state.setQuery);
   const { data, error, isLoading } = useSWR(["search", query], () =>
     getSearchResults(supabase, query)
   );

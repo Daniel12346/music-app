@@ -21,6 +21,7 @@ interface TrackStore {
   lastPlayedSourceTrack: TrackWithExtra | null;
   isShuffleActive: boolean;
   isRepeatActive: boolean;
+  query: string;
   setCurrentTrack: (track: TrackWithExtra | null) => void;
   setNextTrack: (track: TrackWithExtra | null) => void;
   setPrevTrack: (track: TrackWithExtra | null) => void;
@@ -37,6 +38,7 @@ interface TrackStore {
   toggleShuffle: () => void;
   toggleRepeat: () => void;
   setUserQueue: (queue: TrackWithExtra[]) => void;
+  setQuery: (query: string) => void;
 }
 
 //persist queue and current track state with zustand
@@ -51,6 +53,7 @@ export const useTrackStore = create<TrackStore>()(
       lastPlayedSourceTrack: null,
       isShuffleActive: false,
       isRepeatActive: false,
+      query: "",
       setCurrentTrack: (track: TrackWithExtra | null) => {
         set({ currentTrack: track });
       },
@@ -137,7 +140,9 @@ export const useTrackStore = create<TrackStore>()(
         set((state) => ({ isShuffleActive: !state.isShuffleActive })),
       toggleRepeat: () =>
         set((state) => ({ isRepeatActive: !state.isRepeatActive })),
+      setQuery: (query: string) => set({ query }),
     }),
+
     {
       name: "track-storage",
     }
