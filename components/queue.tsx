@@ -106,7 +106,7 @@ export default function Queue() {
       <div
         className={cn(
           "flex items-center gap-2",
-          isCurrent && "border-y-fuchsia-400 border-y-2 py-1 bg-fuchsia-600/10"
+          isCurrent && "border-y-highlight/50 border-y-2 py-1 bg-highlight/20"
         )}
         onClick={(e) => {
           e.stopPropagation();
