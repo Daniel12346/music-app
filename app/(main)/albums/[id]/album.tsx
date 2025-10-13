@@ -4,7 +4,7 @@ import LikeAlbum from "@/components/like-album";
 import LikeTrack from "@/components/like-track";
 import TrackArtists from "@/components/track-artists";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
-import { addNewQueueIdToTrack } from "@/lib/utils";
+import { addNewQueueIdToTrack, cn } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
@@ -27,6 +27,7 @@ export default function Album() {
   const queueTracksFromSource = useTrackStore(
     (state) => state.queueTracksFromSource
   );
+  const currentTrack = useTrackStore((state) => state.currentTrack);
   const tracksWithExtraInfo = albumWithTracks?.tracks.map((track) => ({
     ...track,
     albumName: albumWithTracks.title,
@@ -120,8 +121,11 @@ export default function Album() {
       <ul className="w-full max-w-md space-y-2 md:space-y-1 border-t-2 p-2">
         {tracksWithExtraInfo?.map((track, idx) => (
           <li
-            className="w-full  flex items-center justify-between px-2"
             key={track.id}
+            className={cn(
+              "w-full  flex items-center justify-between px-2",
+              track.id === currentTrack?.id && "bg-highlight/30"
+            )}
           >
             <div className="flex flex-col">
               <span
