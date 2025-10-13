@@ -3,10 +3,12 @@ import AlbumCard from "@/components/album-card";
 import LikeAlbum from "@/components/like-album";
 import LikeTrack from "@/components/like-track";
 import TrackArtists from "@/components/track-artists";
+import { TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
 import { addNewQueueIdToTrack, cn } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
+import { Tooltip } from "@radix-ui/react-tooltip";
 import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
@@ -89,30 +91,44 @@ export default function Album() {
               </div>
             </div>
             <div className="flex gap-2">
-              <ListStartIcon
-                className="cursor-pointer"
-                size={22}
-                onClick={() => {
-                  addTracksToQueue(
-                    tracksWithExtraInfo?.map((track) =>
-                      addNewQueueIdToTrack(track)
-                    )!,
-                    "start"
-                  );
-                }}
-              />
-              <ListEndIcon
-                className="cursor-pointer"
-                size={22}
-                onClick={() => {
-                  addTracksToQueue(
-                    tracksWithExtraInfo?.map((track) =>
-                      addNewQueueIdToTrack(track)
-                    )!,
-                    "end"
-                  );
-                }}
-              />
+              <Tooltip>
+                <TooltipTrigger>
+                  <ListStartIcon
+                    className="cursor-pointer"
+                    size={22}
+                    onClick={() => {
+                      addTracksToQueue(
+                        tracksWithExtraInfo?.map((track) =>
+                          addNewQueueIdToTrack(track)
+                        )!,
+                        "start"
+                      );
+                    }}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Add to start of queue</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger>
+                  <ListEndIcon
+                    className="cursor-pointer"
+                    size={22}
+                    onClick={() => {
+                      addTracksToQueue(
+                        tracksWithExtraInfo?.map((track) =>
+                          addNewQueueIdToTrack(track)
+                        )!,
+                        "end"
+                      );
+                    }}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Add to end of queue</p>
+                </TooltipContent>
+              </Tooltip>
               <LikeAlbum albumID={albumWithTracks.id} size={22} />
             </div>
           </div>
@@ -153,23 +169,33 @@ export default function Album() {
               <span className="text-md font-extralight">
                 {track.length as string}
               </span>
-              <ListStartIcon
-                size={16}
-                className="opacity-80 cursor-pointer"
-                onClick={(e) => {
-                  //stopping propagation because the on click handle for the li element would set the clicked track as current and add unintened tracks to queue
-                  e.stopPropagation();
-                  addTrackToQueue(addNewQueueIdToTrack(track), "start");
-                }}
-              />
-              <ListEndIcon
-                size={16}
-                className="opacity-80 cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addTrackToQueue(addNewQueueIdToTrack(track), "end");
-                }}
-              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <ListStartIcon
+                    size={16}
+                    className="opacity-80 cursor-pointer"
+                    onClick={(e) => {
+                      //stopping propagation because the on click handle for the li element would set the clicked track as current and add unintened tracks to queue
+                      e.stopPropagation();
+                      addTrackToQueue(addNewQueueIdToTrack(track), "start");
+                    }}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>Add to start of queue</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <ListEndIcon
+                    size={16}
+                    className="opacity-80 cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addTrackToQueue(addNewQueueIdToTrack(track), "end");
+                    }}
+                  />
+                </TooltipTrigger>
+                <TooltipContent>Add to end of queue</TooltipContent>
+              </Tooltip>
               <LikeTrack trackID={track.id} trackAlbumID={track.albumId} />
             </div>
           </li>
