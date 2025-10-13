@@ -169,7 +169,7 @@ export default function TrackOptionsButton({
           }}
         >
           <ListStartIcon size={20} />
-          <span>Add to queue start</span>
+          <span>Add to start of queue</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="flex justify-between "
@@ -179,7 +179,7 @@ export default function TrackOptionsButton({
           }}
         >
           <ListEndIcon size={20} />
-          <span>Add to queue end</span>
+          <span>Add to end of queue</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
