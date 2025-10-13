@@ -1,7 +1,7 @@
 import AuthButton from "./header-auth";
 import { ThemeSwitcher } from "./theme-switcher";
 import { SidebarTrigger } from "./ui/sidebar";
-import Search from "./search";
+import Search from "./search-bar";
 
 export default function Header() {
   return (
