@@ -3,7 +3,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 
 export const getAlbums = async (client: SupabaseClient<Database>) => {
   const { data, error } = await client.from("albums").select(
-    "*, artists_albums(*, artists(name, id))",
+    "*, artists(name, id)",
   );
   if (error) {
     throw error;
@@ -54,7 +54,7 @@ export const getAlbumsLikedByUser = async (
   }
   const { data, error } = await client
     .from("users_liked_albums")
-    .select("album_id, albums(*, artists_albums(*, artists(name, id)))")
+    .select("album_id, albums(*, artists(name, id))")
     .eq("user_id", userId);
 
   if (error) {
@@ -120,7 +120,7 @@ export const getArtistWithAlbums = async (
   id: string,
 ) => {
   const { data, error } = await client.from("artists").select(
-    "*, albums(*, artists_albums(*, artists(name, id)))",
+    "*, albums(*,artists(name, id))",
   ).eq("id", id).single();
   if (error) {
     throw error;
@@ -266,7 +266,7 @@ export const getUserPlaylistsWithPreview = async (
   const { data, error } = await client
     .from("playlists")
     .select(
-      "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url), track:tracks(*, tracks_artists(artists(name, id))))",
+      "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url))",
     )
     .eq("owner_id", userId)
     .limit(10, { referencedTable: "playlists_tracks" })
@@ -413,7 +413,7 @@ export const getNewAlbumsByLikedArtists = async (
   const { data, error } = await client
     .from("users_liked_artists")
     .select(
-      "artist_id, artists(*, albums(*, artists_albums(*, artists(name, id))))",
+      "artist_id, artists(*, albums(*, artists(name, id)))",
     )
     //album released in last 5 years
     //TODO: change to last week/month
