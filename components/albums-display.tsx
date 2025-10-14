@@ -59,7 +59,7 @@ export default function Albums({
                   id={album.id}
                   showReleasedAt={showReleasedAt}
                   released_at={album.released_at}
-                  artists={album.artists_albums.map((a) => a.artists)}
+                  artists={album.artists}
                 />
               </li>
             ))}
