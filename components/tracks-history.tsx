@@ -41,17 +41,17 @@ export default function TracksHistory({
       {historyTracks
         ?.toSorted(
           (a, b) =>
-            new Date(b.last_played_at).getTime() -
-            new Date(a.last_played_at).getTime()
+            new Date(b.played_at).getTime() - new Date(a.played_at).getTime()
         )
-        .map((track) => {
-          if (!track) return null;
+        .map((record) => {
+          if (!record) return null;
+          const { track, track_album } = record;
           const TrackWithExtra = {
             ...track,
-            albumCoverUrl: track.album.cover_url || "",
-            albumId: track.album.id, // Assuming albumId is the same as album ID
+            albumCoverUrl: track_album.cover_url || "",
+            albumId: track_album.id, // Assuming albumId is the same as album ID
             artists: track.artists || [],
-            albumName: track.album.title || "",
+            albumName: track_album.title || "",
           };
 
           return (
@@ -64,7 +64,7 @@ export default function TracksHistory({
               }
             >
               <img
-                src={track.album.cover_url || ""}
+                src={track_album.cover_url || ""}
                 alt={track.title}
                 className="w-10 h-10 rounded"
               />
@@ -74,7 +74,7 @@ export default function TracksHistory({
                 <TrackArtists artists={track.artists} />
               </div>
               <span className="hidden @sm:block text-sm text-muted-foreground">
-                {formatDistanceToNow(new Date(track.last_played_at), {
+                {formatDistanceToNow(new Date(record.played_at), {
                   addSuffix: true,
                 })}
               </span>
@@ -87,7 +87,7 @@ export default function TracksHistory({
                   trackID={track.id}
                   size={size}
                   strokeColor={strokeColor}
-                  trackAlbumID={track.album.id}
+                  trackAlbumID={track_album.id}
                 />
                 <XIcon />
               </div>

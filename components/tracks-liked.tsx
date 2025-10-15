@@ -37,14 +37,14 @@ export default function TracksLiked({
         Liked tracks
       </span>
 
-      {myLikedTracks?.map((track) => {
+      {myLikedTracks?.map(({ track, track_album }) => {
         if (!track) return null;
         const TrackWithExtra = {
           ...track,
-          albumCoverUrl: track.album.cover_url || "",
-          albumId: track.album.id, // Assuming albumId is the same as album ID
-          artists: track.tracks_artists.map((artist) => artist.artists) || [],
-          albumName: track.album.title || "",
+          albumCoverUrl: track_album.cover_url || "",
+          albumId: track_album.id, // Assuming albumId is the same as album ID
+          artists: track.artists || [],
+          albumName: track_album.title || "",
         };
 
         return (
@@ -57,16 +57,14 @@ export default function TracksLiked({
             }
           >
             <img
-              src={track.album.cover_url || ""}
+              src={track_album.cover_url || ""}
               alt={track.title}
               className="w-10 h-10 rounded"
             />
             <div className="flex-1 flex flex-col">
               <span className="text-lg ">{track.title}</span>
 
-              <TrackArtists
-                artists={track.tracks_artists.map((artist) => artist.artists)}
-              />
+              <TrackArtists artists={track.artists} />
             </div>
 
             <div
@@ -78,7 +76,7 @@ export default function TracksLiked({
                 trackID={track.id}
                 size={size}
                 strokeColor={strokeColor}
-                trackAlbumID={track.album.id}
+                trackAlbumID={track_album.id}
               />
               <XIcon />
             </div>
