@@ -29,7 +29,7 @@ export default function LikeTrack({
     () => getTracksLikedByUser(supabase, myID)
   );
   const isTrackLiked =
-    liked?.some((likedTrack) => likedTrack.id === trackID) ?? false;
+    liked?.some((likedTrack) => likedTrack.track_id === trackID) ?? false;
 
   if (!myID) {
     return null;
@@ -50,7 +50,7 @@ export default function LikeTrack({
             if (isTrackLiked) {
               await unlikeTrack(supabase, myID, trackID, trackAlbumID);
               mutateLiked((prev) =>
-                prev?.filter((liked) => liked.id !== trackID)
+                prev?.filter((liked) => liked.track_id !== trackID)
               );
             } else {
               await likeTrack(supabase, myID, trackID, trackAlbumID);
