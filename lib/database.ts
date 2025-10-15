@@ -1,6 +1,10 @@
 import { Database } from "@/database.types";
-import { SupabaseClient } from "@supabase/supabase-js";
-
+import { createBrowserClient } from "@supabase/ssr";
+import { QueryData, SupabaseClient } from "@supabase/supabase-js";
+const supabase = createBrowserClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
 export const getAlbums = async (client: SupabaseClient<Database>) => {
   const { data, error } = await client.from("albums").select(
     "*, artists(name, id)",
@@ -176,18 +180,14 @@ export const getTracksLikedByUser = async (
   const { data, error } = await client
     .from("users_liked_tracks")
     .select(
-      "track_id, tracks(*, tracks_artists(*, artists(id, name))), albums(*)",
+      "track_id, track:tracks(*, artists(id, name)), track_album:albums(*)",
     )
     .eq("user_id", userId);
 
   if (error) {
     throw error;
   }
-  const trackData = data?.map((record) => ({
-    ...record.tracks,
-    album: record.albums,
-  }));
-  return trackData;
+  return data;
 };
 
 export const getUserHistoryTracks = async (
@@ -200,22 +200,14 @@ export const getUserHistoryTracks = async (
   const { data, error } = await client
     .from("users_history_tracks")
     .select(
-      "track_id, played_at, tracks(*, tracks_artists(*, artists(id, name))), albums(*)",
+      "track_id, played_at, track:tracks(*, artists(id, name)), track_album:albums(*)",
     )
     .eq("user_id", userId);
 
   if (error) {
     throw error;
   }
-  const trackData = data?.map((record) => ({
-    ...record.tracks,
-    album: record.albums,
-    last_played_at: record.played_at,
-    artists: record.tracks.tracks_artists.map(
-      ({ artists }) => artists,
-    ),
-  }));
-  return trackData;
+  return data;
 };
 
 export const addTrackToHistory = async (
@@ -277,17 +269,7 @@ export const getUserPlaylistsWithPreview = async (
   if (error) {
     throw error;
   }
-  const playlists = data?.map((playlist) => ({
-    ...playlist,
-    // tracks: playlist.playlists_tracks.map((playlistTrack) => ({
-    //   ...playlistTrack.tracks,
-    //   album: playlistTrack.tracks.albums,
-    //   artists: playlistTrack.tracks.tracks_artists.map((artist) =>
-    //     artist.artists
-    //   ),
-    // })),
-  }));
-  return playlists;
+  return data;
 };
 
 export type PlaylistsWithPreview = Awaited<
@@ -303,7 +285,7 @@ export const getPlaylist = async (
     .from("playlists")
     //TODO: check if contributor is using the right fore
     .select(
-      "*, owner:profiles!playlists_owner_id_fkey(id, username), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(*, artists(name, id))))",
+      "*, owner:profiles!playlists_owner_id_fkey(id, username), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(artists(name, id))))",
     )
     .eq("id", id)
     .order("added_at", {
@@ -458,7 +440,7 @@ export type NewTracksByLikedArtists = Awaited<
 
 export const makeNewTracksPlaylist = (
   tracks: NewTracksByLikedArtists,
-): PlaylistWithPreview | null => {
+) => {
   if (!tracks) return null;
   return {
     id: "new_releases",
@@ -537,3 +519,9 @@ export const getSearchResults = async (
     playlists: playlistsRes.status === "fulfilled" ? playlistsRes.value : null,
   };
 };
+
+//TODO?: remove joining tables
+const tracksQuery = supabase.from("tracks").select(
+  "*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url))",
+);
+export type TracksWithAlbumsAndArtists = QueryData<typeof tracksQuery>;
