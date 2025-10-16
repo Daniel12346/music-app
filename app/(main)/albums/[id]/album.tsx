@@ -9,7 +9,12 @@ import { addNewQueueIdToTrack, cn } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { Tooltip } from "@radix-ui/react-tooltip";
-import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
+import {
+  AudioLinesIcon,
+  ClockIcon,
+  ListEndIcon,
+  ListStartIcon,
+} from "lucide-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 
@@ -138,14 +143,14 @@ export default function Album() {
         {tracksWithExtraInfo?.map((track, idx) => (
           <li
             key={track.id}
-            className={cn(
-              "w-full  flex items-center justify-between px-2",
-              track.id === currentTrack?.id && "bg-highlight/30"
-            )}
+            className="w-full  flex items-center justify-between px-2"
           >
             <div className="flex flex-col">
               <span
-                className="text-lg font-light cursor-pointer"
+                className={cn(
+                  "text-lg font-light cursor-pointer",
+                  track.id === currentTrack?.id && "text-highlight font-normal"
+                )}
                 onClick={() => {
                   const tracksWithQueueIds = tracksWithExtraInfo.map((track) =>
                     addNewQueueIdToTrack(track)
@@ -154,7 +159,6 @@ export default function Album() {
                   setCurrentTrack(trackWithQueueId);
                   //clearing the queue and adding all the album tracks starting with the selected track
                   //TODO: add optional setting to add clicked track to queue without resetting queue
-                  // setQueue(tracksWithQueueIds.slice(idx));
                   queueTracksFromSource(tracksWithQueueIds);
                 }}
               >
@@ -163,6 +167,13 @@ export default function Album() {
               <TrackArtists artists={track.artists} />
             </div>
             <div className="flex items-center gap-2">
+              {track.id === currentTrack?.id && (
+                <AudioLinesIcon
+                  size={30}
+                  className="animate-pulse duration-100 mr-2 ease-in-out"
+                  stroke="var(--highlight)"
+                />
+              )}
               <span className="text-md font-thin hidden md:block mr-1 text-md">
                 {track.play_count} plays
               </span>
