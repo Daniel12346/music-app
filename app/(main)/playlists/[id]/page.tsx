@@ -4,7 +4,7 @@ import { getPlaylist } from "@/lib/database";
 import Playlist from "./playlist";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 export default async function PlaylistPage({ params }: Props) {
   const supabase = await createClient();

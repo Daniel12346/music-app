@@ -4,9 +4,9 @@ import { SWRConfig, unstable_serialize } from "swr";
 import Artist from "./artist";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 export default async function ArtistPage({ params }: Props) {
   const { id } = await params;

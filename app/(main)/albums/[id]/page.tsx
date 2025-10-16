@@ -7,7 +7,7 @@ import Album from "./album";
 export default async function AlbumsPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
   const supabase = await createClient();
