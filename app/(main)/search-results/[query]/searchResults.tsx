@@ -33,70 +33,71 @@ export default function SearchResults() {
   const artists = data?.artists ?? null;
 
   return (
-    <div className="px-3">
+    <div className="flex flex-col px-3 gap-6">
       <h1 className="text-lg">
         Search results for
         <span className="ml-1 font-semibold">{query}</span>
       </h1>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6 ">
         <div className="flex flex-col">
           <div className="flex">
             <MusicIcon className="mr-1" />
             Tracks
           </div>
           {(tracks?.data?.length ?? 0) > 0 ? (
-            tracks?.data?.map((track) => {
-              if (!track) return null;
-              const trackWithExtra = {
-                ...track,
-                albumCoverUrl: track.albums_tracks[0].albums.cover_url || "",
-                albumId: track.albums_tracks[0].albums.id || "",
-                artists:
-                  track.tracks_artists.map((artist) => artist.artists) || [],
-                albumName: track.albums_tracks[0].albums.title || "",
-              };
+            <div className="px-2 columns-1 md:columns-2 md:gap-30">
+              {tracks?.data?.map((track) => {
+                if (!track) return null;
+                const trackWithExtra = {
+                  ...track,
+                  albumCoverUrl: track.albums_tracks[0].albums.cover_url || "",
+                  albumId: track.albums_tracks[0].albums.id || "",
+                  artists:
+                    track.tracks_artists.map((artist) => artist.artists) || [],
+                  albumName: track.albums_tracks[0].albums.title || "",
+                };
 
-              return (
-                <div
-                  key={track.id}
-                  className="flex cursor-pointer items-center gap-2  @container"
-                  onClick={
-                    () => setCurrentTrack(addNewQueueIdToTrack(trackWithExtra)) // Add queueId to track
-                  }
-                >
-                  <img
-                    src={trackWithExtra.albumCoverUrl || ""}
-                    alt={track.title}
-                    className="w-10 h-10 rounded"
-                  />
-                  <div className="flex-1 flex flex-col">
-                    <span className="text-lg ">{track.title}</span>
-
-                    <TrackArtists
-                      artists={track.tracks_artists.map(
-                        (artist) => artist.artists
-                      )}
-                    />
-                  </div>
-
+                return (
                   <div
-                    className="flex items-center gap-1.5"
-                    onClick={(e) => e.stopPropagation()}
+                    key={track.id}
+                    className="flex cursor-pointer items-center gap-2  @container"
+                    onClick={
+                      () =>
+                        setCurrentTrack(addNewQueueIdToTrack(trackWithExtra)) // Add queueId to track
+                    }
                   >
-                    <TrackOptionsButton track={trackWithExtra} />
-                    <LikeTrack
-                      trackID={track.id}
-                      // size={size}
-                      // strokeColor={strokeColor}
-                      trackAlbumID={trackWithExtra.albumId}
+                    <img
+                      src={trackWithExtra.albumCoverUrl || ""}
+                      alt={track.title}
+                      className="w-10 h-10 rounded"
                     />
-                    <XIcon />
+                    <div className="flex-1 flex flex-col">
+                      <span className="text-lg ">{track.title}</span>
+
+                      <TrackArtists
+                        artists={track.tracks_artists.map(
+                          (artist) => artist.artists
+                        )}
+                      />
+                    </div>
+
+                    <div
+                      className="flex items-center gap-1.5"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <TrackOptionsButton track={trackWithExtra} />
+                      <LikeTrack
+                        trackID={track.id}
+                        trackAlbumID={trackWithExtra.albumId}
+                      />
+                      <XIcon />
+                    </div>
                   </div>
-                </div>
-              );
-            })
+                );
+              })}
+            </div>
           ) : (
-            <div>No tracks found</div>
+            <div className="flex justify-center">No tracks found</div>
           )}
         </div>
         <div>
@@ -111,7 +112,7 @@ export default function SearchResults() {
                 isLoading={false}
               />
             ) : (
-              <span>No playlists found</span>
+              <span className="flex justify-center">No playlists found</span>
             )}
           </div>
         </div>
@@ -124,7 +125,7 @@ export default function SearchResults() {
             {(albums?.data?.length ?? 0) > 0 ? (
               <AlbumsDisplay albums={albums?.data ?? []} isLoading={false} />
             ) : (
-              <span>No albums found</span>
+              <span className="flex justify-center">No albums found</span>
             )}
           </div>
         </div>
@@ -154,7 +155,7 @@ export default function SearchResults() {
                 </div>
               ))
             ) : (
-              <div>No artists found</div>
+              <div className="flex justify-center">No artists found</div>
             )}
           </div>
         </div>
