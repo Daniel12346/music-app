@@ -66,6 +66,6 @@
   .rhap_volume-bar-area,
   .rhap_volume-button,
   .rhap_volume-indicator {
-    display: block;
+    display: flex;
   }
 }
