@@ -40,7 +40,6 @@ export default function Album() {
     albumName: albumWithTracks.title,
     albumCoverUrl: albumWithTracks.cover_url!,
     albumId: albumWithTracks.id,
-    //TODO: artists for specific track, not album
     artists: track.tracks_artists.map((trackArtist) => ({
       id: trackArtist.artists.id,
       name: trackArtist.artists.name,
@@ -158,7 +157,6 @@ export default function Album() {
                   const trackWithQueueId = tracksWithQueueIds[idx];
                   setCurrentTrack(trackWithQueueId);
                   //clearing the queue and adding all the album tracks starting with the selected track
-                  //TODO: add optional setting to add clicked track to queue without resetting queue
                   queueTracksFromSource(tracksWithQueueIds);
                 }}
               >

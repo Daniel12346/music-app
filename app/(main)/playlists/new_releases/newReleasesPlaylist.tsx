@@ -141,7 +141,6 @@ export default function NewReleasesPlaylist() {
                   const trackWithQueueId = tracksWithQueueIds[idx];
                   setCurrentTrack(trackWithQueueId);
                   //clearing the queue and adding all the album tracks starting with the selected track
-                  //TODO: add optional setting to add clicked track to queue without resetting queue
                   setQueue(tracksWithQueueIds.slice(idx));
                 }}
               >
@@ -150,12 +149,6 @@ export default function NewReleasesPlaylist() {
               <TrackArtists artists={track.artists} />
             </div>
             <div className="flex justify-end items-center gap-2 grow-0 shrink-0">
-              {/* TODO: use user avatar instead
-              <span className="text-md font-extralight w-fit">
-                <span className="text-sm font-extralight">
-                  {track.contributor?.username}
-                </span>
-              </span> */}
               <span className="text-md font-extralight w-fit">
                 {track.length as string}
               </span>

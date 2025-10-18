@@ -38,7 +38,6 @@ export default function Player() {
   );
   useEffect(() => {
     if (currentTrack && myID) {
-      //TODO: optimistic update
       Promise.all([
         addTrackToHistory(
           supabase,
@@ -68,7 +67,6 @@ export default function Player() {
         }}
         onClickPrevious={() => playPrevTrack()}
         autoPlayAfterSrcChange
-        //TODO: custom icons
         header={
           <div className="w-full flex items-center justify-between">
             <div className="flex w-fit gap-2 ">

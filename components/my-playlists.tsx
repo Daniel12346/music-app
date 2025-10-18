@@ -6,7 +6,6 @@ import {
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 import PlaylistsDisplay from "./playlists-grid";
-//TODO: playlist with new releases
 
 export default function MyPlaylists() {
   const supabase = createClient();

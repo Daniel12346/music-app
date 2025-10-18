@@ -283,7 +283,6 @@ export const getPlaylist = async (
 ) => {
   const { data, error } = await client
     .from("playlists")
-    //TODO: check if contributor is using the right fore
     .select(
       "*, owner:profiles!playlists_owner_id_fkey(id, username), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(artists(name, id))))",
     )
@@ -387,7 +386,6 @@ export const removeTrackFromPlaylist = async (
   return data;
 };
 
-//TODO: replace with view
 export const getNewAlbumsByLikedArtists = async (
   client: SupabaseClient<Database>,
   userId: string,
@@ -422,7 +420,6 @@ export const getNewTracksByLikedArtists = async (
   const { data, error } = await client
     //tracks_by_liked_artists is an sql view
     .from("tracks_by_liked_artists")
-    //TODO: fix - if track's track_artists has multiple artists liked by user, duplicate tracks will be returned
     .select(
       "*, tracks_artists(artists(name, id))",
     )

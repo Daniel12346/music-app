@@ -46,7 +46,6 @@ export default function TrackOptionsButton({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        {/* TODO: @md:hidden */}
         <Tooltip>
           <TooltipContent>More options</TooltipContent>
           <TooltipTrigger asChild>
@@ -94,7 +93,6 @@ export default function TrackOptionsButton({
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="flex justify-between">
-          {/* TODO: enable liking by clicking anywhere, not just the icon */}
           <LikeTrack
             trackID={track.id}
             trackAlbumID={track.albumId}
@@ -111,7 +109,6 @@ export default function TrackOptionsButton({
                 <ChevronRightIcon size={20} className="-mr-2" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                {/* TODO: playlists */}
                 {myPlaylists?.map((playlist) => (
                   <DropdownMenuItem
                     key={playlist.id}
