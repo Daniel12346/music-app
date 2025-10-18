@@ -2,7 +2,6 @@
 import AlbumsDisplay from "@/components/albums-display";
 import { getSearchResults } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
-import { useParams } from "next/navigation";
 import useSWR from "swr";
 import PlaylistsGrid from "@/components/playlists-grid";
 import {
@@ -21,9 +20,11 @@ import { useTrackStore } from "@/state/store";
 
 export default function SearchResults() {
   const supabase = createClient();
-  const { query } = useParams<{ query: string }>();
-  const { data, isLoading } = useSWR(["getSearchResults", query], () =>
-    getSearchResults(supabase, query)
+  const { query } = useTrackStore((state) => state);
+  const { data, isLoading } = useSWR(
+    ["getSearchResults", query],
+    () => getSearchResults(supabase, query),
+    { keepPreviousData: true }
   );
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack);
 
@@ -45,7 +46,7 @@ export default function SearchResults() {
             Tracks
           </div>
           {(tracks?.data?.length ?? 0) > 0 ? (
-            <div className="px-2 columns-1 md:columns-2 md:gap-30">
+            <div className="px-2 md:grid md:grid-cols-2 md:gap-10">
               {tracks?.data?.map((track) => {
                 if (!track) return null;
                 const trackWithExtra = {
