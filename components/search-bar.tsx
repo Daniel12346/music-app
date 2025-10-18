@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Input } from "./ui/input";
 import { getSearchResults } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
@@ -14,8 +14,11 @@ import {
 import Link from "next/link";
 import PlaylistCover from "./playlist-cover";
 import { useTrackStore } from "@/state/store";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function SearchBar() {
+  const router = useRouter();
+  const pathname = usePathname();
   const supabase = createClient();
   const query = useTrackStore((state) => state.query);
   const setQuery = useTrackStore((state) => state.setQuery);
@@ -33,11 +36,13 @@ export default function SearchBar() {
         placeholder="Search..."
         className="w-full"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          if (pathname !== "/search-results") router.push("/search-results");
+          setQuery(e.target.value);
+        }}
       />
 
       <div className="absolute w-full  flex-col gap-1 max-h-120 overflow-y-scroll left-0  z-20 bg-accent hidden group-focus-within:flex shadow-md">
-        {/* //TODO: */}
         {data === null && <div>Recent results:</div>}
         {albumsRes &&
           albumsRes.status === 200 &&
