@@ -170,7 +170,7 @@ export default function Album() {
               {track.id === currentTrack?.id && (
                 <AudioLinesIcon
                   size={30}
-                  className="animate-pulse duration-100 mr-2 ease-in-out"
+                  className="animate-spin-x"
                   stroke="var(--highlight)"
                 />
               )}
