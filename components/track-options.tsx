@@ -11,8 +11,8 @@ import {
   Download,
   EllipsisVerticalIcon,
   ListEndIcon,
-  ListMusicIcon,
   ListStartIcon,
+  PlusIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
@@ -103,7 +103,7 @@ export default function TrackOptionsButton({
           <span>Like</span>
         </DropdownMenuItem>
         <DropdownMenuItem className="flex justify-between">
-          <ListMusicIcon size={20} />
+          <PlusIcon size={20} />
           <div className="flex">
             Add to playlist{" "}
             <DropdownMenu>
