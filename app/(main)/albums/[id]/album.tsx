@@ -34,6 +34,7 @@ export default function Album() {
   const queueTracksFromSource = useTrackStore(
     (state) => state.queueTracksFromSource
   );
+  const isPlaying = useTrackStore((state) => state.isPlaying);
   const currentTrack = useTrackStore((state) => state.currentTrack);
   const tracksWithExtraInfo = albumWithTracks?.tracks.map((track) => ({
     ...track,
@@ -168,7 +169,7 @@ export default function Album() {
               {track.id === currentTrack?.id && (
                 <AudioLinesIcon
                   size={30}
-                  className="animate-spin-x"
+                  className={cn(isPlaying ? "animate-spin-x" : "rotate-x-70")}
                   stroke="var(--highlight)"
                 />
               )}
