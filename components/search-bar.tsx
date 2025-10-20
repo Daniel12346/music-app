@@ -80,7 +80,6 @@ export default function SearchBar() {
               ))}
             </div>
           )}
-        {/* TODO: play track on click or open album with track highlighted */}
         {tracksRes &&
           tracksRes.status === 200 &&
           tracksRes.data?.length !== 0 && (
