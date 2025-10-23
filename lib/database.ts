@@ -445,6 +445,7 @@ export const makeNewTracksPlaylist = (
     image_url: "/new.png",
     description: "Recent tracks by artists you like",
     owner_id: null,
+    status: "PRIVATE" as const,
     created_at: new Date().toISOString(),
     playlists_tracks: tracks.map((track) => ({
       added_at: null,
@@ -515,6 +516,29 @@ export const getSearchResults = async (
     artists: artistsRes.status === "fulfilled" ? artistsRes.value : null,
     playlists: playlistsRes.status === "fulfilled" ? playlistsRes.value : null,
   };
+};
+
+export const getPlaylistsSearchResults = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  query: string,
+) => {
+  if (!query) return null;
+  if (!query.trim()) return null;
+  const { data, error } = await client
+    .from("playlists_with_sharing")
+    .select(
+      "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url))",
+    )
+    .like("name", `%${query}%`)
+    .or(
+      `owner_id.eq.${userId}, shared_with_user_id.eq.${userId}`,
+    );
+
+  if (error) {
+    throw error;
+  }
+  return data;
 };
 
 //TODO?: remove joining tables
