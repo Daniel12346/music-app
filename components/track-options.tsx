@@ -13,6 +13,7 @@ import {
   ListEndIcon,
   ListStartIcon,
   PlusIcon,
+  SearchIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
@@ -21,12 +22,15 @@ import Link from "next/link";
 import LikeTrack from "./like-track";
 import {
   addTrackToPlaylist,
+  getPlaylistsSearchResults,
   getUserPlaylistsWithPreview,
 } from "@/lib/database";
 import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
 import { addNewQueueIdToTrack } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Input } from "./ui/input";
+import { useEffect, useState } from "react";
 
 export default function TrackOptionsButton({
   track,
@@ -43,6 +47,14 @@ export default function TrackOptionsButton({
     () => getUserPlaylistsWithPreview(supabase, myID!)
   );
   const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
+  const [playlistsSearchQuery, setPlaylistsSearchQuery] = useState("");
+  const { data: playlistsSearchResult } = useSWR(
+    myID ? ["getPlaylistSearchResults", myID, playlistsSearchQuery] : null,
+    () => getPlaylistsSearchResults(supabase, myID!, playlistsSearchQuery)
+  );
+  useEffect(() => {
+    console.log(playlistsSearchQuery, playlistsSearchResult);
+  }, [playlistsSearchResult]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -118,6 +130,41 @@ export default function TrackOptionsButton({
                         const data = await addTrackToPlaylist(
                           supabase,
                           playlist.id,
+                          track.id,
+                          track.albumId,
+                          myID!
+                        );
+                      } catch (e) {
+                        throw e;
+                      }
+                    }}
+                  >
+                    {playlist.name}
+                  </DropdownMenuItem>
+                ))}
+                <DropdownMenuItem className="relative">
+                  <Input
+                    placeholder="search playlists"
+                    value={playlistsSearchQuery}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => {
+                      setPlaylistsSearchQuery(e.target.value);
+                    }}
+                  />
+                  <SearchIcon
+                    size={20}
+                    className="absolute right-3 stroke-foreground"
+                  />
+                </DropdownMenuItem>
+                {playlistsSearchResult?.map((playlist) => (
+                  <DropdownMenuItem
+                    className="pl-2"
+                    key={playlist.id}
+                    onClick={async (e) => {
+                      try {
+                        const data = await addTrackToPlaylist(
+                          supabase,
+                          playlist.id || "",
                           track.id,
                           track.albumId,
                           myID!
