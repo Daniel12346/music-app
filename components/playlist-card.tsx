@@ -13,6 +13,7 @@ type Props = Tables<"playlists"> & {
     id: string;
     avatar_url: string | null;
   } | null;
+  isMain?: boolean;
 };
 export default function PlaylistCard({
   id,
@@ -23,8 +24,8 @@ export default function PlaylistCard({
   size,
   created_at,
   showCreatedAt = false,
+  isMain = false,
 }: Props) {
-  console.log(owner);
   return (
     <div className={cn("w-32 min-h-32 group", size === "large" && "w-72")}>
       <div className="relative">
@@ -38,24 +39,28 @@ export default function PlaylistCard({
           <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
         </div>
       </div>
-      <div className="font-semibold line-clamp-2 min-h-6 text-lg mt-1">
-        {name}
-      </div>
+      <span className={cn("line-clamp-2 min-h-6 text-lg/6 mt-1")}>{name}</span>
       <div className="text-muted-foreground flex items-center justify-between w-full">
-        <div className="flex items-center">
-          <span>
-            Created by {/* TODO: add link */}
-            <span className="hover:underline font-normal cursor-pointer">
-              {owner?.username}
-            </span>
+        {isMain ? (
+          <div className="flex items-center">
+            <div>
+              <span>Created by {/* TODO: add link */}</span>
+              <span className="hover:underline font-normal cursor-pointer">
+                {owner?.username}
+              </span>
+            </div>
+            <Avatar className="w-8 h-8 ml-1">
+              <AvatarImage
+                src={owner?.avatar_url || ""}
+                alt={owner?.username || ""}
+              />
+            </Avatar>
+          </div>
+        ) : (
+          <span className="hover:underline font-normal cursor-pointer">
+            {owner?.username}
           </span>
-          <Avatar className="w-8 h-8 ml-1">
-            <AvatarImage
-              src={owner?.avatar_url || ""}
-              alt={owner?.username || ""}
-            />
-          </Avatar>
-        </div>
+        )}
         {showCreatedAt && created_at && (
           <span className="">{new Date(created_at).getFullYear()}</span>
         )}

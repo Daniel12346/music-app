@@ -11,6 +11,7 @@ type Props = Pick<Tables<"albums">, "id" | "title" | "cover_url"> & {
   size?: "large";
   showArtistName?: boolean;
   showReleasedAt?: boolean;
+  isMain?: boolean;
 };
 export default function AlbumCard({
   id,
@@ -21,6 +22,7 @@ export default function AlbumCard({
   released_at,
   showArtistName = true,
   showReleasedAt = false,
+  isMain = false,
 }: Props) {
   return (
     <div className={cn("w-32 group", size === "large" && "w-72")}>
@@ -68,10 +70,17 @@ export default function AlbumCard({
       </div>
       <div className="truncate text-lg flex-col">
         <Link href={`/albums/${id}`}>
-          <span>{title}</span>
+          <span
+            className={cn(
+              "line-clamp-2 min-h-6 text-lg/6 mt-0.5",
+              isMain && "mt-1 mb-2"
+            )}
+          >
+            {title}
+          </span>
         </Link>
         {showArtistName && (
-          <div className="font-extralight text-muted-foreground">
+          <div className="font-light text-muted-foreground -mt-1">
             {artists.map((artist, i) => (
               <span key={artist.id}>
                 {(i > 0 && ", ") || ""}
