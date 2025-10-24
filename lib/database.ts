@@ -445,6 +445,11 @@ export const makeNewTracksPlaylist = (
     image_url: "/new.png",
     description: "Recent tracks by artists you like",
     owner_id: null,
+    owner: {
+      id: "",
+      username: null,
+      avatar_url: null,
+    },
     status: "PRIVATE" as const,
     created_at: new Date().toISOString(),
     playlists_tracks: tracks.map((track) => ({
@@ -535,6 +540,19 @@ export const getPlaylistsSearchResults = async (
       `owner_id.eq.${userId}, shared_with_user_id.eq.${userId}`,
     );
 
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+export const getProfile = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+) => {
+  const { data, error } = await client.from("profiles").select().eq(
+    "id",
+    userId,
+  ).single();
   if (error) {
     throw error;
   }
