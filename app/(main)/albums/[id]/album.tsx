@@ -71,6 +71,7 @@ export default function Album() {
     <div className="flex flex-col items-center gap-4">
       <div className="flex flex-col gap-2">
         <AlbumCard
+          isMain
           id={albumWithTracks.id}
           title={albumWithTracks.title}
           cover_url={albumWithTracks.cover_url}
