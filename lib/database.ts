@@ -258,7 +258,7 @@ export const getUserPlaylistsWithPreview = async (
   const { data, error } = await client
     .from("playlists")
     .select(
-      "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url))",
+      "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url)), owner:profiles!playlists_owner_id_fkey(id, username, avatar_url)",
     )
     .eq("owner_id", userId)
     .limit(10, { referencedTable: "playlists_tracks" })
