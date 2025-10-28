@@ -26,7 +26,7 @@ export default function PlaylistCover({
   ) : (
     <div
       className={cn(
-        "grid grid-cols-2 grid-rows-2  bg-muted border-1 border-muted-foreground rounded-md",
+        "grid grid-cols-2 grid-rows-2  bg-muted border-1 border-muted-foreground rounded-md h-32 w-32",
         { "h-20 w-20": size === "small", "h-72 w-72": size === "large" }
       )}
     >
