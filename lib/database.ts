@@ -512,7 +512,7 @@ export const getSearchResults = async (
       ),
       //TODO: custom rpc to limit track albums (only 4 oldest albums with distinct covers needed)
       client.from("playlists").select(
-        "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url))",
+        "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url)), owner:profiles!playlists_owner_id_fkey(id, username, avatar_url)",
       ).ilike("name", `%${query}%`),
     ]);
   return {
