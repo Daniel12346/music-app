@@ -444,10 +444,10 @@ export const makeNewTracksPlaylist = (
     name: "New Tracks",
     image_url: "/new.png",
     description: "Recent tracks by artists you like",
-    owner_id: null,
+    owner_id: "",
     owner: {
       id: "",
-      username: null,
+      username: "",
       avatar_url: null,
     },
     status: "PRIVATE" as const,
