@@ -11,10 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { AvatarFallback, AvatarImage } from "./ui/avatar";
-import { getProfile } from "@/lib/database";
+import { getUserProfile } from "@/lib/database";
 import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
 import { useRef } from "react";
+import { UserRoundCogIcon } from "lucide-react";
 
 export default function AuthButton() {
   const supabase = createClient();
@@ -27,8 +28,9 @@ export default function AuthButton() {
     data: myProfile,
     isLoading,
     isValidating,
-  } = useSWR(myData?.user?.id ? ["getProfile", myData?.user?.id] : null, () =>
-    getProfile(supabase, myData?.user?.id!)
+  } = useSWR(
+    myData?.user?.id ? ["getUserProfile", myData?.user?.id] : null,
+    () => getUserProfile(supabase, myData?.user?.id!)
   );
   const inputRef = useRef<HTMLInputElement>(null);
   return myData ? (
@@ -49,8 +51,9 @@ export default function AuthButton() {
           <DropdownMenuLabel className="text-md">
             {myProfile?.username}
           </DropdownMenuLabel>
-          <div className="px-3 cursor-pointer">
-            <span>Account settings</span>
+          <div className="px-3 cursor-pointer flex">
+            <UserRoundCogIcon />
+            <Link href="/settings">Account settings</Link>
           </div>
           <DropdownMenuItem>
             <form action={signOutAction}>
