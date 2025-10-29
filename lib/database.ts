@@ -545,7 +545,7 @@ export const getPlaylistsSearchResults = async (
   }
   return data;
 };
-export const getProfile = async (
+export const getUserProfile = async (
   client: SupabaseClient<Database>,
   userId: string,
 ) => {
