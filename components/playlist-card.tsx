@@ -5,7 +5,7 @@ import PlaylistCover from "./playlist-cover";
 import { Avatar, AvatarImage } from "./ui/avatar";
 
 type Props = Tables<"playlists"> & {
-  size?: "large";
+  size?: "large" | "small";
   showCreatedAt?: boolean;
   album_cover_urls?: (string | null)[];
   owner?: {
