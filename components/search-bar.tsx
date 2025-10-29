@@ -42,7 +42,7 @@ export default function SearchBar() {
         }}
       />
       {/* TODO: add recent results or remove completely */}
-      <div className="absolute w-full  flex-col gap-1 max-h-120 overflow-y-scroll left-0  z-20 bg-accent hidden group-focus-within:flex shadow-md">
+      {/* <div className="absolute w-full  flex-col gap-1 max-h-120 overflow-y-scroll left-0  z-20 bg-accent hidden group-focus-within:flex shadow-md">
         {data === null && <div>Recent results:</div>}
         {albumsRes &&
           albumsRes.status === 200 &&
@@ -180,7 +180,7 @@ export default function SearchBar() {
               </div>
             </div>
           )}
-      </div>
+      </div> */}
     </div>
   );
 }
