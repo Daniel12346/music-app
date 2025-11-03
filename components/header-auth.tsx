@@ -47,11 +47,11 @@ export default function AuthButton() {
             <AvatarFallback>{myProfile?.username?.charAt(0)}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-fit">
+        <DropdownMenuContent className="w-fit flex flex-col gap-1">
           <DropdownMenuLabel className="text-md">
             {myProfile?.username}
           </DropdownMenuLabel>
-          <div className="px-3 cursor-pointer flex">
+          <div className="px-3 cursor-pointer flex gap-1">
             <UserRoundCogIcon />
             <Link href="/settings">Account settings</Link>
           </div>
