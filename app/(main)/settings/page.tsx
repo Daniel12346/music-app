@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Settings() {
   const supabase = createClient();
@@ -14,10 +15,10 @@ export default function Settings() {
     isValidating: isMyDataValidating,
   } = useSWR("me", () => supabase.auth.getUser().then((res) => res.data));
   const {
-    data: myProfile,
+    data: myProfileData,
     isLoading,
     isValidating,
-    mutate,
+    mutate: mutateUserProfile,
   } = useSWR(
     myData?.user?.id ? ["getUserProfile", myData?.user?.id] : null,
     () => getUserProfile(supabase, myData?.user?.id!)
@@ -27,17 +28,22 @@ export default function Settings() {
     <div className="flex flex-col gap-3">
       <div className="flex flex-col items-center">
         <div className="relative group">
-          <img
-            src={myProfile?.avatar_url || undefined}
-            width={50}
-            height={50}
-            className="w-40 h-40 rounded-full object-cover object-top"
-          />
+          {isLoading || isMyDataLoading ? (
+            <Skeleton className="w-40 h-40 rounded-full" />
+          ) : (
+            <img
+              src={myProfileData?.avatar_url || undefined}
+              width={50}
+              height={50}
+              className="w-40 h-40 rounded-full object-cover object-top"
+            />
+          )}
           <div className="hidden h-full group-hover:flex items-center absolute top-0 backdrop-brightness-50  rounded-full">
             <Input
               type="file"
               accept="image/*"
               onChange={async (e) => {
+                if (!myProfileData) return;
                 const myID = myData?.user?.id;
                 if (!e.target.files || !myID) return;
                 const file = e.target.files[0];
@@ -64,12 +70,14 @@ export default function Settings() {
                 if (updateError) {
                   console.log(updateError);
                 }
-                mutate;
+                mutateUserProfile({
+                  ...myProfileData,
+                });
               }}
             />
           </div>
         </div>
-        <h1 className="text-xl ">{myProfile?.username}</h1>
+        <h1 className="text-xl ">{myProfileData?.username}</h1>
       </div>
       <div className="flex flex-col items-center">
         <div className="flex flex-col space-x-2 p-3 md:p-0 max-w-md">
