@@ -9,6 +9,7 @@ import {
   ListMusicIcon,
   MusicIcon,
   UserRoundIcon,
+  UserStarIcon,
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -32,6 +33,7 @@ export default function SearchResults() {
   const playlists = data?.playlists ?? null;
   const tracks = data?.tracks ?? null;
   const artists = data?.artists ?? null;
+  const profiles = data?.profiles ?? null;
 
   return (
     <div className="flex flex-col px-3 gap-6">
@@ -45,61 +47,67 @@ export default function SearchResults() {
             <MusicIcon className="mr-1" />
             Tracks
           </div>
-          {(tracks?.data?.length ?? 0) > 0 ? (
-            <div className="px-2 md:grid md:grid-cols-2 md:gap-10">
-              {tracks?.data?.map((track) => {
-                if (!track) return null;
-                const trackWithExtra = {
-                  ...track,
-                  albumCoverUrl: track.albums_tracks[0].albums.cover_url || "",
-                  albumId: track.albums_tracks[0].albums.id || "",
-                  artists:
-                    track.tracks_artists.map((artist) => artist.artists) || [],
-                  albumName: track.albums_tracks[0].albums.title || "",
-                };
+          <div className="px-6">
+            {(tracks?.data?.length ?? 0) > 0 ? (
+              <div className="md:grid md:grid-cols-2 md:gap-10">
+                {tracks?.data?.map((track) => {
+                  if (!track) return null;
+                  const trackWithExtra = {
+                    ...track,
+                    albumCoverUrl:
+                      track.albums_tracks[0].albums.cover_url || "",
+                    albumId: track.albums_tracks[0].albums.id || "",
+                    artists:
+                      track.tracks_artists.map((artist) => artist.artists) ||
+                      [],
+                    albumName: track.albums_tracks[0].albums.title || "",
+                  };
 
-                return (
-                  <div
-                    key={track.id}
-                    className="flex cursor-pointer items-center gap-2  @container"
-                    onClick={
-                      () =>
-                        setCurrentTrack(addNewQueueIdToTrack(trackWithExtra)) // Add queueId to track
-                    }
-                  >
-                    <img
-                      src={trackWithExtra.albumCoverUrl || ""}
-                      alt={track.title}
-                      className="w-10 h-10 rounded"
-                    />
-                    <div className="flex-1 flex flex-col">
-                      <span className="text-lg ">{track.title}</span>
-
-                      <TrackArtists
-                        artists={track.tracks_artists.map(
-                          (artist) => artist.artists
-                        )}
-                      />
-                    </div>
-
+                  return (
                     <div
-                      className="flex items-center gap-1.5"
-                      onClick={(e) => e.stopPropagation()}
+                      key={track.id}
+                      className="flex cursor-pointer items-center gap-2  @container"
+                      onClick={
+                        () =>
+                          setCurrentTrack(addNewQueueIdToTrack(trackWithExtra)) // Add queueId to track
+                      }
                     >
-                      <TrackOptionsButton track={trackWithExtra} />
-                      <LikeTrack
-                        trackID={track.id}
-                        trackAlbumID={trackWithExtra.albumId}
+                      <img
+                        src={trackWithExtra.albumCoverUrl || ""}
+                        alt={track.title}
+                        className="w-10 h-10 rounded"
                       />
-                      <XIcon />
+                      <div className="flex-1 flex flex-col">
+                        <span className="text-lg ">{track.title}</span>
+
+                        <TrackArtists
+                          artists={track.tracks_artists.map(
+                            (artist) => artist.artists
+                          )}
+                        />
+                      </div>
+
+                      <div
+                        className="flex items-center gap-1.5"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <TrackOptionsButton track={trackWithExtra} />
+                        <LikeTrack
+                          trackID={track.id}
+                          trackAlbumID={trackWithExtra.albumId}
+                        />
+                        <XIcon />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="flex justify-center">No tracks found</div>
-          )}
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex justify-center text-muted-foreground">
+                No tracks found
+              </div>
+            )}
+          </div>
         </div>
         <div>
           <div className="flex">
@@ -113,7 +121,9 @@ export default function SearchResults() {
                 isLoading={false}
               />
             ) : (
-              <span className="flex justify-center">No playlists found</span>
+              <span className="flex justify-center text-muted-foreground">
+                No playlists found
+              </span>
             )}
           </div>
         </div>
@@ -126,16 +136,18 @@ export default function SearchResults() {
             {(albums?.data?.length ?? 0) > 0 ? (
               <AlbumsDisplay albums={albums?.data ?? []} isLoading={false} />
             ) : (
-              <span className="flex justify-center">No albums found</span>
+              <span className="flex justify-center text-muted-foreground">
+                No albums found
+              </span>
             )}
           </div>
         </div>
         <div className="flex flex-col">
           <div className="flex">
-            <UserRoundIcon className="mr-1" />
+            <UserStarIcon className="mr-1" />
             Artists
           </div>
-          <div>
+          <div className="px-6">
             {(artists?.data?.length ?? 0) > 0 ? (
               artists?.data?.map((artist) => (
                 <div key={artist.id}>
@@ -156,9 +168,44 @@ export default function SearchResults() {
                 </div>
               ))
             ) : (
-              <div className="flex justify-center">No artists found</div>
+              <div className="flex justify-center text-muted-foreground">
+                No artists found
+              </div>
             )}
           </div>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <div className="flex">
+          <UserRoundIcon className="mr-1" />
+          Profiles
+        </div>
+        <div className="px-6">
+          {(profiles?.data?.length ?? 0) > 0 ? (
+            profiles?.data?.map((artist) => (
+              <div key={artist.id}>
+                {/* TOODO: link to profile */}
+                <Link href={`/profiles/${artist.id}`}>
+                  <div className="flex flex-col gap-1 ">
+                    <img
+                      className="w-20 h-20 object-cover rounded-full"
+                      src={artist.avatar_url || ""}
+                      alt={artist.username || ""}
+                      width={20}
+                      height={20}
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-lg">{artist.username}</span>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))
+          ) : (
+            <div className="flex justify-center text-muted-foreground">
+              No profiles found
+            </div>
+          )}
         </div>
       </div>
     </div>
