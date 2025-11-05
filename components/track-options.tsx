@@ -63,7 +63,7 @@ export default function TrackOptionsButton({
         </Tooltip>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48">
-        <DropdownMenuItem className="flex justify-between">
+        <DropdownMenuItem className="flex gap-2">
           {track.artists.length === 1 ? (
             <>
               <UserIcon size={20} />
@@ -93,15 +93,12 @@ export default function TrackOptionsButton({
           )}
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link
-            href={`/albums/${track.albumId}`}
-            className="w-full flex justify-between"
-          >
+          <Link href={`/albums/${track.albumId}`} className="w-full flex gap-2">
             <Disc2Icon size={20} />
             <span>View album</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex justify-between">
+        <DropdownMenuItem className="flex gap-2">
           <LikeTrack
             trackID={track.id}
             trackAlbumID={track.albumId}
@@ -109,7 +106,7 @@ export default function TrackOptionsButton({
           />
           <span>Like</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex justify-between">
+        <DropdownMenuItem className="flex gap-2">
           <PlusIcon size={20} />
           <div className="flex">
             Add to playlist{" "}
@@ -179,7 +176,7 @@ export default function TrackOptionsButton({
           </div>
         </DropdownMenuItem>
         <DropdownMenuItem
-          className="flex justify-between"
+          className="flex gap-2"
           onClick={async (e) => {
             e.stopPropagation();
             const { url, title } = track;
@@ -203,7 +200,7 @@ export default function TrackOptionsButton({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="flex justify-between"
+          className="flex gap-2"
           onClick={(e) => {
             e.stopPropagation();
             addTrackToQueue(addNewQueueIdToTrack(track), "start");
@@ -213,7 +210,7 @@ export default function TrackOptionsButton({
           <span>Add to start of queue</span>
         </DropdownMenuItem>
         <DropdownMenuItem
-          className="flex justify-between "
+          className="flex gap-2 "
           onClick={(e) => {
             e.stopPropagation();
             addTrackToQueue(addNewQueueIdToTrack(track), "end");
