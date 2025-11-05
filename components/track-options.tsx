@@ -52,9 +52,6 @@ export default function TrackOptionsButton({
     myID ? ["getPlaylistSearchResults", myID, playlistsSearchQuery] : null,
     () => getPlaylistsSearchResults(supabase, myID!, playlistsSearchQuery)
   );
-  useEffect(() => {
-    console.log(playlistsSearchQuery, playlistsSearchResult);
-  }, [playlistsSearchResult]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
