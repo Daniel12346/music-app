@@ -60,9 +60,6 @@ export default function Album() {
   if (error) {
     return <div>Error loading album</div>;
   }
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
   if (!albumWithTracks) {
     return <div>No album found</div>;
   }
@@ -170,7 +167,12 @@ export default function Album() {
               {track.id === currentTrack?.id && (
                 <AudioLinesIcon
                   size={30}
-                  className={cn(isPlaying ? "animate-spin-x" : "rotate-x-70")}
+                  className={cn(
+                    "animate-spin-x",
+                    isPlaying
+                      ? "[animation-play-state:running]"
+                      : "[animation-play-state:paused]"
+                  )}
                   stroke="var(--highlight)"
                 />
               )}
