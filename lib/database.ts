@@ -493,33 +493,39 @@ export const getSearchResults = async (
   if (!query) return null;
   if (!query.trim()) return null;
   //TODO: add limits to queries
-  const [albumsRes, tracksRes, artistsRes, playlistsRes] = await Promise
-    .allSettled([
-      client.from("albums").select("*, artists(name, id)").ilike(
-        "title",
-        `%${query}%`,
-      ),
-      client.from("tracks").select(
-        "*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url))",
-      )
-        .ilike(
+  const [albumsRes, tracksRes, artistsRes, playlistsRes, profilesRes] =
+    await Promise
+      .allSettled([
+        client.from("albums").select("*, artists(name, id)").ilike(
           "title",
           `%${query}%`,
         ),
-      client.from("artists").select("*, albums(title, id)").ilike(
-        "name",
-        `%${query}%`,
-      ),
-      //TODO: custom rpc to limit track albums (only 4 oldest albums with distinct covers needed)
-      client.from("playlists").select(
-        "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url)), owner:profiles!playlists_owner_id_fkey(id, username, avatar_url)",
-      ).ilike("name", `%${query}%`),
-    ]);
+        client.from("tracks").select(
+          "*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url))",
+        )
+          .ilike(
+            "title",
+            `%${query}%`,
+          ),
+        client.from("artists").select("*, albums(title, id)").ilike(
+          "name",
+          `%${query}%`,
+        ),
+        //TODO: custom rpc to limit track albums (only 4 oldest albums with distinct covers needed)
+        client.from("playlists").select(
+          "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url)), owner:profiles!playlists_owner_id_fkey(id, username, avatar_url)",
+        ).ilike("name", `%${query}%`),
+        client.from("profiles").select("id, username, avatar_url").ilike(
+          "username",
+          `%${query}%`,
+        ).eq("is_hidden", false),
+      ]);
   return {
     albums: albumsRes.status === "fulfilled" ? albumsRes.value : null,
     tracks: tracksRes.status === "fulfilled" ? tracksRes.value : null,
     artists: artistsRes.status === "fulfilled" ? artistsRes.value : null,
     playlists: playlistsRes.status === "fulfilled" ? playlistsRes.value : null,
+    profiles: profilesRes.status === "fulfilled" ? profilesRes.value : null,
   };
 };
 
