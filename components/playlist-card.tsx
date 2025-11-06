@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import LikePlaylist from "./like-playlist";
 import PlaylistCover from "./playlist-cover";
 import { Avatar, AvatarImage } from "./ui/avatar";
+import { LockKeyholeIcon, LockKeyholeOpenIcon } from "lucide-react";
 
 type Props = Tables<"playlists"> & {
   size?: "large" | "small";
@@ -13,6 +14,7 @@ type Props = Tables<"playlists"> & {
     id: string;
     avatar_url: string | null;
   } | null;
+  status: Tables<"playlists">["status"];
   isMain?: boolean;
 };
 export default function PlaylistCard({
@@ -23,6 +25,7 @@ export default function PlaylistCard({
   album_cover_urls,
   size,
   created_at,
+  status,
   showCreatedAt = false,
   isMain = false,
 }: Props) {
@@ -39,7 +42,21 @@ export default function PlaylistCard({
           <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
         </div>
       </div>
-      <span className={cn("line-clamp-2 min-h-6 text-lg/6 mt-1")}>{name}</span>
+      <div className="flex items-baseline justify-between">
+        <span className={cn("line-clamp-2 min-h-6 text-lg/6 mt-1")}>
+          {name}
+        </span>
+        {isMain && (
+          <div className="flex items-baseline gap-0.5 text-foreground/70">
+            {status === "PUBLIC" ? (
+              <LockKeyholeOpenIcon size={14} />
+            ) : (
+              <LockKeyholeIcon size={14} />
+            )}
+            <span className="lowercase">{status}</span>
+          </div>
+        )}
+      </div>
       <div className="text-muted-foreground flex items-center justify-between w-full">
         {isMain ? (
           <div className="flex items-center">
