@@ -5,11 +5,12 @@ import { getPlaylist } from "@/lib/database";
 import { addNewQueueIdToTrack } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
-import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
+import { ClockIcon, ListEndIcon, ListStartIcon, PlusIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 import PlaylistCard from "@/components/playlist-card";
 import LikePlaylist from "@/components/like-playlist";
+import { Button } from "@/components/ui/button";
 
 export default function Playlist() {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +20,15 @@ export default function Playlist() {
     isLoading,
     error,
   } = useSWR(["getPlaylist", id], () => getPlaylist(supabase, id));
+  const { data } = useSWR("me", () =>
+    supabase.auth.getUser().then((res) => res.data)
+  );
+  const myID = data?.user?.id;
+
+  const canIEditPlaylist = playlist?.playlists_shared_with_users.some(
+    (sharedWithUser) =>
+      sharedWithUser.shared_with_user_id === myID && sharedWithUser.can_edit
+  );
   const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
   const addTracksToQueue = useTrackStore((state) => state.addTracksToQueue);
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack);
@@ -70,7 +80,11 @@ export default function Playlist() {
           size="large"
           showCreatedAt
         />
-
+        {canIEditPlaylist && (
+          <Button variant="outline">
+            <PlusIcon size={12} /> Add track
+          </Button>
+        )}
         <div className="mt-2">
           <div className="flex items-center gap-2 cursor-pointer justify-between">
             <div className="flex">
