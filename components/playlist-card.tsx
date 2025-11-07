@@ -4,6 +4,7 @@ import LikePlaylist from "./like-playlist";
 import PlaylistCover from "./playlist-cover";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { LockKeyholeIcon, LockKeyholeOpenIcon } from "lucide-react";
+import Link from "next/link";
 
 type Props = Tables<"playlists"> & {
   size?: "large" | "small";
@@ -31,21 +32,25 @@ export default function PlaylistCard({
 }: Props) {
   return (
     <div className={cn("w-32 min-h-32 group", size === "large" && "w-72")}>
-      <div className="relative">
-        <PlaylistCover
-          alt={name}
-          image_url={image_url ?? undefined}
-          album_cover_urls={album_cover_urls}
-          size={size}
-        />
-        <div className="hidden group-hover:block absolute top-0 right-0">
-          <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
+      <Link href={`/playlists/${id}`} className="flex justify-center">
+        <div className="relative">
+          <PlaylistCover
+            alt={name}
+            image_url={image_url ?? undefined}
+            album_cover_urls={album_cover_urls}
+            size={size}
+          />
+          <div className="hidden group-hover:block absolute top-0 right-0">
+            <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
+          </div>
         </div>
-      </div>
+      </Link>
       <div className="flex items-baseline justify-between">
-        <span className={cn("line-clamp-2 min-h-6 text-lg/6 mt-1")}>
-          {name}
-        </span>
+        <Link href={`/playlists/${id}`}>
+          <span className={cn("line-clamp-2 min-h-6 text-lg/6 mt-1")}>
+            {name}
+          </span>
+        </Link>
         {isMain && (
           <div className="flex items-baseline gap-0.5 text-foreground/70">
             {status === "PUBLIC" ? (
@@ -61,10 +66,13 @@ export default function PlaylistCard({
         {isMain ? (
           <div className="flex items-center">
             <div>
-              <span>Created by {/* TODO: add link */}</span>
-              <span className="hover:underline font-normal cursor-pointer">
+              <span>Created by </span>
+              <Link
+                href={`/profiles/${owner?.id}`}
+                className="hover:underline font-normal cursor-pointer"
+              >
                 {owner?.username}
-              </span>
+              </Link>
             </div>
             <Avatar className="w-8 h-8 ml-1">
               <AvatarImage
@@ -74,9 +82,12 @@ export default function PlaylistCard({
             </Avatar>
           </div>
         ) : (
-          <span className="hover:underline font-normal cursor-pointer">
+          <Link
+            href={`/profiles/${owner?.id}`}
+            className="hover:underline font-normal cursor-pointer"
+          >
             {owner?.username}
-          </span>
+          </Link>
         )}
         {showCreatedAt && created_at && (
           <span className="">{new Date(created_at).getFullYear()}</span>

@@ -28,18 +28,13 @@ export default function PlaylistsGrid({ playlists, isLoading = true }: Props) {
             {playlists?.map(
               (playlist) =>
                 playlist && (
-                  <Link
-                    href={`/playlists/${playlist.id}`}
+                  <PlaylistCard
+                    {...playlist}
                     key={playlist.id}
-                    className="flex justify-center"
-                  >
-                    <PlaylistCard
-                      {...playlist}
-                      album_cover_urls={playlist.playlists_tracks.map(
-                        (playlist) => playlist.track_album.cover_url
-                      )}
-                    />
-                  </Link>
+                    album_cover_urls={playlist.playlists_tracks.map(
+                      (playlist) => playlist.track_album.cover_url
+                    )}
+                  />
                 )
             )}
           </>
