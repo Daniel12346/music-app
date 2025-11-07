@@ -80,11 +80,12 @@ export default function Playlist() {
           size="large"
           showCreatedAt
         />
-        {canIEditPlaylist && (
-          <Button variant="outline">
-            <PlusIcon size={12} /> Add track
-          </Button>
-        )}
+        {canIEditPlaylist ||
+          (playlist.owner_id === myID && (
+            <Button variant="outline">
+              <PlusIcon size={12} /> Add track
+            </Button>
+          ))}
         <div className="mt-2">
           <div className="flex items-center gap-2 cursor-pointer justify-between">
             <div className="flex">
