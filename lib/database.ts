@@ -284,7 +284,7 @@ export const getPlaylist = async (
   const { data, error } = await client
     .from("playlists")
     .select(
-      "*, owner:profiles!playlists_owner_id_fkey(id, username, avatar_url), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(artists(name, id))))",
+      "*, owner:profiles!playlists_owner_id_fkey(id, username, avatar_url), playlists_tracks(*, contributor:profiles(id, username), albums(id, title, cover_url), tracks(*, tracks_artists(artists(name, id)))), playlists_shared_with_users(*)",
     )
     .eq("id", id)
     .order("added_at", {
