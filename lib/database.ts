@@ -543,7 +543,7 @@ export const getPlaylistsSearchResults = async (
     )
     .like("name", `%${query}%`)
     .or(
-      `owner_id.eq.${userId}, shared_with_user_id.eq.${userId}`,
+      `owner_id.eq.${userId}, and(shared_with_user_id.eq.${userId}, can_edit.eq.true)`,
     );
 
   if (error) {
