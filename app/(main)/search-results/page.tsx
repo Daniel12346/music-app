@@ -67,9 +67,13 @@ export default function SearchResults() {
                     <div
                       key={track.id}
                       className="flex cursor-pointer items-center gap-2  @container"
-                      onClick={
-                        () =>
-                          setCurrentTrack(addNewQueueIdToTrack(trackWithExtra)) // Add queueId to track
+                      onClick={() =>
+                        setCurrentTrack(
+                          addNewQueueIdToTrack(trackWithExtra),
+                          null,
+                          null,
+                          null
+                        )
                       }
                     >
                       <img

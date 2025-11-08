@@ -154,7 +154,12 @@ export default function Album() {
                     addNewQueueIdToTrack(track)
                   );
                   const trackWithQueueId = tracksWithQueueIds[idx];
-                  setCurrentTrack(trackWithQueueId);
+                  setCurrentTrack(
+                    trackWithQueueId,
+                    albumWithTracks.id,
+                    "ALBUM",
+                    albumWithTracks.title
+                  );
                   //clearing the queue and adding all the album tracks starting with the selected track
                   queueTracksFromSource(tracksWithQueueIds);
                 }}

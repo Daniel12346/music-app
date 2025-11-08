@@ -52,8 +52,14 @@ export default function TracksLiked({
             key={track.id}
             className="flex cursor-pointer items-center gap-2  @container"
             onClick={
-              () => setCurrentTrack(addNewQueueIdToTrack(TrackWithExtra)) // Add queueId to track
-              //TODO: set queue to something (history tracks?)
+              () =>
+                setCurrentTrack(
+                  addNewQueueIdToTrack(TrackWithExtra),
+                  null,
+                  "LIKED",
+                  "Liked tracks"
+                )
+              //TODO: set queue to liked tracks
             }
           >
             <img

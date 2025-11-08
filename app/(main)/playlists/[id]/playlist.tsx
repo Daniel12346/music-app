@@ -146,7 +146,12 @@ export default function Playlist() {
                     addNewQueueIdToTrack(track)
                   );
                   const trackWithQueueId = tracksWithQueueIds[idx];
-                  setCurrentTrack(trackWithQueueId);
+                  setCurrentTrack(
+                    trackWithQueueId,
+                    playlist.id,
+                    "PLAYLIST",
+                    playlist.name
+                  );
                   //clearing the queue and adding all the album tracks starting with the selected track
                   setQueue(tracksWithQueueIds.slice(idx));
                 }}

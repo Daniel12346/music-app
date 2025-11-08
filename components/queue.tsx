@@ -5,6 +5,7 @@ import { ListIcon, XIcon } from "lucide-react";
 import TrackArtists from "./track-artists";
 import TrackOptionsButton from "./track-options";
 import { useEffect, useMemo } from "react";
+import Link from "next/link";
 
 export default function Queue() {
   const {
@@ -20,6 +21,9 @@ export default function Queue() {
     setLastPlayedSourceTrack,
     lastPlayedSourceTrack,
     setCurrentTrack,
+    currentSourceName,
+    currentSourceId,
+    currentSourceType,
   } = useTrackStore();
 
   const sortedSourceQueue = useMemo(
@@ -159,7 +163,21 @@ export default function Queue() {
       {/* TODO: source name */}
       {sortedSourceQueue.length > 0 && (
         <span className="text-lg font-semibold text-muted-foreground mt-4 cursor-default">
-          Next from source
+          Next from:{" "}
+          <Link
+            className="hover:underline"
+            href={
+              currentSourceType === "PLAYLIST"
+                ? `/playlists/${currentSourceId}`
+                : currentSourceType === "ALBUM"
+                  ? `/albums/${currentSourceId}`
+                  : currentSourceType === "ARTIST"
+                    ? `/artists/${currentSourceId}`
+                    : ""
+            }
+          >
+            {currentSourceName}
+          </Link>
         </span>
       )}
       {sortedSourceQueue
