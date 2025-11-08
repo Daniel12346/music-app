@@ -10,7 +10,16 @@ export type TrackWithExtra = Tables<"tracks"> & {
   queueId: string;
 };
 
+//the position of the track in the queue
 type Position = "start" | "end";
+//the source from which the track was played
+type SourceType =
+  | "ALBUM"
+  | "PLAYLIST"
+  | "ARTIST"
+  | "HISTORY"
+  | "LIKED"
+  | "NEW_RELEASES";
 
 interface TrackStore {
   currentTrack: TrackWithExtra | null;
@@ -23,7 +32,15 @@ interface TrackStore {
   isRepeatActive: boolean;
   isPlaying: boolean;
   query: string;
-  setCurrentTrack: (track: TrackWithExtra | null) => void;
+  currentSourceName: string | null;
+  currentSourceId: string | null;
+  currentSourceType: SourceType | null;
+  setCurrentTrack: (
+    track: TrackWithExtra | null,
+    sourceId?: string | null,
+    sourceType?: SourceType | null,
+    sourceName?: string | null
+  ) => void;
   setNextTrack: (track: TrackWithExtra | null) => void;
   setPrevTrack: (track: TrackWithExtra | null) => void;
   setLastPlayedSourceTrack: (track: TrackWithExtra | null) => void;
@@ -41,6 +58,11 @@ interface TrackStore {
   setUserQueue: (queue: TrackWithExtra[]) => void;
   setQuery: (query: string) => void;
   setIsPlaying: (isPlaying: boolean) => void;
+  setCurrentSource: (
+    sourceName: string,
+    sourceType: SourceType,
+    sourceId: string
+  ) => void;
 }
 
 //persist queue and current track state with zustand
@@ -57,8 +79,25 @@ export const useTrackStore = create<TrackStore>()(
       isRepeatActive: false,
       isPlaying: false,
       query: "",
-      setCurrentTrack: (track: TrackWithExtra | null) => {
-        set({ currentTrack: track });
+      currentSourceName: null,
+      currentSourceId: null,
+      currentSourceType: null,
+      setCurrentTrack: (
+        track: TrackWithExtra | null,
+        sourceId?: string | null,
+        sourceType?: SourceType | null,
+        sourceName?: string | null
+      ) => {
+        //if sourceId, sourceType and sourceName are not provided, use the previous values
+        set((prev) => ({
+          currentTrack: track,
+          currentSourceId:
+            sourceId === undefined ? prev.currentSourceId : sourceId,
+          currentSourceType:
+            sourceType === undefined ? prev.currentSourceType : sourceType,
+          currentSourceName:
+            sourceName === undefined ? prev.currentSourceName : sourceName,
+        }));
       },
       setNextTrack: (track: TrackWithExtra | null) => {
         set({ nextTrack: track });
@@ -145,6 +184,13 @@ export const useTrackStore = create<TrackStore>()(
       toggleRepeat: () =>
         set((state) => ({ isRepeatActive: !state.isRepeatActive })),
       setQuery: (query: string) => set({ query }),
+      setCurrentSource: (sourceName, sourceType, sourceId) => {
+        set({
+          currentSourceName: sourceName,
+          currentSourceType: sourceType,
+          currentSourceId: sourceId,
+        });
+      },
     }),
 
     {
