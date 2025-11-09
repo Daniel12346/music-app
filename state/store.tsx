@@ -13,7 +13,7 @@ export type TrackWithExtra = Tables<"tracks"> & {
 //the position of the track in the queue
 type Position = "start" | "end";
 //the source from which the track was played
-type SourceType =
+export type SourceType =
   | "ALBUM"
   | "PLAYLIST"
   | "ARTIST"
