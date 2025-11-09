@@ -131,6 +131,21 @@ export const getArtistWithAlbums = async (
   }
   return data;
 };
+export const getArtistWithAlbumsAndTopTracks = async (
+  client: SupabaseClient<Database>,
+  id: string,
+) => {
+  const { data, error } = await client.from("artists").select(
+    "*, albums(*,artists(name, id)), tracks(*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url)))",
+  )
+    .order("play_count", { ascending: false, referencedTable: "tracks" })
+    .limit(10, { referencedTable: "tracks" })
+    .eq("id", id).single();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
 
 export const likeTrack = async (
   client: SupabaseClient<Database>,
