@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getArtistWithAlbums } from "@/lib/database";
+import { getArtistWithAlbumsAndTopTracks } from "@/lib/database";
 import { SortKey } from "@/lib/types";
 import { createClient } from "@/utils/supabase/client";
 import { useParams } from "next/navigation";
@@ -17,8 +17,9 @@ import useSWR from "swr";
 export default function Artist() {
   const client = createClient();
   const { id } = useParams<{ id: string }>();
-  const { data: artist } = useSWR(["getArtistWithAlbums", id], () =>
-    getArtistWithAlbums(client, id)
+  const { data: artist, error } = useSWR(
+    ["getArtistWithAlbumsAndTopTracks", id],
+    () => getArtistWithAlbumsAndTopTracks(client, id)
   );
   const sortKeys: SortKey[] = [
     "newest_first",

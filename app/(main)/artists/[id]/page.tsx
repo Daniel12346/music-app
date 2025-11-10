@@ -17,7 +17,7 @@ export default async function ArtistPage({ params }: Props) {
     <SWRConfig
       value={{
         fallback: {
-          [unstable_serialize(["getArtistWithAlbums", id])]: artist,
+          [unstable_serialize(["getArtistWithAlbumsAndTopTracks", id])]: artist,
         },
       }}
     >
