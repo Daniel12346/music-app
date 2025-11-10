@@ -8,32 +8,18 @@ import { addNewQueueIdToTrack } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { Tooltip } from "@radix-ui/react-tooltip";
-import {
-  ClockIcon,
-  ListEndIcon,
-  ListStartIcon,
-} from "lucide-react";
+import { ClockIcon, ListEndIcon, ListStartIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import useSWR from "swr";
 
 export default function Album() {
   const { id } = useParams<{ id: string }>();
   const supabase = createClient();
-  const {
-    data: albumWithTracks,
-    isLoading,
-    error,
-  } = useSWR(["getAlbumWithTracksAndArtist", id], () =>
-    getAlbumWithTracksAndArtist(supabase, id)
+  const { data: albumWithTracks, error } = useSWR(
+    ["getAlbumWithTracksAndArtist", id],
+    () => getAlbumWithTracksAndArtist(supabase, id)
   );
-  const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
   const addTracksToQueue = useTrackStore((state) => state.addTracksToQueue);
-  const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack);
-  const queueTracksFromSource = useTrackStore(
-    (state) => state.queueTracksFromSource
-  );
-  const isPlaying = useTrackStore((state) => state.isPlaying);
-  const currentTrack = useTrackStore((state) => state.currentTrack);
   const tracksWithExtraInfo = albumWithTracks?.tracks.map((track) => ({
     ...track,
     albumName: albumWithTracks.title,
@@ -141,6 +127,7 @@ export default function Album() {
         sourceType="ALBUM"
         sourceId={albumWithTracks.id}
         sourceName={albumWithTracks.title}
+        withBorder
       />
     </div>
   );
