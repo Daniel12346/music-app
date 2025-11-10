@@ -1,5 +1,6 @@
 "use client";
 import AlbumsDisplay from "@/components/albums-display";
+import TracksList from "@/components/tracks-list";
 import {
   Select,
   SelectContent,
@@ -21,12 +22,23 @@ export default function Artist() {
     ["getArtistWithAlbumsAndTopTracks", id],
     () => getArtistWithAlbumsAndTopTracks(client, id)
   );
+  const { tracks } = artist!;
   const sortKeys: SortKey[] = [
     "newest_first",
     "oldest_first",
     "A-to-Z",
     "Z-to-A",
   ];
+  const tracksWithExtraInfo = tracks?.map((track) => ({
+    ...track,
+    albumName: track.albums_tracks[0].albums.title ?? "",
+    albumCoverUrl: track.albums_tracks[0].albums.cover_url ?? "",
+    albumId: track.id,
+    artists: track.tracks_artists.map((trackArtist) => ({
+      id: trackArtist.artists.id,
+      name: trackArtist.artists.name,
+    })),
+  }));
   const [currentSortKey, setCurrentSortKey] = useState<SortKey>("newest_first");
   return (
     <div>
@@ -40,6 +52,10 @@ export default function Artist() {
         <h1 className="absolute bottom-0.5 left-0.5 z-10 text-6xl text-white text-shadow-accent">
           {artist?.name}
         </h1>
+      </div>
+      <span className="text-2xl pl-2 opacity-90">Popular tracks</span>
+      <div className="flex flex-col items-center mt-2">
+        <TracksList tracks={tracksWithExtraInfo || []} />
       </div>
       <div className="flex items-baseline-last pl-2 pt-4 mb-2">
         <span className="text-2xl opacity-90">Albums</span>
