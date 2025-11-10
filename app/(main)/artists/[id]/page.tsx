@@ -1,4 +1,6 @@
-import { getArtistWithAlbums } from "@/lib/database";
+import {
+  getArtistWithAlbumsAndTopTracks,
+} from "@/lib/database";
 import { createClient } from "@/utils/supabase/server";
 import { SWRConfig, unstable_serialize } from "swr";
 import Artist from "./artist";
@@ -11,7 +13,7 @@ type Props = {
 export default async function ArtistPage({ params }: Props) {
   const { id } = await params;
   const supabase = await createClient();
-  const artist = await getArtistWithAlbums(supabase, id);
+  const artist = await getArtistWithAlbumsAndTopTracks(supabase, id);
 
   return (
     <SWRConfig
