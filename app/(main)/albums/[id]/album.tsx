@@ -1,16 +1,14 @@
 "use client";
 import AlbumCard from "@/components/album-card";
 import LikeAlbum from "@/components/like-album";
-import LikeTrack from "@/components/like-track";
-import TrackArtists from "@/components/track-artists";
+import TracksList from "@/components/tracks-list";
 import { TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { getAlbumWithTracksAndArtist } from "@/lib/database";
-import { addNewQueueIdToTrack, cn } from "@/lib/utils";
+import { addNewQueueIdToTrack } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
 import { createClient } from "@/utils/supabase/client";
 import { Tooltip } from "@radix-ui/react-tooltip";
 import {
-  AudioLinesIcon,
   ClockIcon,
   ListEndIcon,
   ListStartIcon,
@@ -137,88 +135,13 @@ export default function Album() {
           </div>
         </div>
       </div>
-      <ul className="w-full max-w-md space-y-2 md:space-y-1 border-t-2 p-2">
-        {tracksWithExtraInfo?.map((track, idx) => (
-          <li
-            key={track.id}
-            className="w-full  flex items-center justify-between px-2"
-          >
-            <div className="flex flex-col">
-              <span
-                className={cn(
-                  "text-lg font-light cursor-pointer",
-                  track.id === currentTrack?.id && "text-highlight font-normal"
-                )}
-                onClick={() => {
-                  const tracksWithQueueIds = tracksWithExtraInfo.map((track) =>
-                    addNewQueueIdToTrack(track)
-                  );
-                  const trackWithQueueId = tracksWithQueueIds[idx];
-                  setCurrentTrack(
-                    trackWithQueueId,
-                    albumWithTracks.id,
-                    "ALBUM",
-                    albumWithTracks.title
-                  );
-                  //clearing the queue and adding all the album tracks starting with the selected track
-                  queueTracksFromSource(tracksWithQueueIds);
-                }}
-              >
-                {track.title}
-              </span>
-              <TrackArtists artists={track.artists} />
-            </div>
-            <div className="flex items-center gap-2">
-              {track.id === currentTrack?.id && (
-                <AudioLinesIcon
-                  size={30}
-                  className={cn(
-                    "animate-spin-x",
-                    isPlaying
-                      ? "[animation-play-state:running]"
-                      : "[animation-play-state:paused]"
-                  )}
-                  stroke="var(--highlight)"
-                />
-              )}
-              <span className="text-md font-thin hidden md:block mr-1 text-md">
-                {track.play_count} plays
-              </span>
-              <span className="text-md font-extralight">
-                {track.length as string}
-              </span>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <ListStartIcon
-                    size={16}
-                    className="opacity-80 cursor-pointer"
-                    onClick={(e) => {
-                      //stopping propagation because the on click handle for the li element would set the clicked track as current and add unintened tracks to queue
-                      e.stopPropagation();
-                      addTrackToQueue(addNewQueueIdToTrack(track), "start");
-                    }}
-                  />
-                </TooltipTrigger>
-                <TooltipContent>Add to start of queue</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <ListEndIcon
-                    size={16}
-                    className="opacity-80 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addTrackToQueue(addNewQueueIdToTrack(track), "end");
-                    }}
-                  />
-                </TooltipTrigger>
-                <TooltipContent>Add to end of queue</TooltipContent>
-              </Tooltip>
-              <LikeTrack trackID={track.id} trackAlbumID={track.albumId} />
-            </div>
-          </li>
-        ))}
-      </ul>
+
+      <TracksList
+        tracks={tracksWithExtraInfo || []}
+        sourceType="ALBUM"
+        sourceId={albumWithTracks.id}
+        sourceName={albumWithTracks.title}
+      />
     </div>
   );
 }
