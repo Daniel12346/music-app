@@ -33,7 +33,7 @@ export default function Artist() {
     ...track,
     albumName: track.albums_tracks[0].albums.title ?? "",
     albumCoverUrl: track.albums_tracks[0].albums.cover_url ?? "",
-    albumId: track.id,
+    albumId: track.albums_tracks[0].albums.id,
     artists: track.tracks_artists.map((trackArtist) => ({
       id: trackArtist.artists.id,
       name: trackArtist.artists.name,
@@ -55,7 +55,12 @@ export default function Artist() {
       </div>
       <span className="text-2xl pl-2 opacity-90">Popular tracks</span>
       <div className="flex flex-col items-center mt-2">
-        <TracksList tracks={tracksWithExtraInfo || []} />
+        <TracksList
+          tracks={tracksWithExtraInfo}
+          sourceId={artist?.id}
+          sourceName={artist?.name}
+          sourceType="ARTIST"
+        />
       </div>
       <div className="flex items-baseline-last pl-2 pt-4 mb-2">
         <span className="text-2xl opacity-90">Albums</span>
