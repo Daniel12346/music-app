@@ -11,17 +11,17 @@ export default function TracksList({
   sourceType,
   sourceId,
   tracksToQueue = tracks,
+  withBorder = false,
 }: {
   tracks: Omit<TrackWithExtra, "queueId">[];
   sourceName?: string;
   sourceType?: SourceType;
   sourceId?: string;
+  withBorder?: boolean;
   //the tracks that are queued when the user clicks on a track, they don't have to be the same as the listed tracks
   tracksToQueue?: Omit<TrackWithExtra, "queueId">[];
 }) {
   const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
-  const addTracksToQueue = useTrackStore((state) => state.addTracksToQueue);
-  const setQueue = useTrackStore((state) => state.setQueue);
   const setCurrentTrack = useTrackStore((state) => state.setCurrentTrack);
   const currentTrack = useTrackStore((state) => state.currentTrack);
   const queueTracksFromSource = useTrackStore(
@@ -29,7 +29,12 @@ export default function TracksList({
   );
   const isPlaying = useTrackStore((state) => state.isPlaying);
   return (
-    <ul className="w-full max-w-md space-y-2 md:space-y-1 border-t-2 p-2">
+    <ul
+      className={cn(
+        "w-full max-w-md space-y-2 md:space-y-1 p-2",
+        withBorder && "border-t-2"
+      )}
+    >
       {tracks?.map((track, idx) => (
         <li
           key={track.id}
