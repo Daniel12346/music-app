@@ -358,6 +358,21 @@ export const getPlaylistsLikedByUser = async (
   }
   return data;
 };
+export const getAllArtistTracks = async (
+  client: SupabaseClient<Database>,
+  artistId: string,
+) => {
+  const { data, error } = await client.from("artists").select(
+    "*, albums(*,artists(name, id)), tracks(*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url)))",
+  ).eq(
+    "id",
+    artistId,
+  ).single();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
 export const addTrackToPlaylist = async (
   client: SupabaseClient<Database>,
   playlistId: string,
