@@ -8,7 +8,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getArtistWithAlbumsAndTopTracks } from "@/lib/database";
+import {
+  getAllArtistTracks,
+  getArtistWithAlbumsAndTopTracks,
+} from "@/lib/database";
 import { SortKey } from "@/lib/types";
 import { createClient } from "@/utils/supabase/client";
 import { useParams } from "next/navigation";
@@ -22,14 +25,28 @@ export default function Artist() {
     ["getArtistWithAlbumsAndTopTracks", id],
     () => getArtistWithAlbumsAndTopTracks(client, id)
   );
-  const { tracks } = artist!;
+  const { data: artistWithAllTracks } = useSWR(["getAllArtistTracks", id], () =>
+    getAllArtistTracks(client, id)
+  );
+  const { tracks: topTracks } = artist!;
+  const { tracks: allTracks } = artistWithAllTracks!;
   const sortKeys: SortKey[] = [
     "newest_first",
     "oldest_first",
     "A-to-Z",
     "Z-to-A",
   ];
-  const tracksWithExtraInfo = tracks?.map((track) => ({
+  const topTracksWithExtraInfo = topTracks?.map((track) => ({
+    ...track,
+    albumName: track.albums_tracks[0].albums.title ?? "",
+    albumCoverUrl: track.albums_tracks[0].albums.cover_url ?? "",
+    albumId: track.albums_tracks[0].albums.id,
+    artists: track.tracks_artists.map((trackArtist) => ({
+      id: trackArtist.artists.id,
+      name: trackArtist.artists.name,
+    })),
+  }));
+  const allTracksWithExtraInfo = allTracks?.map((track) => ({
     ...track,
     albumName: track.albums_tracks[0].albums.title ?? "",
     albumCoverUrl: track.albums_tracks[0].albums.cover_url ?? "",
@@ -56,7 +73,8 @@ export default function Artist() {
       <span className="text-2xl pl-2 opacity-90">Popular tracks</span>
       <div className="flex flex-col items-center mt-2">
         <TracksList
-          tracks={tracksWithExtraInfo}
+          tracks={topTracksWithExtraInfo}
+          tracksToQueue={allTracksWithExtraInfo}
           sourceId={artist?.id}
           sourceName={artist?.name}
           sourceType="ARTIST"
