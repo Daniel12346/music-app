@@ -1,4 +1,5 @@
 import {
+  getAllArtistTracks,
   getArtistWithAlbumsAndTopTracks,
 } from "@/lib/database";
 import { createClient } from "@/utils/supabase/server";
@@ -20,6 +21,8 @@ export default async function ArtistPage({ params }: Props) {
       value={{
         fallback: {
           [unstable_serialize(["getArtistWithAlbumsAndTopTracks", id])]: artist,
+          //getAllArtistTracks is not prefetched because it takes too long and all tracks can only be accessed on client side when a track is clicked and all tracks are added to queue
+          [unstable_serialize(["getAllArtistTracks", id])]: [],
         },
       }}
     >
