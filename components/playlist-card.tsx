@@ -62,7 +62,7 @@ export default function PlaylistCard({
           </div>
         )}
       </div>
-      <div className="text-muted-foreground flex items-center justify-between w-full">
+      <div className="text-muted-foreground flex items-center justify-between w-full mt-1 mb-1">
         {isMain ? (
           <div className="flex items-center">
             <div>
