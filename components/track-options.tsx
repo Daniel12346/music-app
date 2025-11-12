@@ -98,83 +98,87 @@ export default function TrackOptionsButton({
             <span>View album</span>
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="flex gap-2">
-          <LikeTrack
-            trackID={track.id}
-            trackAlbumID={track.albumId}
-            size={20}
-          />
-          <span>Like</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex gap-2">
-          <PlusIcon size={20} />
-          <div className="flex">
-            Add to playlist{" "}
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <ChevronRightIcon size={20} className="-mr-2" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {myPlaylists?.map((playlist) => (
-                  <DropdownMenuItem
-                    key={playlist.id}
-                    onClick={async (e) => {
-                      try {
-                        //TODO: handle error, optimistically update state with data
-                        const data = await addTrackToPlaylist(
-                          supabase,
-                          playlist.id,
-                          track.id,
-                          track.albumId,
-                          myID!
-                        );
-                      } catch (e) {
-                        throw e;
-                      }
-                    }}
-                  >
-                    {playlist.name}
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuItem className="relative">
-                  <Input
-                    placeholder="search playlists"
-                    value={playlistsSearchQuery}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => {
-                      setPlaylistsSearchQuery(e.target.value);
-                    }}
-                  />
-                  <SearchIcon
-                    size={20}
-                    className="absolute right-3 stroke-foreground"
-                  />
-                </DropdownMenuItem>
-                {playlistsSearchResult?.map((playlist) => (
-                  <DropdownMenuItem
-                    className="pl-2"
-                    key={playlist.id}
-                    onClick={async (e) => {
-                      try {
-                        const data = await addTrackToPlaylist(
-                          supabase,
-                          playlist.id || "",
-                          track.id,
-                          track.albumId,
-                          myID!
-                        );
-                      } catch (e) {
-                        throw e;
-                      }
-                    }}
-                  >
-                    {playlist.name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </DropdownMenuItem>
+        {myID && (
+          <>
+            <DropdownMenuItem className="flex gap-2">
+              <LikeTrack
+                trackID={track.id}
+                trackAlbumID={track.albumId}
+                size={20}
+              />
+              <span>Like</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="flex gap-2">
+              <PlusIcon size={20} />
+              <div className="flex">
+                Add to playlist{" "}
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <ChevronRightIcon size={20} className="-mr-2" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {myPlaylists?.map((playlist) => (
+                      <DropdownMenuItem
+                        key={playlist.id}
+                        onClick={async (e) => {
+                          try {
+                            //TODO: handle error, optimistically update state with data
+                            const data = await addTrackToPlaylist(
+                              supabase,
+                              playlist.id,
+                              track.id,
+                              track.albumId,
+                              myID!
+                            );
+                          } catch (e) {
+                            throw e;
+                          }
+                        }}
+                      >
+                        {playlist.name}
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuItem className="relative">
+                      <Input
+                        placeholder="search playlists"
+                        value={playlistsSearchQuery}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => {
+                          setPlaylistsSearchQuery(e.target.value);
+                        }}
+                      />
+                      <SearchIcon
+                        size={20}
+                        className="absolute right-3 stroke-foreground"
+                      />
+                    </DropdownMenuItem>
+                    {playlistsSearchResult?.map((playlist) => (
+                      <DropdownMenuItem
+                        className="pl-2"
+                        key={playlist.id}
+                        onClick={async (e) => {
+                          try {
+                            const data = await addTrackToPlaylist(
+                              supabase,
+                              playlist.id || "",
+                              track.id,
+                              track.albumId,
+                              myID!
+                            );
+                          } catch (e) {
+                            throw e;
+                          }
+                        }}
+                      >
+                        {playlist.name}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuItem
           className="flex gap-2"
           onClick={async (e) => {
