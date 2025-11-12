@@ -74,12 +74,17 @@ export default function PlaylistCard({
                 {owner?.username}
               </Link>
             </div>
-            <Avatar className="w-8 h-8 ml-1">
-              <AvatarImage
-                src={owner?.avatar_url || ""}
-                alt={owner?.username || ""}
-              />
-            </Avatar>
+            <Link
+              href={`/profiles/${owner?.id}`}
+              className="hover:underline font-normal cursor-pointer"
+            >
+              <Avatar className="w-8 h-8 ml-1">
+                <AvatarImage
+                  src={owner?.avatar_url || ""}
+                  alt={owner?.username || ""}
+                />
+              </Avatar>
+            </Link>
           </div>
         ) : (
           <Link
