@@ -4,6 +4,7 @@ import LikeTrack from "./like-track";
 import TrackArtists from "./track-artists";
 import { SourceType, TrackWithExtra, useTrackStore } from "@/state/store";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
+import Link from "next/link";
 
 export default function TracksList({
   tracks,
@@ -13,12 +14,21 @@ export default function TracksList({
   tracksToQueue = tracks,
   withBorder = false,
 }: {
-  tracks: Omit<TrackWithExtra, "queueId">[];
+  tracks: Omit<
+    TrackWithExtra & {
+      contributor?: {
+        id: string;
+        username: string | null;
+        avatar_url: string | null;
+      } | null;
+    },
+    "queueId"
+  >[];
   sourceName?: string;
   sourceType?: SourceType;
   sourceId?: string;
   withBorder?: boolean;
-  //the tracks that are queued when the user clicks on a track, they don't have to be the same as the listed tracks
+  //tracksToQueue are the tracks that are queued when the user clicks on a track, they don't have to be the same as the listed tracks
   tracksToQueue?: Omit<TrackWithExtra, "queueId">[];
 }) {
   const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
@@ -81,6 +91,23 @@ export default function TracksList({
             <span className="text-md font-thin hidden md:block mr-1 text-md">
               {track.play_count} plays
             </span>
+            {track.contributor && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link href={`/profiles/${track.contributor.id}`}>
+                    <img
+                      src={track.contributor.avatar_url ?? ""}
+                      width={10}
+                      height={10}
+                      className="w-5 h-5 rounded-full"
+                    />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Added by {track.contributor.username}
+                </TooltipContent>
+              </Tooltip>
+            )}
             <span className="text-md font-extralight">
               {track.length as string}
             </span>
