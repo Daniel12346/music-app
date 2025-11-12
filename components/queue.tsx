@@ -132,7 +132,8 @@ export default function Queue() {
           <TrackOptionsButton track={track} />
           <XIcon
             className="cursor-pointer"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               isQueuedByUser
                 ? removeTrackFromUserQueue(track.queueId)
                 : removeTrackFromSourceQueue(track.queueId);
