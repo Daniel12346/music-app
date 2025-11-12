@@ -53,6 +53,8 @@ export default function Album() {
       <div className="flex flex-col gap-2">
         <AlbumCard
           isMain
+          showReleasedAt
+          released_at={albumWithTracks.released_at}
           id={albumWithTracks.id}
           title={albumWithTracks.title}
           cover_url={albumWithTracks.cover_url}
