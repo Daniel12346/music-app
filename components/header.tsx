@@ -9,7 +9,7 @@ export default function Header() {
       <SidebarTrigger className="md:hidden" />
       <div className="w-20 hidden md:flex"></div>
       <Search />
-      <div className="flex w-20 gap-3 justify-between items-center">
+      <div className="flex w-20 gap-4 justify-end items-center">
         <ThemeSwitcher />
         <AuthButton />
       </div>
