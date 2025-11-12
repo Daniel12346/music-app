@@ -54,16 +54,24 @@ export default function AlbumCard({
         {showReleasedAt && released_at && (
           <div className="flex justify-between mt-1">
             {new Date(released_at) >= new Date() ? (
-              <span className="w-full bg-amber-200 text-slate-800 px-1 text-sm rounded-sm">
+              <span
+                className={cn(
+                  "w-full bg-amber-200 text-slate-800 px-1 text-sm rounded-sm",
+                  isMain && "text-base w-fit"
+                )}
+              >
                 {"Out "}
                 {new Date(released_at).getFullYear() -
                   new Date().getFullYear() >
                 1
                   ? format(released_at, "dd MMMM yyyy")
                   : format(released_at, "dd MMMM")}
+                {` (in ${formatDistanceToNowStrict(released_at)})`}
               </span>
             ) : (
-              <span className="">{new Date(released_at).getFullYear()}</span>
+              !isMain && (
+                <span className="">{new Date(released_at).getFullYear()}</span>
+              )
             )}
           </div>
         )}
@@ -73,14 +81,14 @@ export default function AlbumCard({
           <span
             className={cn(
               "line-clamp-2 min-h-6 text-lg/6 mt-0.5",
-              isMain && "mt-1 mb-2"
+              isMain && "mt-1 mb-2 text-xl"
             )}
           >
             {title}
           </span>
         </Link>
         {showArtistName && (
-          <div className="font-light text-muted-foreground -mt-1">
+          <div className="font-light flex justify-between text-muted-foreground -mt-1">
             {artists.map((artist, i) => (
               <span key={artist.id}>
                 {(i > 0 && ", ") || ""}
@@ -89,6 +97,11 @@ export default function AlbumCard({
                 </Link>
               </span>
             ))}
+            {isMain && showReleasedAt && released_at && (
+              <span className="ml-2">
+                <span className="">{new Date(released_at).getFullYear()}</span>
+              </span>
+            )}
           </div>
         )}
       </div>
