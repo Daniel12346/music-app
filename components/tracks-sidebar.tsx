@@ -21,10 +21,12 @@ export default async function TracksSidebar() {
         },
       }}
     >
-      <aside className="flex flex-col gap-2 p-2">
-        <TracksLiked />
-        <TracksHistory />
-      </aside>
+      {myID && (
+        <aside className="flex flex-col gap-2 p-2">
+          <TracksLiked />
+          <TracksHistory />
+        </aside>
+      )}
     </SWRConfig>
   );
 }
