@@ -14,7 +14,6 @@ import { AvatarFallback, AvatarImage } from "./ui/avatar";
 import { getUserProfile } from "@/lib/database";
 import useSWR from "swr";
 import { createClient } from "@/utils/supabase/client";
-import { useRef } from "react";
 import { UserRoundCogIcon } from "lucide-react";
 
 export default function AuthButton() {
@@ -32,9 +31,8 @@ export default function AuthButton() {
     myData?.user?.id ? ["getUserProfile", myData?.user?.id] : null,
     () => getUserProfile(supabase, myData?.user?.id!)
   );
-  const inputRef = useRef<HTMLInputElement>(null);
-  return myData ? (
-    <div className="flex items-center gap-4 w-full">
+  return (
+    <div className="flex items-center gap-4 w-full justify-end">
       {/* TODO: user profile image */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -69,16 +67,5 @@ export default function AuthButton() {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  ) : (
-    !isLoading && !isValidating && !isMyDataLoading && !isMyDataValidating && (
-      <div className="flex gap-2">
-        <Button asChild size="sm" variant={"outline"}>
-          <Link href="/sign-in">Sign in</Link>
-        </Button>
-        <Button asChild size="sm" variant={"default"}>
-          <Link href="/sign-up">Sign up</Link>
-        </Button>
-      </div>
-    )
   );
 }
