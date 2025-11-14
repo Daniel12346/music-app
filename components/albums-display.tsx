@@ -39,7 +39,7 @@ export default function Albums({
   };
   return (
     <div className="@container">
-      <ul className="grid grid-cols-2 @md:grid-cols-3 @lg:grid-cols-4">
+      <ul className="grid grid-cols-2 justify-items-center @md:grid-cols-3 @lg:grid-cols-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <li className="flex justify-center" key={i}>
@@ -51,7 +51,7 @@ export default function Albums({
               </li>
             ))
           : sortAlbumsByKey(!albums ? [] : albums, sortKey).map((album) => (
-              <li className="flex justify-center" key={album.id}>
+              <li className="flex w-32 justify-center" key={album.id}>
                 <AlbumCard
                   showArtistName={showArtistName}
                   cover_url={album.cover_url}
