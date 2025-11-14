@@ -5,7 +5,7 @@ import { getAlbumsLikedByUser } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 
-export default function Me() {
+export default function Home() {
   const supabase = createClient();
   const { data, isLoading: isMyDataLoading } = useSWR("me", () =>
     supabase.auth.getUser().then((res) => res.data)
@@ -42,11 +42,7 @@ export default function Me() {
           </div>
         </div>
       )}
-      {!myID && !isMyDataLoading && (
-        <div>
-          
-        </div>
-      )}
+      {!myID && !isMyDataLoading && <div></div>}
     </>
   );
 }

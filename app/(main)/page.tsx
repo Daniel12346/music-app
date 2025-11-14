@@ -1,9 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 import { SWRConfig, unstable_serialize } from "swr";
-import Me from "./me";
 import { getAlbumsLikedByUser } from "@/lib/database";
+import Home from "./home";
 
-export default async function Home() {
+export default async function HomePage() {
   const supabase = await createClient();
   const { data: meData } = await supabase.auth.getUser();
   const myID = meData.user?.id;
@@ -17,7 +17,7 @@ export default async function Home() {
         },
       }}
     >
-      <Me />
+      <Home />
     </SWRConfig>
   );
 }
