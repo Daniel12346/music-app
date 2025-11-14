@@ -33,7 +33,7 @@ export default function PlaylistCard({
   return (
     <div className={cn("w-32 min-h-32 group", size === "large" && "w-72")}>
       <Link href={`/playlists/${id}`} className="flex justify-center">
-        <div className="relative">
+        <div className="relative w-full">
           <PlaylistCover
             alt={name}
             image_url={image_url ?? undefined}
