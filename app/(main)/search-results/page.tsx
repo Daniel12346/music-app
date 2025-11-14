@@ -36,7 +36,7 @@ export default function SearchResults() {
   const profiles = data?.profiles ?? null;
 
   return (
-    <div className="flex flex-col px-3 gap-6">
+    <div className="flex flex-col px-3 gap-10">
       <h1 className="text-lg">
         Search results for
         <span className="ml-1 font-semibold">{query}</span>
