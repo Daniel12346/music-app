@@ -1,8 +1,9 @@
 import { getTracksLikedByUser, getUserHistoryTracks } from "@/lib/database";
 import { createClient } from "@/utils/supabase/server";
-import useSWR, { SWRConfig, unstable_serialize } from "swr";
+import { SWRConfig, unstable_serialize } from "swr";
 import TracksLiked from "./tracks-liked";
 import TracksHistory from "./tracks-history";
+import Link from "next/link";
 
 export default async function TracksSidebar() {
   const supabase = await createClient();
@@ -21,12 +22,26 @@ export default async function TracksSidebar() {
         },
       }}
     >
-      {myID && (
-        <aside className="flex flex-col gap-2 p-2">
-          <TracksLiked />
-          <TracksHistory />
-        </aside>
-      )}
+      <aside className="flex flex-col gap-2 p-2">
+        {myID ? (
+          <>
+            <TracksLiked />
+            <TracksHistory />
+          </>
+        ) : (
+          <div className="flex justify-center text-lg">
+            <div className="text-foreground">
+              <Link
+                href="/sign-in"
+                className="text-fuchsia-500 hover:underline"
+              >
+                Sign in
+              </Link>{" "}
+              to like tracks and view history
+            </div>
+          </div>
+        )}
+      </aside>
     </SWRConfig>
   );
 }
