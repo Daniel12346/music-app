@@ -30,14 +30,14 @@ export default async function TracksSidebar() {
           </>
         ) : (
           <div className="flex justify-center text-lg">
-            <div className="text-foreground">
+            <div className="text-foreground max-w-xs">
               <Link
                 href="/sign-in"
                 className="text-fuchsia-500 hover:underline"
               >
                 Sign in
               </Link>{" "}
-              to like tracks and view history
+              to like tracks and view listening history
             </div>
           </div>
         )}
