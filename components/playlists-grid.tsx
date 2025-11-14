@@ -10,7 +10,7 @@ interface Props {
 export default function PlaylistsGrid({ playlists, isLoading = true }: Props) {
   return (
     <div className="@container">
-      <div className="grid grid-cols-2 gap-y-4 md:gap-y-0 @md:grid-cols-3 @lg:grid-cols-4">
+      <div className="grid grid-cols-2 justify-items-center @md:grid-cols-3 @lg:grid-cols-4">
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <li
