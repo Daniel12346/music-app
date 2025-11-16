@@ -21,7 +21,7 @@ export default async function Signup(props: {
     <div className="w-full flex flex-col items-center p-2 md: pt-12">
       <form
         className="flex-1 flex flex-col w-full max-w-80 bg-background p-3 md:p-6 rounded-md
-      border-2 border-muted-foreground"
+      border-2 border-fuchsia-400"
       >
         <h1 className="text-2xl font-medium">Sign up</h1>
         <p className="text-sm">
@@ -37,7 +37,11 @@ export default async function Signup(props: {
           <Input name="username" required />
           <Label htmlFor="password">Password</Label>
           <Input type="password" name="password" minLength={6} required />
-          <SubmitButton formAction={signUpAction} pendingText="Signing up...">
+          <SubmitButton
+            formAction={signUpAction}
+            pendingText="Signing up..."
+            className="bg-fuchsia-900/90 dark:bg-fuchsia-400/90 hover:bg-fuchsia-900 dark:hover:bg-fuchsia-400"
+          >
             Sign up
           </SubmitButton>
           <FormMessage message={searchParams} />
