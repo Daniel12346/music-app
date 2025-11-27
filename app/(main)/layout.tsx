@@ -15,8 +15,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "MusicApp",
+  description: "A music streaming app",
 };
 
 export default function RootLayout({
@@ -37,7 +37,11 @@ export default function RootLayout({
         direction="horizontal"
         className="min-h-screen pb-60"
       >
-        <ResizablePanel className="hidden md:block" defaultSize={25}>
+        <ResizablePanel
+          className="hidden md:block"
+          defaultSize={25}
+          minSize={10}
+        >
           <Liked />
         </ResizablePanel>
         <ResizableHandle className="hidden md:block w-0.75 " />
@@ -45,7 +49,11 @@ export default function RootLayout({
           {children}
         </ResizablePanel>
         <ResizableHandle className="hidden md:block w-0.75" />
-        <ResizablePanel className="hidden md:block" defaultSize={25}>
+        <ResizablePanel
+          className="hidden md:block"
+          defaultSize={25}
+          minSize={10}
+        >
           <Queue />
         </ResizablePanel>
       </ResizablePanelGroup>
