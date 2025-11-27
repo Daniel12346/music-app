@@ -43,6 +43,19 @@ export const signUpAction = async (formData: FormData) => {
   }
 };
 
+export const signUpAsGuestAction = async () => {
+  console.log("signing up as guest");
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInAnonymously({
+    options: { data: { username: "guest" } },
+  });
+  console.log(data, error);
+  if (error) {
+    return encodedRedirect("error", "/sign-in", error.message);
+  }
+  return redirect("/");
+};
+
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
