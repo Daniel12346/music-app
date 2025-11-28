@@ -22,9 +22,6 @@ export default function Home() {
   if (albumsError) {
     return <div>Error loading albums</div>;
   }
-  if (!areAlbumsLoading && myLikedAlbums?.length === 0) {
-    return <div className="bg-red-400">No albums found</div>;
-  }
   return (
     <>
       {myID && (
