@@ -66,7 +66,7 @@ export default function Artist() {
           height={50}
           className="w-full h-40 object-cover object-top"
         />
-        <h1 className="absolute bottom-0.5 left-0.5 z-10 text-6xl text-white text-shadow-accent">
+        <h1 className="absolute bottom-0.5 left-0.5 z-10 text-6xl text-white bg-black/50">
           {artist?.name}
         </h1>
       </div>
