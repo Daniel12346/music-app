@@ -41,7 +41,7 @@ export default function TracksList({
   return (
     <ul
       className={cn(
-        "w-full max-w-md space-y-2 md:space-y-1 p-2",
+        "w-full max-w-lg space-y-2 md:space-y-1 p-2",
         withBorder && "border-t-2"
       )}
     >
