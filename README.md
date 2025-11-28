@@ -1,6 +1,10 @@
 # Music App
 
-A music streaming service
+<img src="public/logo1.svg" alt="logo" width="200"/>
+
+A music streaming website created as a practice project. 
+[View demo](https://music-app-umber-phi.vercel.app/)
+To avoid infringing on any artists' rights while still serving as an effective proof of concept, this app only features royalty-free music.
 
 
 ## Features
