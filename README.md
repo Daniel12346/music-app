@@ -28,7 +28,7 @@ To avoid infringing on any artists' rights while still serving as an effective p
 
 
 ##  Database Tables
-
+<img src="public/supabase-schema.png" alt="logo" />
 
 ## Screenshots
 
