@@ -1,5 +1,6 @@
 "use client";
 import AlbumsDisplay from "@/components/albums-display";
+import LikeArtist from "@/components/like-artist";
 import TracksList from "@/components/tracks-list";
 import {
   Select,
@@ -60,6 +61,9 @@ export default function Artist() {
   return (
     <div>
       <div className="relative">
+        <div className="absolute top-1 right-1">
+          <LikeArtist size={32} artistID={artist?.id!} />
+        </div>
         <img
           src={artist?.image_url || ""}
           width={300}
