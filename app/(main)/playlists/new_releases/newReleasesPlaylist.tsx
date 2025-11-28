@@ -72,6 +72,7 @@ export default function NewReleasesPlaylist() {
       <div className="flex flex-col gap-2">
         <PlaylistCard
           {...playlist}
+          isMain
           album_cover_urls={playlist.playlists_tracks.map(
             (playlist) => playlist.track_album.cover_url
           )}
