@@ -99,6 +99,58 @@ export const unlikeAlbum = async (
   return data;
 };
 
+export const likeArtist = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  artistId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_artists")
+    .insert({ user_id: userId, artist_id: artistId })
+    .select();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const unlikeArtist = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  artistId: string,
+) => {
+  const { data, error } = await client
+    .from("users_liked_artists")
+    .delete()
+    .match({ user_id: userId, artist_id: artistId })
+    .select();
+
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const getArtistsLikedByUser = async (
+  client: SupabaseClient<Database>,
+  userId?: string,
+) => {
+  if (!userId) {
+    return null;
+  }
+  const { data, error } = await client
+    .from("users_liked_artists")
+    .select(
+      "artist_id",
+    )
+    .eq("user_id", userId);
+
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
 export const getAuthUser = async (
   client: SupabaseClient<Database>,
 ) => {
@@ -139,7 +191,7 @@ export const getArtistWithAlbumsAndTopTracks = async (
     "*, albums(*,artists(name, id)), tracks(*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url)))",
   )
     .order("play_count", { ascending: false, referencedTable: "tracks" })
-    .limit(10, { referencedTable: "tracks" })
+    .limit(5, { referencedTable: "tracks" })
     .eq("id", id).single();
   if (error) {
     throw error;
