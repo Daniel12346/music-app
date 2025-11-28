@@ -15,6 +15,7 @@ type Props = Tables<"playlists"> & {
     id: string;
     avatar_url: string | null;
   } | null;
+  description?: string | null;
   status: Tables<"playlists">["status"];
   isMain?: boolean;
 };
@@ -27,6 +28,7 @@ export default function PlaylistCard({
   size,
   created_at,
   status,
+  description,
   showCreatedAt = false,
   isMain = false,
 }: Props) {
@@ -62,6 +64,11 @@ export default function PlaylistCard({
           </div>
         )}
       </div>
+      {isMain && (
+        <div className="line-clamp-2 min-h-6 text-sm/6 mt-1 text-foreground/90">
+          {description}
+        </div>
+      )}
       <div className="text-muted-foreground flex items-center justify-between w-full mt-1 mb-1">
         {isMain ? (
           <div className="flex items-center">
