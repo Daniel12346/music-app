@@ -80,7 +80,7 @@ export default function AlbumCard({
         <Link href={`/albums/${id}`}>
           <span
             className={cn(
-              "line-clamp-2 min-h-6 text-lg/6 mt-0.5",
+              "min-h-6 text-lg/6 mt-0.5",
               isMain && "mt-1 mb-2 text-xl"
             )}
           >
@@ -93,7 +93,7 @@ export default function AlbumCard({
               <span key={artist.id}>
                 {(i > 0 && ", ") || ""}
                 <Link href={`/artists/${artist.id}`}>
-                  <span>{artist.name}</span>
+                  <span className="hover:underline">{artist.name}</span>
                 </Link>
               </span>
             ))}
