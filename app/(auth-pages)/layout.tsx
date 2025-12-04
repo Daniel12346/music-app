@@ -15,7 +15,7 @@ export default async function Layout({
           className="md:order-2 w-full max-w-sm"
         />
         <div className="text-background/80 dark:text-foreground/80">
-          <span className="text-2xl">Sign up to:</span>
+          <span className="text-2xl">Join MusicApp to:</span>
           <ul className="text-xl flex flex-col gap-2 md:gap-3 mt-2">
             <li className="flex">
               <CheckCircleIcon className="text-fuchsia-500 mr-2" size={25} />
