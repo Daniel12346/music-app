@@ -1,4 +1,4 @@
-import { signUpAction } from "@/app/actions";
+import { signUpAction, signUpAsGuestAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +46,16 @@ export default async function Signup(props: {
           </SubmitButton>
           <FormMessage message={searchParams} />
         </div>
+      </form>
+      <span className="text-sm my-2">or</span>
+      <form className="w-full max-w-80 px-3 md:px-6">
+        <SubmitButton
+          formAction={signUpAsGuestAction}
+          pendingText="Signing up..."
+          className="w-full bg-slate-500 hover:bg-slate-600"
+        >
+          Join as guest
+        </SubmitButton>
       </form>
     </div>
   );
