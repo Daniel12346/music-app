@@ -18,6 +18,7 @@ import TrackArtists from "@/components/track-artists";
 import TrackOptionsButton from "@/components/track-options";
 import { addNewQueueIdToTrack } from "@/lib/utils";
 import { useTrackStore } from "@/state/store";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function SearchResults() {
   const supabase = createClient();
@@ -151,28 +152,28 @@ export default function SearchResults() {
             <UserStarIcon className="mr-1" />
             Artists
           </div>
-          <div className="px-6">
+          <div className="px-6 flex gap-6 flex-wrap">
             {(artists?.data?.length ?? 0) > 0 ? (
               artists?.data?.map((artist) => (
                 <div key={artist.id}>
                   <Link href={`/artists/${artist.id}`}>
                     <div className="flex flex-col gap-1 ">
-                      <img
-                        className="w-20 h-20 object-cover rounded-full"
-                        src={artist.image_url || ""}
-                        alt={artist.name}
-                        width={20}
-                        height={20}
-                      />
+                      <Avatar className="w-25 h-25 object-cover rounded-full">
+                        <AvatarImage
+                          src={artist.image_url || undefined}
+                          alt={artist.name}
+                        />
+                        <AvatarFallback>{artist.name}</AvatarFallback>
+                      </Avatar>
                       <div className="flex flex-col">
-                        <span className="text-lg">{artist.name}</span>
+                        <span className="max-w-25">{artist.name}</span>
                       </div>
                     </div>
                   </Link>
                 </div>
               ))
             ) : (
-              <div className="flex justify-center text-muted-foreground">
+              <div className="w-full flex justify-center text-muted-foreground">
                 No artists found
               </div>
             )}
@@ -184,29 +185,29 @@ export default function SearchResults() {
           <UserRoundIcon className="mr-1" />
           Profiles
         </div>
-        <div className="px-6">
+        <div className="px-6 flex gap-6 flex-wrap">
           {(profiles?.data?.length ?? 0) > 0 ? (
-            profiles?.data?.map((artist) => (
-              <div key={artist.id}>
+            profiles?.data?.map((profile) => (
+              <div key={profile.id}>
                 {/* TOODO: link to profile */}
-                <Link href={`/profiles/${artist.id}`}>
+                <Link href={`/profiles/${profile.id}`}>
                   <div className="flex flex-col gap-1 ">
-                    <img
-                      className="w-20 h-20 object-cover rounded-full"
-                      src={artist.avatar_url || ""}
-                      alt={artist.username || ""}
-                      width={20}
-                      height={20}
-                    />
+                    <Avatar className="w-25 h-25 object-cover rounded-full">
+                      <AvatarImage
+                        src={profile.avatar_url || undefined}
+                        alt={profile.username || undefined}
+                      />
+                      <AvatarFallback>{profile.username}</AvatarFallback>
+                    </Avatar>
                     <div className="flex flex-col">
-                      <span className="text-lg">{artist.username}</span>
+                      <span className="max-w-25">{profile.username}</span>
                     </div>
                   </div>
                 </Link>
               </div>
             ))
           ) : (
-            <div className="flex justify-center text-muted-foreground">
+            <div className="flex w-full justify-center text-muted-foreground">
               No profiles found
             </div>
           )}
