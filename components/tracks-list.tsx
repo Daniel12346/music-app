@@ -11,11 +11,13 @@ export default function TracksList({
   sourceName,
   sourceType,
   sourceId,
+  //if tracksToQueue are not provided, they are the same as the listed tracks
   tracksToQueue = tracks,
   withBorder = false,
 }: {
   tracks: Omit<
     TrackWithExtra & {
+      //contributor is only needed for the displayed tracks
       contributor?: {
         id: string;
         username: string | null;
@@ -28,7 +30,7 @@ export default function TracksList({
   sourceType?: SourceType;
   sourceId?: string;
   withBorder?: boolean;
-  //tracksToQueue are the tracks that are queued when the user clicks on a track, they don't have to be the same as the listed tracks
+  //tracksToQueue are the tracks that are queued when the user clicks on a displayed track, they don't have to be the same as the displayed tracks
   tracksToQueue?: Omit<TrackWithExtra, "queueId">[];
 }) {
   const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
@@ -57,17 +59,21 @@ export default function TracksList({
                 track.id === currentTrack?.id && "text-highlight font-normal"
               )}
               onClick={() => {
+                //adding queueIds to all the tracks that are going to be queued
                 const tracksWithQueueIds = tracksToQueue.map((track) =>
                   addNewQueueIdToTrack(track)
                 );
-                const trackWithQueueId = tracksWithQueueIds[idx];
+                const newCurrentTrack =
+                  tracksWithQueueIds.find(
+                    (track) => track.id === tracks[idx].id
+                  ) ?? null;
                 setCurrentTrack(
-                  trackWithQueueId,
+                  newCurrentTrack,
                   sourceId,
                   sourceType,
                   sourceName
                 );
-                //clearing the queue and adding all the album tracks starting with the selected track
+                //clearing the queue and adding all the tracks starting with the selected track
                 queueTracksFromSource(tracksWithQueueIds);
               }}
             >
