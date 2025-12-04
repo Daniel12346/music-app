@@ -29,9 +29,6 @@ export default function RootLayout({
       <div className="block md:hidden">
         <SidebarMobile />
       </div>
-      <div className="block md:hidden">
-        <SidebarMobile />
-      </div>
       <Header />
       <ResizablePanelGroup
         direction="horizontal"
