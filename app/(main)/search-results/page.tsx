@@ -158,8 +158,9 @@ export default function SearchResults() {
                 <div key={artist.id}>
                   <Link href={`/artists/${artist.id}`}>
                     <div className="flex flex-col gap-1 ">
-                      <Avatar className="w-25 h-25 object-cover rounded-full">
+                      <Avatar className="w-25 h-25 rounded-full">
                         <AvatarImage
+                          className="object-cover"
                           src={artist.image_url || undefined}
                           alt={artist.name}
                         />
@@ -192,8 +193,9 @@ export default function SearchResults() {
                 {/* TOODO: link to profile */}
                 <Link href={`/profiles/${profile.id}`}>
                   <div className="flex flex-col gap-1 ">
-                    <Avatar className="w-25 h-25 object-cover rounded-full">
+                    <Avatar className="w-25 h-25 rounded-full">
                       <AvatarImage
+                        className="object-cover"
                         src={profile.avatar_url || undefined}
                         alt={profile.username || undefined}
                       />
