@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <div className="flex w-full gap-4 md:gap-16 items-center justify-between px-4 py-2 bg-background border-b border-border">
+    <div className="flex w-full gap-6 md:gap-16 items-center justify-between  px-4 py-2 bg-background border-b border-border">
       <SidebarTrigger className="md:hidden" />
       <Link href="/">
         <div className="flex items-center gap-1">
@@ -25,7 +25,6 @@ export default function Header() {
           </span>
         </div>
       </Link>
-      <div className="w-20 hidden md:flex"></div>
       <Search />
       <div className="flex w-20 gap-4 justify-end items-center">
         <AuthLink />
