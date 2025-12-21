@@ -6,6 +6,7 @@ import TrackArtists from "./track-artists";
 import TrackOptionsButton from "./track-options";
 import { useEffect, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Queue() {
   const {
@@ -118,9 +119,11 @@ export default function Queue() {
           setCurrentTrack(track);
         }}
       >
-        <img
+        <Image
           src={track.albumCoverUrl}
           alt={track.title}
+          width={64}
+          height={64}
           className="w-16 h-16 rounded"
         />
         <div className="flex-1 flex flex-col">

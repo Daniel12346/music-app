@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
 export default function Settings() {
   const supabase = createClient();
@@ -31,8 +32,9 @@ export default function Settings() {
           {isLoading || isMyDataLoading ? (
             <Skeleton className="w-40 h-40 rounded-full" />
           ) : (
-            <img
-              src={myProfileData?.avatar_url || undefined}
+            <Image
+              src={myProfileData?.avatar_url || ""}
+              alt={myProfileData?.username || ""}
               width={50}
               height={50}
               className="w-40 h-40 rounded-full object-cover object-top"

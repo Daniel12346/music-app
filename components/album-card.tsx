@@ -3,6 +3,7 @@ import Link from "next/link";
 import LikeAlbum from "./like-album";
 import { cn } from "@/lib/utils";
 import { format, formatDistanceToNowStrict } from "date-fns";
+import Image from "next/image";
 
 type ArtistInfo = Pick<Tables<"artists">, "name" | "id">;
 type Props = Pick<Tables<"albums">, "id" | "title" | "cover_url"> & {
@@ -29,7 +30,7 @@ export default function AlbumCard({
       <div className="relative">
         {size !== "large" ? (
           <Link href={`/albums/${id}`}>
-            <img
+            <Image
               src={cover_url || ""}
               alt={title || ""}
               width={120}
@@ -38,9 +39,9 @@ export default function AlbumCard({
             />
           </Link>
         ) : (
-          <img
+          <Image
             src={cover_url || ""}
-            alt={title || ""}
+            alt={title}
             width={120}
             height={120}
             className="rounded-md w-full"

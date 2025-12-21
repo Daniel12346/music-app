@@ -5,6 +5,7 @@ import UserAvatar from "./user-avatar";
 import AuthLink from "./auth-link";
 import logo1 from "../public/logo1.svg";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   return (
@@ -12,7 +13,7 @@ export default function Header() {
       <SidebarTrigger className="md:hidden" />
       <Link href="/">
         <div className="flex items-center gap-1">
-          <img
+          <Image
             src={logo1.src}
             alt="Logo"
             width={20}

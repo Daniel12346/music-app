@@ -16,6 +16,7 @@ import TrackArtists from "./track-artists";
 import { ListIcon, Repeat1Icon, ShuffleIcon } from "lucide-react";
 import LikeTrack from "./like-track";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 export default function Player() {
   const {
     currentTrack,
@@ -78,7 +79,12 @@ export default function Player() {
                 href={"/albums/" + currentTrack.albumId}
                 className="cursor-pointer"
               >
-                <img src={currentTrack.albumCoverUrl} width={50} height={50} />
+                <Image
+                  src={currentTrack.albumCoverUrl}
+                  alt={currentTrack.albumName}
+                  width={50}
+                  height={50}
+                />
               </Link>
               <div className="flex flex-col gap-2 max-w-30 md:max-w-60 justify-center">
                 <span className="truncate">{currentTrack.title}</span>

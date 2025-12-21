@@ -5,6 +5,7 @@ import TrackArtists from "./track-artists";
 import { SourceType, TrackWithExtra, useTrackStore } from "@/state/store";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function TracksList({
   tracks,
@@ -101,8 +102,9 @@ export default function TracksList({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link href={`/profiles/${track.contributor.id}`}>
-                    <img
+                    <Image
                       src={track.contributor.avatar_url ?? ""}
+                      alt={track.contributor.username ?? ""}
                       width={10}
                       height={10}
                       className="w-5 h-5 rounded-full"

@@ -9,6 +9,7 @@ import TrackArtists from "./track-artists";
 import { useTrackStore } from "@/state/store";
 import { addNewQueueIdToTrack } from "@/lib/utils";
 import TrackOptionsButton from "./track-options";
+import Image from "next/image";
 
 export default function TracksHistory({
   size = 16,
@@ -69,9 +70,11 @@ export default function TracksHistory({
                 //TODO: set queue to history tracks
               }
             >
-              <img
+              <Image
                 src={track_album.cover_url || ""}
                 alt={track.title}
+                width={120}
+                height={120}
                 className="w-10 h-10 rounded"
               />
               <div className="flex-1 flex flex-col">
