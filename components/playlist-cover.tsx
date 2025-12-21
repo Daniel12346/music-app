@@ -7,6 +7,7 @@ interface Props {
   album_cover_urls?: (string | null)[];
   size?: "small" | "large";
 }
+//if the playlist has its own image, show it, else show the first 4 album covers from the playlist
 export default function PlaylistCover({
   alt,
   image_url,

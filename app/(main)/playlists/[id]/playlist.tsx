@@ -24,10 +24,12 @@ export default function Playlist() {
   );
   const myID = data?.user?.id;
 
-  const canIEditPlaylist = playlist?.playlists_shared_with_users.some(
-    (sharedWithUser) =>
-      sharedWithUser.shared_with_user_id === myID && sharedWithUser.can_edit
-  );
+  const canIEditPlaylist =
+    playlist?.owner_id === myID ||
+    playlist?.playlists_shared_with_users.some(
+      (sharedWithUser) =>
+        sharedWithUser.shared_with_user_id === myID && sharedWithUser.can_edit
+    );
   const addTracksToQueue = useTrackStore((state) => state.addTracksToQueue);
   const tracksWithExtraInfo = playlist?.playlists_tracks?.map(
     (playlists_tracks) => ({
@@ -76,12 +78,11 @@ export default function Playlist() {
           size="large"
           showCreatedAt
         />
-        {canIEditPlaylist ||
-          (playlist.owner_id === myID && (
-            <Button variant="outline">
-              <PlusIcon size={12} /> Add track
-            </Button>
-          ))}
+        {canIEditPlaylist && (
+          <Button variant="outline">
+            <PlusIcon size={12} /> Add track
+          </Button>
+        )}
         <div className="mt-2">
           <div className="flex items-center gap-2 cursor-pointer justify-between">
             <div className="flex">

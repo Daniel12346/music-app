@@ -27,7 +27,6 @@ export default function UserAvatar() {
   );
   return (
     <div className="flex items-center gap-4 w-full justify-end">
-      {/* TODO: user profile image */}
       {myData?.user?.id && !isMyDataLoading && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
