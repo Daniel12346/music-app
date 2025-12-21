@@ -15,6 +15,7 @@ import {
 } from "@/lib/database";
 import { SortKey } from "@/lib/types";
 import { createClient } from "@/utils/supabase/client";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import useSWR from "swr";
@@ -64,11 +65,12 @@ export default function Artist() {
         <div className="absolute top-1 right-1">
           <LikeArtist size={32} artistID={artist?.id!} />
         </div>
-        <img
+        <Image
           src={artist?.image_url || ""}
+          alt={artist?.name || ""}
           width={300}
-          height={50}
-          className="w-full h-40 object-cover object-top"
+          height={100}
+          className="w-full h-50 object-cover object-center"
         />
         <h1 className="absolute bottom-0.5 left-0.5 z-10 text-6xl text-white bg-black/50">
           {artist?.name}
