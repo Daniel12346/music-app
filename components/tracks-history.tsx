@@ -61,12 +61,11 @@ export default function TracksHistory({
               className="flex cursor-pointer items-center gap-2  @container"
               onClick={
                 () =>
-                  setCurrentTrack(
-                    addNewQueueIdToTrack(TrackWithExtra),
-                    null,
-                    "HISTORY",
-                    "Recent tracks"
-                  )
+                  setCurrentTrack(addNewQueueIdToTrack(TrackWithExtra), {
+                    sourceId: null,
+                    sourceType: "HISTORY",
+                    sourceName: "Recent tracks",
+                  })
                 //TODO: set queue to history tracks
               }
             >

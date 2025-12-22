@@ -140,7 +140,10 @@ export default function NewReleasesPlaylist() {
                     addNewQueueIdToTrack(track)
                   );
                   const trackWithQueueId = tracksWithQueueIds[idx];
-                  setCurrentTrack(trackWithQueueId, null, "NEW_RELEASES");
+                  setCurrentTrack(trackWithQueueId, {
+                    sourceId: null,
+                    sourceName: "NEW_RELEASES",
+                  });
                   //clearing the queue and adding all the album tracks starting with the selected track
                   setQueue(tracksWithQueueIds.slice(idx));
                 }}
