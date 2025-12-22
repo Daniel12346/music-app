@@ -1,6 +1,7 @@
 import { Geist } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/providers";
+import { Toaster } from "sonner";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -20,6 +21,8 @@ export default function RootLayout({
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground min-h-screen">
         <Providers>{children}</Providers>
+        {/* needed for sonner from shadcn/ui */}
+        <Toaster />
       </body>
     </html>
   );
