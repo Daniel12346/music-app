@@ -6,7 +6,7 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import { LockKeyholeIcon, LockKeyholeOpenIcon } from "lucide-react";
 import Link from "next/link";
 
-type Props = Tables<"playlists"> & {
+type PlaylistCardProps = Tables<"playlists"> & {
   size?: "large" | "small";
   showCreatedAt?: boolean;
   album_cover_urls?: (string | null)[];
@@ -31,22 +31,22 @@ export default function PlaylistCard({
   description,
   showCreatedAt = false,
   isMain = false,
-}: Props) {
+}: PlaylistCardProps) {
   return (
     <div className={cn("w-32 min-h-32 group", size === "large" && "w-72")}>
-      <Link href={`/playlists/${id}`} className="flex justify-center">
-        <div className="relative w-full">
+      <div className="relative w-full">
+        <Link href={`/playlists/${id}`} className="flex justify-center">
           <PlaylistCover
             alt={name}
             image_url={image_url ?? undefined}
             album_cover_urls={album_cover_urls}
             size={size}
           />
-          <div className="hidden group-hover:block absolute top-0 right-0">
-            <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
-          </div>
+        </Link>
+        <div className="hidden group-hover:block absolute top-0 right-0">
+          <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
         </div>
-      </Link>
+      </div>
       <div className="flex items-baseline justify-between">
         <Link href={`/playlists/${id}`}>
           <span className={cn("line-clamp-2 min-h-6 text-lg/6 mt-1")}>
