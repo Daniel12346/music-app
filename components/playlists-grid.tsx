@@ -1,16 +1,22 @@
-import Link from "next/link";
 import PlaylistCard from "./playlist-card";
 import { PlaylistsWithPreview } from "@/lib/database";
 import { Skeleton } from "./ui/skeleton";
+import CreatePlaylist from "./create-playlist";
 interface Props {
   playlists: PlaylistsWithPreview;
   isLoading?: boolean;
+  withCreateNew?: boolean;
 }
 
-export default function PlaylistsGrid({ playlists, isLoading = true }: Props) {
+export default function PlaylistsGrid({
+  playlists,
+  isLoading = true,
+  withCreateNew,
+}: Props) {
   return (
     <div className="@container">
       <div className="grid grid-cols-2 justify-items-center @md:grid-cols-3 @lg:grid-cols-4">
+        {withCreateNew && <CreatePlaylist />}
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
             <li
