@@ -5,7 +5,7 @@ import PlaylistCover from "./playlist-cover";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { LockKeyholeIcon, LockKeyholeOpenIcon } from "lucide-react";
 import Link from "next/link";
-
+import PlaylistSettings from "./playlist-settings";
 type PlaylistCardProps = Tables<"playlists"> & {
   size?: "large" | "small";
   showCreatedAt?: boolean;
@@ -16,8 +16,8 @@ type PlaylistCardProps = Tables<"playlists"> & {
     avatar_url: string | null;
   } | null;
   description?: string | null;
-  status: Tables<"playlists">["status"];
   isMain?: boolean;
+  amIOwner?: boolean;
 };
 export default function PlaylistCard({
   id,
@@ -31,7 +31,9 @@ export default function PlaylistCard({
   description,
   showCreatedAt = false,
   isMain = false,
+  amIOwner = false,
 }: PlaylistCardProps) {
+  const isPublic = status === "PUBLIC";
   return (
     <div className={cn("w-32 min-h-32 group", size === "large" && "w-72")}>
       <div className="relative w-full">
@@ -54,13 +56,16 @@ export default function PlaylistCard({
           </span>
         </Link>
         {isMain && (
-          <div className="flex items-baseline gap-0.5 text-foreground/70">
-            {status === "PUBLIC" ? (
-              <LockKeyholeOpenIcon size={14} />
-            ) : (
-              <LockKeyholeIcon size={14} />
+          <div className="flex items-baseline gap-1 text-foreground/70">
+            {amIOwner && (
+              <PlaylistSettings isPublic={isPublic} id={id} />
             )}
-            <span className="lowercase">{status}</span>
+            {status === "PUBLIC" ? (
+              <LockKeyholeOpenIcon size={16} />
+            ) : (
+              <LockKeyholeIcon size={16} />
+            )}
+            {/* <span className="lowercase">{status}</span> */}
           </div>
         )}
       </div>
