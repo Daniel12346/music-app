@@ -23,9 +23,10 @@ export default function Playlist() {
     supabase.auth.getUser().then((res) => res.data)
   );
   const myID = data?.user?.id;
+  const amIOwner = playlist?.owner_id === myID;
 
   const canIEditPlaylist =
-    playlist?.owner_id === myID ||
+    amIOwner ||
     playlist?.playlists_shared_with_users.some(
       (sharedWithUser) =>
         sharedWithUser.shared_with_user_id === myID && sharedWithUser.can_edit
@@ -77,6 +78,7 @@ export default function Playlist() {
           )}
           size="large"
           showCreatedAt
+          amIOwner={amIOwner}
         />
         {canIEditPlaylist && (
           <Button variant="outline">
