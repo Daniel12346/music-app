@@ -57,9 +57,7 @@ export default function PlaylistCard({
         </Link>
         {isMain && (
           <div className="flex items-baseline gap-1 text-foreground/70">
-            {amIOwner && (
-              <PlaylistSettings isPublic={isPublic} id={id} />
-            )}
+            {amIOwner && <PlaylistSettings id={id} />}
             {status === "PUBLIC" ? (
               <LockKeyholeOpenIcon size={16} />
             ) : (
