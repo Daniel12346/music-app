@@ -155,14 +155,15 @@ export default function TrackOptionsButton({
                       <DropdownMenuItem
                         className="pl-2"
                         key={playlist.id}
-                        onClick={async (e) => {
+                        onClick={async () => {
+                          if (!playlist.id || !myID) return;
                           try {
-                            const data = await addTrackToPlaylist(
+                            await addTrackToPlaylist(
                               supabase,
-                              playlist.id || "",
+                              playlist.id,
                               track.id,
                               track.albumId,
-                              myID!
+                              myID
                             );
                           } catch (e) {
                             throw e;
