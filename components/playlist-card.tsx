@@ -35,7 +35,13 @@ export default function PlaylistCard({
 }: PlaylistCardProps) {
   const isPublic = status === "PUBLIC";
   return (
-    <div className={cn("w-32 min-h-32 group", size === "large" && "w-72")}>
+    <div
+      className={cn(
+        "w-32 min-h-32 group flex flex-col",
+        size === "large" && "w-72",
+        isMain && "gap-1"
+      )}
+    >
       <div className="relative w-full">
         <Link href={`/playlists/${id}`} className="flex justify-center">
           <PlaylistCover
@@ -58,7 +64,7 @@ export default function PlaylistCard({
         {isMain && (
           <div className="flex items-baseline gap-1 text-foreground/70">
             {amIOwner && <PlaylistSettings id={id} />}
-            {status === "PUBLIC" ? (
+            {!isPublic ? (
               <LockKeyholeOpenIcon size={16} />
             ) : (
               <LockKeyholeIcon size={16} />
@@ -67,7 +73,7 @@ export default function PlaylistCard({
           </div>
         )}
       </div>
-      {isMain && (
+      {isMain && description && (
         <div className="line-clamp-2 min-h-6 text-sm/6 mt-1 text-foreground/90">
           {description}
         </div>
