@@ -15,7 +15,7 @@ export default function PlaylistsGrid({
 }: Props) {
   return (
     <div className="@container">
-      <div className="grid grid-cols-2 justify-items-center @md:grid-cols-3 @lg:grid-cols-4">
+      <ul className="grid grid-cols-2 justify-items-center @md:grid-cols-3 @lg:grid-cols-4 gap-y-6">
         {withCreateNew && <CreatePlaylist />}
         {isLoading ? (
           Array.from({ length: 4 }).map((_, i) => (
@@ -45,7 +45,7 @@ export default function PlaylistsGrid({
             )}
           </>
         )}
-      </div>
+      </ul>
     </div>
   );
 }

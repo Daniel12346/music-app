@@ -39,7 +39,7 @@ export default function Albums({
   };
   return (
     <div className="@container">
-      <ul className="grid grid-cols-2 justify-items-center @md:grid-cols-3 @lg:grid-cols-4">
+      <ul className="grid grid-cols-2 justify-items-center @md:grid-cols-3 @lg:grid-cols-4 gap-y-6">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <li className="flex justify-center" key={i}>
