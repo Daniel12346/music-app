@@ -23,23 +23,24 @@ export default function Home() {
     return <div>Error loading albums</div>;
   }
   return (
-    <>
-      {myID && (
-        <div className="px-3">
-          <h1 className="mb-2 text-lg">Playlists</h1>
-          <div className="mb-4">
-            <MyPlaylists />
-          </div>
-          <h1 className="mb-2 text-lg">Liked albums</h1>
-          <div className="">
-            <AlbumsDisplay
-              albums={myLikedAlbums ?? null}
-              isLoading={isMyDataLoading || areAlbumsLoading}
-            />
-          </div>
+    myID && (
+      <div className="px-3">
+        <h1 className="mb-2 text-xl font-bold text-foreground/90">
+          Your playlists
+        </h1>
+        <div className="mb-4">
+          <MyPlaylists />
         </div>
-      )}
-      {!myID && !isMyDataLoading && <div></div>}
-    </>
+        <h1 className="mb-2 text-xl font-bold text-foreground/90">
+          Liked albums
+        </h1>
+        <div className="">
+          <AlbumsDisplay
+            albums={myLikedAlbums ?? null}
+            isLoading={isMyDataLoading || areAlbumsLoading}
+          />
+        </div>
+      </div>
+    )
   );
 }
