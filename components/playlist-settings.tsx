@@ -143,7 +143,6 @@ export default function PlaylistSettings({ id }: { id: string }) {
                 />
                 <DropdownMenuItem className="relative">
                   <Input
-                    //TODO: fix input losing focus
                     autoFocus={false}
                     placeholder="search users"
                     value={profileSearchQuery}

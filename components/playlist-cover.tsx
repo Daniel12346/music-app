@@ -32,26 +32,27 @@ export default function PlaylistCover({
         { "h-20 w-20": size === "small", "h-72 w-72": size === "large" }
       )}
     >
-      {album_cover_urls?.slice(0, 4).map(
-        (album_cover_url, i) =>
-          album_cover_url && (
-            <Image
-              key={album_cover_url + i}
-              src={album_cover_url}
-              //TODO: add alt for each album
-              alt="album cover"
-              width={10}
-              height={10}
-              className={cn(
-                "w-full",
-                i === 0 && "rounded-tl-md",
-                i === 1 && "rounded-tr-md",
-                i === 2 && "rounded-bl-md",
-                i === 3 && "rounded-br-md"
-              )}
-            />
-          )
-      )}
+      {album_cover_urls
+        ?.slice(0, 4)
+        .map(
+          (album_cover_url, i) =>
+            album_cover_url && (
+              <Image
+                key={album_cover_url + i}
+                src={album_cover_url}
+                alt="album cover"
+                width={10}
+                height={10}
+                className={cn(
+                  "w-full",
+                  i === 0 && "rounded-tl-md",
+                  i === 1 && "rounded-tr-md",
+                  i === 2 && "rounded-bl-md",
+                  i === 3 && "rounded-br-md"
+                )}
+              />
+            )
+        )}
     </div>
   );
 }
