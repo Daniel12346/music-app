@@ -25,15 +25,13 @@ import {
   makePlaylistPrivate,
   makePlaylistPublic,
   sharePlaylistWithUser,
-  unsharePlaylistWithUser,
-  updateCanUserEditPlaylist,
 } from "@/lib/database";
 import useSWR from "swr";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { Checkbox } from "./ui/checkbox";
+import PlaylistSharedWithUsers from "./playlist-shared-with-users";
 
 export default function PlaylistSettings({ id }: { id: string }) {
   const supabase = createClient();
@@ -139,94 +137,10 @@ export default function PlaylistSettings({ id }: { id: string }) {
                     </span>
                   </div>
                 )}
-                {sharedWithUsers?.map((profile) => {
-                  const canEdit =
-                    profile.playlists_shared_with_users[0].can_edit ?? false;
-                  return (
-                    <DropdownMenuItem
-                      className="flex justify-between"
-                      key={profile.id}
-                    >
-                      {profile.username}
-                      <div className="flex items-center">
-                        <Checkbox
-                          className="ml-1 cursor-pointer"
-                          checked={canEdit}
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            //toggling whether user can edit playlist
-                            try {
-                              await updateCanUserEditPlaylist(
-                                supabase,
-                                id,
-                                profile.id,
-                                !canEdit
-                              );
-                              mutateProfileSearchResults((prev) =>
-                                prev?.map((p) => {
-                                  if (p.id === profile.id) {
-                                    return {
-                                      ...p,
-                                      playlists_shared_with_users:
-                                        p.playlists_shared_with_users.map(
-                                          (p) => {
-                                            if (
-                                              p.shared_with_user_id ===
-                                              profile.id
-                                            ) {
-                                              return {
-                                                ...p,
-                                                can_edit: !canEdit,
-                                              };
-                                            }
-                                            return p;
-                                          }
-                                        ),
-                                    };
-                                  }
-                                  return p;
-                                })
-                              );
-                            } catch (e) {
-                              toast.error(
-                                "Failed to allow user to edit playlist"
-                              );
-                            }
-                          }}
-                        />
-                        <Trash2Icon
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            try {
-                              await unsharePlaylistWithUser(
-                                supabase,
-                                id,
-                                profile.id
-                              );
-                              mutateProfileSearchResults((prev) =>
-                                prev?.map((p) => {
-                                  if (p.id === profile.id) {
-                                    return {
-                                      ...p,
-                                      playlists_shared_with_users: [],
-                                    };
-                                  }
-                                  return p;
-                                })
-                              );
-                            } catch (e) {
-                              toast.error(
-                                "Failed to remove user from playlist"
-                              );
-                            }
-                          }}
-                          size={18}
-                          className="ml-4 cursor-pointer hover:text-red-400"
-                        />
-                      </div>
-                    </DropdownMenuItem>
-                  );
-                })}
+                <PlaylistSharedWithUsers
+                  playlistId={id}
+                  searchQuery={profileSearchQuery}
+                />
                 <DropdownMenuItem className="relative">
                   <Input
                     //TODO: fix input losing focus
