@@ -26,11 +26,10 @@ export default function CreatePlaylist() {
   );
   const myID = myData?.user?.id;
   const [name, setName] = useState("");
-  if (!myID) return null;
 
   const { mutate: mutatePlaylists } = useSWR(
     ["getUserPlaylistsWithPreview", myID],
-    () => getUserPlaylistsWithPreview(supabase, myID)
+    myID ? () => getUserPlaylistsWithPreview(supabase, myID) : null
   );
 
   const [isOpen, setIsOpen] = useState(false);
@@ -69,6 +68,7 @@ export default function CreatePlaylist() {
           </DialogClose>
           <Button
             onClick={async () => {
+              if (!myID) return;
               try {
                 await createPlaylist(supabase, myID, name);
                 //refresh my playlists
