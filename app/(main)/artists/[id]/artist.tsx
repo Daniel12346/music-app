@@ -23,7 +23,7 @@ import useSWR from "swr";
 export default function Artist() {
   const client = createClient();
   const { id } = useParams<{ id: string }>();
-  const { data: artist, error } = useSWR(
+  const { data: artist } = useSWR(
     ["getArtistWithAlbumsAndTopTracks", id],
     () => getArtistWithAlbumsAndTopTracks(client, id)
   );
@@ -79,7 +79,7 @@ export default function Artist() {
       <span className="text-2xl pl-2 opacity-90">Popular tracks</span>
       <div className="flex flex-col items-center mt-2">
         <TracksList
-          //only the top 5 most popular tracks are shown, but all tracks are queued when one of them is clicked
+          //only the top 5 most popular tracks are shown, but all the artist's tracks are queued when one of them is clicked
           tracks={topTracksWithExtraInfo}
           tracksToQueue={allTracksWithExtraInfo}
           sourceId={artist?.id}

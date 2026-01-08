@@ -304,6 +304,43 @@ export const addTrackToHistory = async (
   return data;
 };
 
+export const createPlaylist = async (
+  client: SupabaseClient<Database>,
+  userId: string,
+  name: string,
+) => {
+  const { data, error } = await client
+    .from("playlists")
+    .insert({
+      owner_id: userId,
+      name,
+    })
+    .select();
+
+  if (error) {
+    throw error;
+  } else {
+    return data;
+  }
+};
+
+export const deletePlaylist = async (
+  client: SupabaseClient<Database>,
+  playlistId: string,
+) => {
+  const { data, error } = await client
+    //when a playlist is deleted, rows in tables that reference it are also deleted (playlists_tracks, users_liked_playlists, playlists_shared_with_users)
+    //TODO: update readme with added cascade delete
+    .from("playlists")
+    .delete()
+    .eq("id", playlistId)
+    .select();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
 export const getUserPlaylists = async (
   client: SupabaseClient<Database>,
   userId: string,
@@ -374,7 +411,8 @@ export const likePlaylist = async (
   const { data, error } = await client
     .from("users_liked_playlists")
     .insert({ playlist_id: playlistId, user_id: userId })
-    .select();
+    .select()
+    .single();
   if (error) {
     throw error;
   }
@@ -492,9 +530,6 @@ export const getNewAlbumsByLikedArtists = async (
   return albums;
 };
 
-// export  const makePlaylistFromTracks= async (
-
-// )
 export const getNewTracksByLikedArtists = async (
   client: SupabaseClient<Database>,
   userId: string,
@@ -623,6 +658,7 @@ export const getPlaylistsSearchResults = async (
     .select(
       "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url))",
     )
+    //find playlists whose name matches the query or are shared with the user
     .like("name", `%${query}%`)
     .or(
       `owner_id.eq.${userId}, and(shared_with_user_id.eq.${userId}, can_edit.eq.true)`,
@@ -633,6 +669,26 @@ export const getPlaylistsSearchResults = async (
   }
   return data;
 };
+export const getProfileSearchResultsWithSharingStatus = async (
+  client: SupabaseClient<Database>,
+  query: string,
+  playlist_id: string,
+) => {
+  if (!query) return null;
+  if (!query.trim()) return null;
+  const { data, error } = await client.from("profiles").select(
+    "*, playlists_shared_with_users(*)",
+  ).like(
+    "username",
+    `%${query}%`,
+  )
+    .eq("playlists_shared_with_users.playlist_id", playlist_id);
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
 export const getUserProfile = async (
   client: SupabaseClient<Database>,
   userId: string,
@@ -652,3 +708,84 @@ const tracksQuery = supabase.from("tracks").select(
   "*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url))",
 );
 export type TracksWithAlbumsAndArtists = QueryData<typeof tracksQuery>;
+
+//TODO: getPlaylistsSharedWithUser
+
+export const makePlaylistPrivate = async (
+  client: SupabaseClient<Database>,
+  id: string,
+) => {
+  const { data, error } = await client.from("playlists").update({
+    status: "PRIVATE",
+  }).eq("id", id).select().single();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const makePlaylistPublic = async (
+  client: SupabaseClient<Database>,
+  id: string,
+) => {
+  const { data, error } = await client.from("playlists").update({
+    status: "PUBLIC",
+  }).eq("id", id).select().single();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const sharePlaylistWithUser = async (
+  client: SupabaseClient<Database>,
+  playlistId: string,
+  //the id of the user the playlist is being shared with
+  userId: string,
+  canEdit: boolean,
+) => {
+  const { data, error } = await client.from("playlists_shared_with_users")
+    .insert({
+      playlist_id: playlistId,
+      shared_with_user_id: userId,
+      can_edit: canEdit,
+    }).select().single();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const updateCanUserEditPlaylist = async (
+  client: SupabaseClient<Database>,
+  playlistId: string,
+  userId: string,
+  canEdit: boolean,
+) => {
+  const { data, error } = await client.from("playlists_shared_with_users")
+    .update({
+      can_edit: canEdit,
+    }).eq("playlist_id", playlistId).eq("shared_with_user_id", userId).select()
+    .single();
+  if (error) {
+    throw error;
+  }
+  return data;
+};
+
+export const unsharePlaylistWithUser = async (
+  client: SupabaseClient<Database>,
+  playlistId: string,
+  userId: string,
+) => {
+  const { data, error } = await client.from("playlists_shared_with_users")
+    .delete()
+    .match({
+      playlist_id: playlistId,
+      shared_with_user_id: userId,
+    }).select();
+  if (error) {
+    throw error;
+  }
+  return data;
+};

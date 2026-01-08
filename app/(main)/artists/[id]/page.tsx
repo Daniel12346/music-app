@@ -21,7 +21,8 @@ export default async function ArtistPage({ params }: Props) {
       value={{
         fallback: {
           [unstable_serialize(["getArtistWithAlbumsAndTopTracks", id])]: artist,
-          //getAllArtistTracks is not prefetched because it takes too long and all tracks can only be accessed on client side when a track is clicked and all tracks are added to queue
+          //getAllArtistTracks is not prefetched because all tracks are not needed on the server side
+          //all tracks are needed only on the client when user clicks on one of the top tracks and all tracks are queued
           [unstable_serialize(["getAllArtistTracks", id])]: [],
         },
       }}

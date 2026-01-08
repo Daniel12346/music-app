@@ -68,12 +68,11 @@ export default function TracksList({
                   tracksWithQueueIds.find(
                     (track) => track.id === tracks[idx].id
                   ) ?? null;
-                setCurrentTrack(
-                  newCurrentTrack,
+                setCurrentTrack(newCurrentTrack, {
                   sourceId,
                   sourceType,
-                  sourceName
-                );
+                  sourceName,
+                });
                 //clearing the queue and adding all the tracks starting with the selected track
                 queueTracksFromSource(tracksWithQueueIds);
               }}

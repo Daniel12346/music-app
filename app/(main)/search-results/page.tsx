@@ -23,7 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export default function SearchResults() {
   const supabase = createClient();
   const { query } = useTrackStore((state) => state);
-  const { data, isLoading } = useSWR(
+  const { data } = useSWR(
     ["getSearchResults", query],
     () => getSearchResults(supabase, query),
     { keepPreviousData: true }
@@ -69,12 +69,12 @@ export default function SearchResults() {
                       key={track.id}
                       className="flex cursor-pointer items-center gap-2  @container"
                       onClick={() =>
-                        setCurrentTrack(
-                          addNewQueueIdToTrack(trackWithExtra),
-                          null,
-                          null,
-                          null
-                        )
+                        //no source data is added when playing a track from search
+                        setCurrentTrack(addNewQueueIdToTrack(trackWithExtra), {
+                          sourceId: null,
+                          sourceType: null,
+                          sourceName: null,
+                        })
                       }
                     >
                       <img

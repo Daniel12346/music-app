@@ -27,15 +27,15 @@ export default function MyPlaylists() {
   const newReleasesPlaylist = makeNewTracksPlaylist(
     newTracksByLikedArtists ?? null
   );
+  const playlists = [newReleasesPlaylist!, ...(myPlaylists || [])];
   const isLoading =
     isMyDataLoading || areNewTracksLoading || arePlaylistsLoading;
   if (playlistsError) return <div>Error loading playlists</div>;
-  if (!isLoading && myPlaylists?.length === 0)
-    return <div>No playlists found</div>;
   return (
     <PlaylistsDisplay
-      playlists={[newReleasesPlaylist!, ...(myPlaylists || [])]}
+      playlists={playlists}
       isLoading={isLoading}
+      withCreateNew
     />
   );
 }

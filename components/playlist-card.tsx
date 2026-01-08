@@ -5,8 +5,8 @@ import PlaylistCover from "./playlist-cover";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { LockKeyholeIcon, LockKeyholeOpenIcon } from "lucide-react";
 import Link from "next/link";
-
-type Props = Tables<"playlists"> & {
+import PlaylistSettings from "./playlist-settings";
+type PlaylistCardProps = Tables<"playlists"> & {
   size?: "large" | "small";
   showCreatedAt?: boolean;
   album_cover_urls?: (string | null)[];
@@ -16,8 +16,8 @@ type Props = Tables<"playlists"> & {
     avatar_url: string | null;
   } | null;
   description?: string | null;
-  status: Tables<"playlists">["status"];
   isMain?: boolean;
+  amIOwner?: boolean;
 };
 export default function PlaylistCard({
   id,
@@ -31,22 +31,30 @@ export default function PlaylistCard({
   description,
   showCreatedAt = false,
   isMain = false,
-}: Props) {
+  amIOwner = false,
+}: PlaylistCardProps) {
+  const isPublic = status === "PUBLIC";
   return (
-    <div className={cn("w-32 min-h-32 group", size === "large" && "w-72")}>
-      <Link href={`/playlists/${id}`} className="flex justify-center">
-        <div className="relative w-full">
+    <div
+      className={cn(
+        "w-32 min-h-32 group flex flex-col",
+        size === "large" && "w-72",
+        isMain && "gap-1"
+      )}
+    >
+      <div className="relative w-full">
+        <Link href={`/playlists/${id}`} className="flex justify-center">
           <PlaylistCover
             alt={name}
             image_url={image_url ?? undefined}
             album_cover_urls={album_cover_urls}
             size={size}
           />
-          <div className="hidden group-hover:block absolute top-0 right-0">
-            <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
-          </div>
+        </Link>
+        <div className="hidden group-hover:block absolute top-0 right-0">
+          <LikePlaylist playlistID={id} size={size === "large" ? 32 : 16} />
         </div>
-      </Link>
+      </div>
       <div className="flex items-baseline justify-between">
         <Link href={`/playlists/${id}`}>
           <span className={cn("line-clamp-2 min-h-6 text-lg/6 mt-1")}>
@@ -54,17 +62,18 @@ export default function PlaylistCard({
           </span>
         </Link>
         {isMain && (
-          <div className="flex items-baseline gap-0.5 text-foreground/70">
-            {status === "PUBLIC" ? (
-              <LockKeyholeOpenIcon size={14} />
+          <div className="flex items-baseline gap-1 text-foreground/70">
+            {amIOwner && <PlaylistSettings id={id} />}
+            {!isPublic ? (
+              <LockKeyholeOpenIcon size={16} />
             ) : (
-              <LockKeyholeIcon size={14} />
+              <LockKeyholeIcon size={16} />
             )}
-            <span className="lowercase">{status}</span>
+            {/* <span className="lowercase">{status}</span> */}
           </div>
         )}
       </div>
-      {isMain && (
+      {isMain && description && (
         <div className="line-clamp-2 min-h-6 text-sm/6 mt-1 text-foreground/90">
           {description}
         </div>

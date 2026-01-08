@@ -30,7 +30,7 @@ import { createClient } from "@/utils/supabase/client";
 import { addNewQueueIdToTrack } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { Input } from "./ui/input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function TrackOptionsButton({
   track,
@@ -122,8 +122,7 @@ export default function TrackOptionsButton({
                         key={playlist.id}
                         onClick={async (e) => {
                           try {
-                            //TODO: handle error, optimistically update state with data
-                            const data = await addTrackToPlaylist(
+                            await addTrackToPlaylist(
                               supabase,
                               playlist.id,
                               track.id,
@@ -156,14 +155,15 @@ export default function TrackOptionsButton({
                       <DropdownMenuItem
                         className="pl-2"
                         key={playlist.id}
-                        onClick={async (e) => {
+                        onClick={async () => {
+                          if (!playlist.id || !myID) return;
                           try {
-                            const data = await addTrackToPlaylist(
+                            await addTrackToPlaylist(
                               supabase,
-                              playlist.id || "",
+                              playlist.id,
                               track.id,
                               track.albumId,
-                              myID!
+                              myID
                             );
                           } catch (e) {
                             throw e;

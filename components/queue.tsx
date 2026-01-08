@@ -1,37 +1,30 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { TrackWithExtra, useTrackStore } from "@/state/store";
-import { ListIcon, XIcon } from "lucide-react";
-import TrackArtists from "./track-artists";
-import TrackOptionsButton from "./track-options";
+import { useTrackStore } from "@/state/store";
 import { useEffect, useMemo } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import QueueTrack from "./queue-track";
 
 export default function Queue() {
   const {
     userQueue,
     sourceQueue,
     currentTrack,
-    removeTrackFromSourceQueue,
-    removeTrackFromUserQueue,
     isShuffleActive,
     setUserQueue,
     setPrevTrack,
     setNextTrack,
     setLastPlayedSourceTrack,
     lastPlayedSourceTrack,
-    setCurrentTrack,
     currentSourceName,
     currentSourceId,
     currentSourceType,
   } = useTrackStore();
 
+  //when switching shuffle on and off, the order of the queue is always the same when shuffle is turned off so it can be memoized
   const sortedSourceQueue = useMemo(
     () =>
       isShuffleActive
-        ? //sort randomly
-          sourceQueue.toSorted(() => Math.random() - 0.5)
+        ? sourceQueue.toSorted(() => Math.random() - 0.5)
         : sourceQueue,
     [sourceQueue, isShuffleActive]
   );
@@ -98,54 +91,7 @@ export default function Queue() {
     } else {
     }
   }, [userQueue]);
-  const QueueTrack = ({
-    track,
-    isCurrent = false,
-    isQueuedByUser = false,
-  }: {
-    track: TrackWithExtra;
-    isCurrent?: boolean;
-    isQueuedByUser?: boolean;
-  }) => {
-    return (
-      <div
-        className={cn(
-          "flex items-center gap-2",
-          isCurrent &&
-            "border-y-highlight/50 border-y-2 py-1 bg-highlight/5 text-highlight"
-        )}
-        onClick={(e) => {
-          e.stopPropagation();
-          setCurrentTrack(track);
-        }}
-      >
-        <Image
-          src={track.albumCoverUrl}
-          alt={track.title}
-          width={64}
-          height={64}
-          className="w-16 h-16 rounded"
-        />
-        <div className="flex-1 flex flex-col">
-          <span className="text-lg font-semibold">{track.title}</span>
-          <TrackArtists artists={track.artists} textColor="text-foreground" />
-        </div>
-        <div className="flex text-foreground">
-          {isQueuedByUser && <ListIcon stroke="var(--color-fuchsia-500)" />}
-          <TrackOptionsButton track={track} />
-          <XIcon
-            className="cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              isQueuedByUser
-                ? removeTrackFromUserQueue(track.queueId)
-                : removeTrackFromSourceQueue(track.queueId);
-            }}
-          />
-        </div>
-      </div>
-    );
-  };
+
   return (
     <div className="flex flex-col gap-2 px-1 cursor-pointer @container">
       {currentTrack && (

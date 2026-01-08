@@ -49,6 +49,7 @@ export default async function Signup(props: {
       </form>
       <span className="text-sm my-2">or</span>
       <form className="w-full max-w-80 px-3 md:px-6">
+        {/* A user can join as a guest without using any credentials. A guest account can not be used on any other device and the user can not access it again if they log out */}
         <SubmitButton
           formAction={signUpAsGuestAction}
           pendingText="Signing up..."
