@@ -1,6 +1,6 @@
-import LikedAlbums from "@/components/liked-albums";
-import MyPlaylists from "@/components/my-playlists";
-import NewAlbums from "@/components/new-albums";
+import LikedAlbumsLimited from "@/components/liked-albums-limited";
+import MyPlaylistsLimited from "@/components/my-playlists-limited";
+import NewAlbumsLimited from "@/components/new-albums-limited";
 import Link from "next/link";
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
             See all
           </Link>
         </div>
-        <NewAlbums />
+        <NewAlbumsLimited />
       </div>
       <div>
         <div className="flex justify-between pr-6">
@@ -32,7 +32,7 @@ export default function Home() {
             See all
           </Link>
         </div>
-        <MyPlaylists />
+        <MyPlaylistsLimited />
       </div>
       <div>
         <div className="flex justify-between pr-6">
@@ -46,7 +46,7 @@ export default function Home() {
             See all
           </Link>
         </div>
-        <LikedAlbums />
+        <LikedAlbumsLimited />
       </div>
     </div>
   );
