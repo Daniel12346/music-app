@@ -43,8 +43,8 @@ export default function TrackOptionsButton({
   );
   const myID = data?.user?.id;
   const { data: myPlaylists } = useSWR(
-    myID ? ["getUserPlaylistsWithPreview", myID] : null,
-    () => getUserPlaylistsWithPreview(supabase, myID!)
+    myID ? ["getUserPlaylistsWithPreview", myID, Infinity] : null,
+    () => getUserPlaylistsWithPreview(supabase, myID!, Infinity)
   );
   const addTrackToQueue = useTrackStore((state) => state.addTrackToQueue);
   const [playlistsSearchQuery, setPlaylistsSearchQuery] = useState("");
