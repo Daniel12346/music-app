@@ -9,6 +9,7 @@ export default async function TracksSidebar() {
   const supabase = await createClient();
   const { data: myData } = await supabase.auth.getUser();
   const myID = myData.user?.id;
+  if (!myID) return null;
   const [myLikedTracks, tracksHistory] = await Promise.all([
     getTracksLikedByUser(supabase, myID),
     getUserHistoryTracks(supabase, myID),
