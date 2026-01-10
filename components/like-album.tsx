@@ -22,8 +22,8 @@ export default function LikeAlbum({
   });
   const myID = myData?.user?.id;
   const { data: liked, mutate: mutateLiked } = useSWR(
-    myID ? ["getAlbumsLikedByUser", myID] : null,
-    () => getAlbumsLikedByUser(supabase, myID)
+    myID ? ["getAlbumsLikedByUser", myID, Infinity] : null,
+    () => getAlbumsLikedByUser(supabase, myID!, Infinity)
   );
   const isAlbumLiked =
     liked?.some((likedAlbum) => likedAlbum.id === albumID) ?? false;
