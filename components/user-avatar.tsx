@@ -1,3 +1,4 @@
+"use client";
 import { signOutAction } from "@/app/actions";
 import Link from "next/link";
 import { Button } from "./ui/button";
@@ -11,13 +12,15 @@ import {
 } from "./ui/dropdown-menu";
 import { AvatarFallback, AvatarImage } from "./ui/avatar";
 import { getUserProfile } from "@/lib/database";
-import useSWR from "swr";
 import { UserRoundCogIcon } from "lucide-react";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
+import useSWR from "swr";
 
-export default async function UserAvatar() {
-  const supabase = await createClient();
-  const { data: myData } = await supabase.auth.getUser();
+export default function UserAvatar() {
+  const supabase = createClient();
+  const { data: myData } = useSWR("me", () =>
+    supabase.auth.getUser().then((res) => res.data)
+  );
   const { data: myProfile } = useSWR(
     myData?.user?.id ? ["getUserProfile", myData?.user?.id] : null,
     () => getUserProfile(supabase, myData?.user?.id!)
