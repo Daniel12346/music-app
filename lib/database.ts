@@ -51,20 +51,37 @@ export const getAlbumWithTracksAndArtist = async (
 
 export const getAlbumsLikedByUser = async (
   client: SupabaseClient<Database>,
-  userId?: string,
+  userId: string,
+  limit: number,
 ) => {
-  if (!userId) {
-    return null;
+  if (!limit) {
+    throw new Error("Limit is required");
   }
   const { data, error } = await client
     .from("users_liked_albums")
     .select("album_id, albums(*, artists(name, id))")
-    .eq("user_id", userId);
+    .eq("user_id", userId)
+    .limit(limit);
 
   if (error) {
     throw error;
   }
   return data?.map((record) => record.albums);
+};
+
+export const getNewAlbums = async (
+  client: SupabaseClient<Database>,
+  limit = 4,
+) => {
+  const { data, error } = await client
+    .from("albums")
+    .select("*, artists(name, id)")
+    .order("released_at", { ascending: false })
+    .limit(limit);
+  if (error) {
+    throw error;
+  }
+  return data;
 };
 
 export const likeAlbum = async (
@@ -133,11 +150,8 @@ export const unlikeArtist = async (
 
 export const getArtistsLikedByUser = async (
   client: SupabaseClient<Database>,
-  userId?: string,
+  userId: string,
 ) => {
-  if (!userId) {
-    return null;
-  }
   const { data, error } = await client
     .from("users_liked_artists")
     .select(
@@ -239,11 +253,8 @@ export const unlikeTrack = async (
 
 export const getTracksLikedByUser = async (
   client: SupabaseClient<Database>,
-  userId?: string,
+  userId: string,
 ) => {
-  if (!userId) {
-    return null;
-  }
   const { data, error } = await client
     .from("users_liked_tracks")
     .select(
@@ -259,11 +270,8 @@ export const getTracksLikedByUser = async (
 
 export const getUserHistoryTracks = async (
   client: SupabaseClient<Database>,
-  userId?: string,
+  userId: string,
 ) => {
-  if (!userId) {
-    return null;
-  }
   const { data, error } = await client
     .from("users_history_tracks")
     .select(
@@ -358,6 +366,7 @@ export const getUserPlaylists = async (
 export const getUserPlaylistsWithPreview = async (
   client: SupabaseClient<Database>,
   userId: string,
+  limit: number,
 ) => {
   const { data, error } = await client
     .from("playlists")
@@ -365,6 +374,7 @@ export const getUserPlaylistsWithPreview = async (
       "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url)), owner:profiles!playlists_owner_id_fkey(id, username, avatar_url)",
     )
     .eq("owner_id", userId)
+    .limit(limit)
     .limit(10, { referencedTable: "playlists_tracks" })
     .order("added_at", {
       referencedTable: "playlists_tracks",
@@ -628,7 +638,7 @@ export const getSearchResults = async (
           "name",
           `%${query}%`,
         ),
-        //TODO: custom rpc to limit track albums (only 4 oldest albums with distinct covers needed)
+        //TODO: custom view to limit track albums (only 4 oldest albums with distinct covers needed)
         client.from("playlists").select(
           "*, playlists_tracks(added_at, added_by, track_album:albums(id, title, cover_url)), owner:profiles!playlists_owner_id_fkey(id, username, avatar_url)",
         ).ilike("name", `%${query}%`),
@@ -703,13 +713,10 @@ export const getUserProfile = async (
   return data;
 };
 
-//TODO?: remove joining tables
 const tracksQuery = supabase.from("tracks").select(
   "*, tracks_artists(artists(name, id)), albums_tracks(albums(title, id, cover_url))",
 );
 export type TracksWithAlbumsAndArtists = QueryData<typeof tracksQuery>;
-
-//TODO: getPlaylistsSharedWithUser
 
 export const makePlaylistPrivate = async (
   client: SupabaseClient<Database>,
