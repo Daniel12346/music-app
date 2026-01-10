@@ -55,12 +55,12 @@ export default function PlaylistSettings({ id }: { id: string }) {
     () => getPlaylist(supabase, id)
   );
   const { mutate: mutateMyPlaylists } = useSWR(
-    myID ? ["getUserPlaylistsWithPreview", myID] : null,
-    () => getUserPlaylistsWithPreview(supabase, myID!)
+    myID ? ["getUserPlaylistsWithPreview", myID, 4] : null,
+    () => getUserPlaylistsWithPreview(supabase, myID!, 4)
   );
   const isPublic = playlist?.status === "PUBLIC";
   const router = useRouter();
-  //the only entry in the playlist_shared_with_users refers to this playlist
+  //the only entry in the playlist_shared_with_users returned by this specific database query refers to this playlist
   const sharedWithUsers =
     profileSearchResults?.filter(
       (profile) => profile.playlists_shared_with_users.length > 0

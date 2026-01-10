@@ -28,7 +28,7 @@ export default function TracksLiked({
     error,
     isLoading,
   } = useSWR(myID ? ["getTracksLikedByUser", myID] : null, () =>
-    getTracksLikedByUser(supabase, myID)
+    getTracksLikedByUser(supabase, myID!)
   );
   const { setCurrentTrack } = useTrackStore();
 

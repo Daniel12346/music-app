@@ -28,8 +28,8 @@ export default function CreatePlaylist() {
   const [name, setName] = useState("");
 
   const { mutate: mutatePlaylists } = useSWR(
-    ["getUserPlaylistsWithPreview", myID],
-    myID ? () => getUserPlaylistsWithPreview(supabase, myID) : null
+    ["getUserPlaylistsWithPreview", myID, 4],
+    myID ? () => getUserPlaylistsWithPreview(supabase, myID, 4) : null
   );
 
   const [isOpen, setIsOpen] = useState(false);

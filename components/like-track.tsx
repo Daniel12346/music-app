@@ -26,7 +26,7 @@ export default function LikeTrack({
   const myID = myData?.user?.id;
   const { data: liked, mutate: mutateLiked } = useSWR(
     myID ? ["getTracksLikedByUser", myID] : null,
-    () => getTracksLikedByUser(supabase, myID)
+    () => getTracksLikedByUser(supabase, myID!)
   );
   const isTrackLiked =
     liked?.some((likedTrack) => likedTrack.track_id === trackID) ?? false;

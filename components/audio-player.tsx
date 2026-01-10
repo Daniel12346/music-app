@@ -36,7 +36,7 @@ export default function Player() {
   const myID = myData?.user?.id;
   const { mutate: mutateHistoryTracks } = useSWR(
     myID ? ["getUserHistoryTracks", myID] : null,
-    () => getUserHistoryTracks(supabase, myID)
+    () => getUserHistoryTracks(supabase, myID!)
   );
   useEffect(() => {
     if (currentTrack && myID) {

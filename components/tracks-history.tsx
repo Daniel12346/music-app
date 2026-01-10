@@ -26,7 +26,7 @@ export default function TracksHistory({
   const myID = myData?.user?.id;
   const { data: historyTracks } = useSWR(
     myID ? ["getUserHistoryTracks", myID] : null,
-    () => getUserHistoryTracks(supabase, myID)
+    () => getUserHistoryTracks(supabase, myID!)
   );
   const { setCurrentTrack } = useTrackStore();
 

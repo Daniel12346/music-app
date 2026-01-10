@@ -28,7 +28,7 @@ export default function LikeArtist({
   const myID = myData?.user?.id;
   const { data: liked, mutate: mutateLiked } = useSWR(
     myID ? ["getArtistsLikedByUser", myID] : null,
-    () => getArtistsLikedByUser(supabase, myID)
+    () => getArtistsLikedByUser(supabase, myID!)
   );
   const isLiked =
     liked?.some((likedArtist) => likedArtist.artist_id === artistID) ?? false;
