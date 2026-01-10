@@ -7,16 +7,13 @@ type Props = {
   showArtistName?: boolean;
   showReleasedAt?: boolean;
   sortKey?: SortKey;
-  isLoading?: boolean;
 };
 export default function Albums({
   albums,
   showArtistName = true,
   showReleasedAt = false,
   sortKey = "newest_first",
-  isLoading,
 }: Props) {
-  if (!albums && !isLoading) return null;
   const sortAlbumsByKey = (albums: AlbumsWithArtists, sortKey: SortKey) => {
     switch (sortKey) {
       case "newest_first":
@@ -40,7 +37,20 @@ export default function Albums({
   return (
     <div className="@container">
       <ul className="grid grid-cols-2 justify-items-center @md:grid-cols-3 @lg:grid-cols-4 gap-y-6">
-        {isLoading
+        {sortAlbumsByKey(!albums ? [] : albums, sortKey).map((album) => (
+          <li className="flex w-32 justify-center" key={album.id}>
+            <AlbumCard
+              showArtistName={showArtistName}
+              cover_url={album.cover_url}
+              title={album.title}
+              id={album.id}
+              showReleasedAt={showReleasedAt}
+              released_at={album.released_at}
+              artists={album.artists}
+            />
+          </li>
+        ))}
+        {/* {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
               <li className="flex justify-center" key={i}>
                 <div className="w-32 opacity-90 dark:opacity-40">
@@ -62,7 +72,7 @@ export default function Albums({
                   artists={album.artists}
                 />
               </li>
-            ))}
+            ))} */}
       </ul>
     </div>
   );

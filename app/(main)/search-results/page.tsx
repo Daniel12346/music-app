@@ -139,7 +139,7 @@ export default function SearchResults() {
           </div>
           <div>
             {(albums?.data?.length ?? 0) > 0 ? (
-              <AlbumsDisplay albums={albums?.data ?? []} isLoading={false} />
+              <AlbumsDisplay albums={albums?.data ?? []} />
             ) : (
               <span className="flex justify-center text-muted-foreground">
                 No albums found
