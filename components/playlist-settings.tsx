@@ -32,6 +32,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import PlaylistSharedWithUsers from "./playlist-shared-with-users";
+import { MY_PLAYLISTS_PREVIEW_LIMIT } from "@/app/constants";
 
 export default function PlaylistSettings({ id }: { id: string }) {
   const supabase = createClient();
@@ -54,9 +55,11 @@ export default function PlaylistSettings({ id }: { id: string }) {
     ["getPlaylist", id],
     () => getPlaylist(supabase, id)
   );
+  //mutate the limited playlist list on the home page 
+  //will be used if the playlist is deleted and was among the playlists so it is no longer shown on the home page when the user is redirected there
   const { mutate: mutateMyPlaylists } = useSWR(
-    myID ? ["getUserPlaylistsWithPreview", myID, 4] : null,
-    () => getUserPlaylistsWithPreview(supabase, myID!, 4)
+    myID ? ["getUserPlaylistsWithPreview", myID, MY_PLAYLISTS_PREVIEW_LIMIT] : null,
+    () => getUserPlaylistsWithPreview(supabase, myID!, MY_PLAYLISTS_PREVIEW_LIMIT)
   );
   const isPublic = playlist?.status === "PUBLIC";
   const router = useRouter();

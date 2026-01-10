@@ -7,6 +7,11 @@ import {
   getUserPlaylistsWithPreview,
 } from "@/lib/database";
 import Home from "./home";
+import {
+  LIKED_ALBUMS_PREVIEW_LIMIT,
+  MY_PLAYLISTS_PREVIEW_LIMIT,
+  NEW_ALBUMS_PREVIEW_LIMIT,
+} from "../constants";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -20,24 +25,34 @@ export default async function HomePage() {
         fallback: myID
           ? {
               ["me"]: myData,
-              [unstable_serialize(["getAlbumsLikedByUser", myID, 4])]:
-                getAlbumsLikedByUser(supabase, myID!, 4),
-              [unstable_serialize(["getUserPlaylistsWithPreview", myID, 4])]:
-                getUserPlaylistsWithPreview(supabase, myID!, 4),
-              [unstable_serialize(["getNewAlbums", 4])]: getNewAlbums(
+              [unstable_serialize([
+                "getAlbumsLikedByUser",
+                myID,
+                LIKED_ALBUMS_PREVIEW_LIMIT,
+              ])]: getAlbumsLikedByUser(
                 supabase,
-                4
+                myID!,
+                LIKED_ALBUMS_PREVIEW_LIMIT
               ),
+              [unstable_serialize([
+                "getUserPlaylistsWithPreview",
+                myID,
+                MY_PLAYLISTS_PREVIEW_LIMIT,
+              ])]: getUserPlaylistsWithPreview(
+                supabase,
+                myID!,
+                MY_PLAYLISTS_PREVIEW_LIMIT
+              ),
+              [unstable_serialize(["getNewAlbums", NEW_ALBUMS_PREVIEW_LIMIT])]:
+                getNewAlbums(supabase, NEW_ALBUMS_PREVIEW_LIMIT),
               //getNewTracksByLikedArtists is used in the new tracks playlist in my playlists on the home page
               [unstable_serialize(["getNewTracksByLikedArtists", myID])]:
                 getNewTracksByLikedArtists(supabase, myID!),
             }
           : //getNewAlbums is prefetched even if user is not logged in because it doesn't use myID
             {
-              [unstable_serialize(["getNewAlbums", 4])]: getNewAlbums(
-                supabase,
-                4
-              ),
+              [unstable_serialize(["getNewAlbums", NEW_ALBUMS_PREVIEW_LIMIT])]:
+                getNewAlbums(supabase, NEW_ALBUMS_PREVIEW_LIMIT),
             },
       }}
     >

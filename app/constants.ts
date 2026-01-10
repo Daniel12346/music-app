@@ -1,0 +1,3 @@
+export const NEW_ALBUMS_PREVIEW_LIMIT = 4;
+export const MY_PLAYLISTS_PREVIEW_LIMIT = 4;
+export const LIKED_ALBUMS_PREVIEW_LIMIT = 4;

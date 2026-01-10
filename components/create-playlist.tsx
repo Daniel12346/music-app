@@ -18,6 +18,7 @@ import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
 import { useState } from "react";
 import { toast } from "sonner";
+import { MY_PLAYLISTS_PREVIEW_LIMIT } from "@/app/constants";
 
 export default function CreatePlaylist() {
   const supabase = createClient();
@@ -28,8 +29,15 @@ export default function CreatePlaylist() {
   const [name, setName] = useState("");
 
   const { mutate: mutatePlaylists } = useSWR(
-    ["getUserPlaylistsWithPreview", myID, 4],
-    myID ? () => getUserPlaylistsWithPreview(supabase, myID, 4) : null
+    ["getUserPlaylistsWithPreview", myID, MY_PLAYLISTS_PREVIEW_LIMIT],
+    myID
+      ? () =>
+          getUserPlaylistsWithPreview(
+            supabase,
+            myID,
+            MY_PLAYLISTS_PREVIEW_LIMIT
+          )
+      : null
   );
 
   const [isOpen, setIsOpen] = useState(false);
