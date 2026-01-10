@@ -10,17 +10,18 @@ export default async function TracksSidebar() {
   const { data: myData } = await supabase.auth.getUser();
   const myID = myData.user?.id;
   if (!myID) return null;
-  const [myLikedTracks, tracksHistory] = await Promise.all([
-    getTracksLikedByUser(supabase, myID),
-    getUserHistoryTracks(supabase, myID),
-  ]);
+
   return (
     <SWRConfig
       value={{
-        fallback: {
-          [unstable_serialize(["getTracksLikedByUser", myID])]: myLikedTracks,
-          [unstable_serialize(["getUserHistoryTracks", myID])]: tracksHistory,
-        },
+        fallback: myID
+          ? {
+              [unstable_serialize(["getTracksLikedByUser", myID])]:
+                getTracksLikedByUser(supabase, myID),
+              [unstable_serialize(["getUserHistoryTracks", myID])]:
+                getUserHistoryTracks(supabase, myID),
+            }
+          : {},
       }}
     >
       <aside className="flex flex-col gap-2 p-2">
