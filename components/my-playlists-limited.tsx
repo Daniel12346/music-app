@@ -42,7 +42,7 @@ export default function MyPlaylistsLimited({ limit = 4 }: { limit?: number }) {
           See all
         </Link>
       </div>
-      <PlaylistsDisplay playlists={playlists} />;
+      <PlaylistsDisplay playlists={playlists} />
     </div>
   );
 }
