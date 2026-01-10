@@ -1,7 +1,6 @@
 import LikedAlbumsLimited from "@/components/liked-albums-limited";
 import MyPlaylistsLimited from "@/components/my-playlists-limited";
 import NewAlbumsLimited from "@/components/new-albums-limited";
-import Link from "next/link";
 
 export default function Home() {
   return (
