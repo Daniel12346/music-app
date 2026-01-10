@@ -22,7 +22,7 @@ const ThemeSwitcher = () => {
   }, []);
 
   if (!mounted) {
-    return null;
+    return <div className="h-8 w-16" />;
   }
 
   const ICON_SIZE = 16;
