@@ -6,7 +6,7 @@ import {
 } from "@/lib/database";
 import { createClient } from "@/utils/supabase/client";
 import useSWR from "swr";
-import PlaylistsDisplay from "./playlists-grid";
+import PlaylistsGrid from "./playlists-grid";
 import Link from "next/link";
 
 export default function MyPlaylistsLimited({ limit = 4 }: { limit?: number }) {
@@ -42,7 +42,7 @@ export default function MyPlaylistsLimited({ limit = 4 }: { limit?: number }) {
           See all
         </Link>
       </div>
-      <PlaylistsDisplay playlists={playlists} />
+      <PlaylistsGrid playlists={playlists} withCreateNew />
     </div>
   );
 }
